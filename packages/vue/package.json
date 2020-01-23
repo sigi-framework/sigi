@@ -1,0 +1,32 @@
+{
+  "name": "@sigi/vue",
+  "version": "0.0.0",
+  "description": "Sigi framework binding for VueJS",
+  "keywords": [
+    "Vue",
+    "RxJS",
+    "TypeScript",
+    "Sigi"
+  ],
+  "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
+  "homepage": "https://github.com/sigi-framework",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigi-framework/sigi.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/sigi-framework/sigi/issues"
+  }
+}
