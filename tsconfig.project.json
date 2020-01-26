@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/react" },
+    { "path": "./packages/vue" },
+    { "path": "./packages/di" }
+  ],
+  "compilerOptions": {
+    "noEmit": true
+  }
+}

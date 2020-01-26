@@ -1,12 +1,12 @@
 {
-  "name": "@sigi/core",
+  "name": "@sigi/di",
   "version": "0.0.0",
-  "description": "Sigi core library",
+  "description": "Dependencies injection library for sigi framework",
   "keywords": [
-    "RxJS",
-    "TypeScript"
+    "Dependencies",
+    "Injection"
   ],
-  "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
+  "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework",
   "license": "MIT",
   "main": "lib/index.js",
@@ -14,7 +14,8 @@
   "esnext": "esnext/index.js",
   "types": "esm/index.d.ts",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "test": "__tests__"
   },
   "files": [
     "lib"
@@ -28,8 +29,5 @@
   },
   "bugs": {
     "url": "https://github.com/sigi-framework/sigi/issues"
-  },
-  "dependencies": {
-    "immer": "^5.3.2"
   }
 }

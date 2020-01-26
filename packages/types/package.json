@@ -1,12 +1,11 @@
 {
-  "name": "@sigi/core",
+  "name": "@sigi/types",
   "version": "0.0.0",
-  "description": "Sigi core library",
+  "description": "Types defination for sigi framenwork",
   "keywords": [
-    "RxJS",
-    "TypeScript"
+    "Sigi"
   ],
-  "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
+  "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework",
   "license": "MIT",
   "main": "lib/index.js",
@@ -14,7 +13,8 @@
   "esnext": "esnext/index.js",
   "types": "esm/index.d.ts",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "test": "__tests__"
   },
   "files": [
     "lib"
@@ -28,8 +28,5 @@
   },
   "bugs": {
     "url": "https://github.com/sigi-framework/sigi/issues"
-  },
-  "dependencies": {
-    "immer": "^5.3.2"
   }
 }

@@ -1,0 +1,6 @@
+node_modules
+dist
+lib
+esm
+coverage
+.nyc_output

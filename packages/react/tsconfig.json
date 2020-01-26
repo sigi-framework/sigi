@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./esm",
+    "module": "esnext", 
+    "composite": true
+  },
+  "references": [
+    { "path": "../di" }
+  ],
+  "include": [
+    "./src"
+  ]
+}
