@@ -9,16 +9,13 @@
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework",
   "license": "MIT",
-  "main": "lib/index.js",
-  "module": "esm/index.js",
-  "esnext": "esnext/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "esnext": "dist/index.next.js",
   "types": "esm/index.d.ts",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
   "files": [
-    "lib"
+    "dist",
+    "esm"
   ],
   "repository": {
     "type": "git",

@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "references": [
     { "path": "./packages/core" },
+    { "path": "./packages/devtool" },
     { "path": "./packages/react" },
     { "path": "./packages/vue" },
     { "path": "./packages/di" }
