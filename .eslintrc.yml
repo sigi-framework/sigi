@@ -77,7 +77,7 @@ rules:
 overrides:
   -
     files:
-      - packages/**/*{.js,.jsx}
+      - packages/**/*.{ts,tsx}
     rules:
       'no-unused-vars': [2, { varsIgnorePattern: '^_', argsIgnorePattern: '^_', ignoreRestSiblings: true }]
   

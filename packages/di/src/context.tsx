@@ -15,7 +15,7 @@ const ProvidersContext = createContext<Provider[]>([])
 export const InjectionProvidersContext = memo<{ providers?: Provider[]; children: React.ReactNode }>(
   ({ providers = [], children }) => {
     const parentInjector = useContext(_InjectableContext)
-    const childInjectableFactory = useMemo(() => parentInjector.createChild(providers), [providers])
+    const childInjectableFactory = useMemo(() => parentInjector.createChild(providers), [parentInjector, providers])
     return (
       <_InjectableContext.Provider value={childInjectableFactory}>
         <ProvidersContext.Provider value={providers}>{children}</ProvidersContext.Provider>

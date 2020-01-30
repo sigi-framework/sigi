@@ -30,10 +30,10 @@ describe('Context specs', () => {
       expect(instance.service instanceof Service).toBeTruthy()
       return <div />
     }
-  
+
     render(<TestComponent />)
   })
-  
+
   it('should override provider', () => {
     const { Module, Service } = inject()
     const mockService = {
@@ -45,14 +45,14 @@ describe('Context specs', () => {
       expect(instance.service).toBe(mockService.useValue)
       return <div />
     }
-  
+
     render(
       <InjectionProvidersContext providers={[mockService]}>
         <TestComponent />
       </InjectionProvidersContext>,
     )
   })
-  
+
   it('Muti providers context', () => {
     const { Module, Service } = inject()
     const mockService1 = {
@@ -68,13 +68,13 @@ describe('Context specs', () => {
       expect(instance.service).toBe(mockService1.useValue)
       return <div />
     }
-  
+
     const TestComponent2 = () => {
       const instance = useInstance(Module)
       expect(mockService2.useValue).toBe(instance.service)
       return <div />
     }
-  
+
     render(
       <>
         <InjectionProvidersContext providers={[mockService1]}>
@@ -86,7 +86,7 @@ describe('Context specs', () => {
       </>,
     )
   })
-  
+
   it('Nested providers', () => {
     const { Module, Service } = inject()
     const mockService1 = {
@@ -102,13 +102,13 @@ describe('Context specs', () => {
       expect(instance.service).toBe(mockService1.useValue)
       return <div />
     }
-  
+
     const TestComponent2 = () => {
       const instance = useInstance(Module)
       expect(instance.service).toBe(mockService2.useValue)
       return <div />
     }
-  
+
     render(
       <>
         <InjectionProvidersContext providers={[mockService1]}>

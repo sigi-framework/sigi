@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2018",
+    "outDir": "./next"
+  },
+  "include": [
+    "./src"
+  ],
+  "references": [
+    { "path": "../di/tsconfig.next.json" },
+    { "path": "../types/tsconfig.next.json" },
+    { "path": "../core/tsconfig.next.json" }
+  ]
+}

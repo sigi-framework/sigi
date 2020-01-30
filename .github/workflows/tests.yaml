@@ -1,0 +1,47 @@
+name: Node.js CI
+
+on: [push]
+
+jobs:
+  tests-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: 'Install latest yarn'
+      run: |
+        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+        sudo apt update && sudo apt install yarn -y
+    - name: Cache NPM dependencies
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: npm-cache-${{ hashFiles('yarn.lock') }}
+        restore-keys: |
+          npm-cache-
+    - name: 'Install dependencies'
+      run: yarn install --frozen-lockfile --registry https://registry.npmjs.org
+    - name: 'Lint'
+      run: yarn lint
+    - name: 'Unit tests'
+      run: yarn test
+      env:
+        CI: true
+    - name: 'Deploy'
+      run: |
+        if git log -1 --pretty=%B | grep "^v\?[0-9]\+\.[0-9]\+\.[0-9]\+$";
+        then
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          npx lerna publish from-git --no-verify-access --yes
+        else
+          echo "Not a release, skipping publish"
+        fi
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

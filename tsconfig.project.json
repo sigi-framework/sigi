@@ -5,7 +5,8 @@
     { "path": "./packages/devtool" },
     { "path": "./packages/react" },
     { "path": "./packages/vue" },
-    { "path": "./packages/di" }
+    { "path": "./packages/di" },
+    { "path": "./packages/ssr" }
   ],
   "compilerOptions": {
     "noEmit": true

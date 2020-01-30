@@ -3,15 +3,18 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./esm",
-    "composite": true
+    "composite": true,
+    "types": [
+      "../../node_modules/reflect-metadata",
+      "../../node_modules/@types/jest"
+    ]
   },
+  "include": [
+    "./src"
+  ],
   "references": [
     { "path": "../di" },
     { "path": "../types" },
-    { "path": "../core" },
-    { "path": "../ssr" }
-  ],
-  "include": [
-    "./src"
+    { "path": "../core" }
   ]
 }

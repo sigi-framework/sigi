@@ -29,8 +29,9 @@ export default pkgs
   }))
   .concat(
     pkgs.map((dir) => ({
-      input: `./packages/${dir}/src/index.ts`,
+      input: `./packages/${dir}/next/index.js`,
       external,
+      plugins: [sourcemaps()],
       output: [
         {
           file: `./packages/${dir}/dist/index.next.js`,
@@ -38,6 +39,5 @@ export default pkgs
           sourcemap: true,
         },
       ],
-      plugins: [typescript({ target: 'ES2018' }), sourcemaps()],
     })),
   )

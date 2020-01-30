@@ -1,11 +1,10 @@
 import 'reflect-metadata'
 
-import { Observable } from 'rxjs'
+import { Observable, noop } from 'rxjs'
 import { delay, map, withLatestFrom, takeUntil, tap } from 'rxjs/operators'
 import { Draft } from 'immer'
 import { rootInjector } from '@sigi/di'
 import * as Sinon from 'sinon'
-import { noop } from 'rxjs'
 import { Action, State } from '@sigi/types'
 
 import { Ayanami } from '../ayanami'

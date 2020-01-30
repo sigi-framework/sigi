@@ -13,6 +13,7 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^3.0.0",
     "@types/jest": "^25.1.0",
+    "@types/lodash": "^4.14.149",
     "@types/node": "^13.5.0",
     "@types/react-dom": "^16.9.5",
     "@types/react-test-renderer": "^16.9.2",
@@ -31,6 +32,7 @@
     "jest": "^25.1.0",
     "lerna": "^3.20.2",
     "lint-staged": "^10.0.3",
+    "lodash": "^4.17.15",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
@@ -48,12 +50,15 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "build": "run-s clean build:esm build:bundle clean:js clean:tests",
+    "build": "run-s clean build:esm build:next build:bundle clean:js clean:next clean:tests",
     "build:esm": "tsc -b tsconfig.project.json",
+    "build:next": "tsc -b tsconfig.next.json",
     "build:bundle": "rollup --config rollup.config.js",
     "clean": "shx rm -rf ./packages/**/*.tsbuildinfo && shx rm -rf ./packages/**/{esm,dist}",
-    "clean:js": "shx rm -rf './packages/{core,devtool,di,react,types,vue}/esm/**/*.{js,map}'",
+    "clean:js": "shx rm -rf './packages/{core,devtool,di,react,types,ssr,vue}/esm/**/*.{js,map}'",
+    "clean:next": "shx rm -rf ./packages/**/next",
     "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
+    "lint": "eslint . -c ./.eslintrc.yml 'packages/**/*.{ts,tsx}' './*.js'",
     "test": "jest"
   },
   "lint-staged": {

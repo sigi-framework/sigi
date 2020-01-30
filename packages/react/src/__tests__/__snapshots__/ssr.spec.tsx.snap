@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SSR specs: should return right state in hooks 1`] = `"<span>1</span>"`;
+
+exports[`SSR specs: should run ssr effects 1`] = `
+Object {
+  "CountModel": Object {
+    "count": 1,
+    "name": "name",
+  },
+}
+`;
+
+exports[`SSR specs: should skip effect if it returns SKIP_SYMBOL 1`] = `
+Object {
+  "CountModel": Object {
+    "count": 1,
+    "name": "",
+  },
+}
+`;
+
+exports[`SSR specs: should support concurrency 1`] = `
+Object {
+  "firstRequest": Object {
+    "CountModel": Object {
+      "count": 1,
+      "name": "name1",
+    },
+    "TipModel": Object {
+      "tip": "tip",
+    },
+  },
+  "secondRequest": Object {
+    "CountModel": Object {
+      "count": 1,
+      "name": "name2",
+    },
+    "TipModel": Object {
+      "tip": "tip",
+    },
+  },
+}
+`;

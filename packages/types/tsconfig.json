@@ -4,5 +4,8 @@
     "rootDir": "./src",
     "outDir": "./esm",
     "composite": true
-  }
+  },
+  "include": [
+    "src"
+  ]
 }
