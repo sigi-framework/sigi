@@ -1,6 +1,6 @@
 {
   "name": "@sigi/vue",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Sigi framework binding for VueJS",
   "keywords": [
     "Vue",
