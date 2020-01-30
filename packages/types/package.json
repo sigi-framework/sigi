@@ -12,6 +12,11 @@
   "module": "dist/index.esm.js",
   "esnext": "dist/index.next.js",
   "types": "esm/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "sideEffects": false,
   "files": [
     "dist",
     "esm"
