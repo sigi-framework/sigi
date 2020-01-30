@@ -59,7 +59,7 @@
     "clean:next": "shx rm -rf ./packages/**/next",
     "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
     "lint": "eslint . -c ./.eslintrc.yml 'packages/**/*.{ts,tsx}' './*.js'",
-    "test": "jest"
+    "test": "jest --collectCoverage"
   },
   "lint-staged": {
     "*.@(js|ts|tsx)": [
