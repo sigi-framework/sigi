@@ -34,6 +34,10 @@ jobs:
       run: yarn test
       env:
         CI: true
+    - name: 'Codecov'
+      run: npx codecov -f coverage/*.json
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - name: 'Deploy'
       run: |
         if git log -1 --pretty=%B | grep "^v\?[0-9]\+\.[0-9]\+\.[0-9]\+$";
