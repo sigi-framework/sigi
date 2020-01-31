@@ -1,6 +1,6 @@
 {
   "name": "@sigi/testing",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "Testing library for sigi framework",
   "keywords": [
     "Testing",
@@ -33,7 +33,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^1.0.0-alpha.6",
-    "@sigi/di": "^1.0.0-alpha.6"
+    "@sigi/core": "^1.0.0-alpha.7",
+    "@sigi/di": "^1.0.0-alpha.7"
   }
 }
