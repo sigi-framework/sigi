@@ -5,14 +5,14 @@ import { Observable, timer } from 'rxjs'
 import { endWith, switchMap, map, mergeMap, flatMap, withLatestFrom } from 'rxjs/operators'
 import { Draft } from 'immer'
 import { rootInjector } from '@sigi/di'
-import { TERMINATE_ACTION, GLOBAL_KEY, Ayanami, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
+import { TERMINATE_ACTION, GLOBAL_KEY, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
 import { Action } from '@sigi/types'
 import { emitSSREffects, SSREffect, SSRStateCacheInstance } from '@sigi/ssr'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
 import uniqueId from 'lodash/uniqueId'
 
-import { SSRSharedContext, SSRContext, useAyanami, useAyanamiState } from '../index'
+import { SSRSharedContext, SSRContext, useEffectModule, useEffectState } from '../index'
 
 interface CountState {
   count: number
@@ -24,7 +24,7 @@ interface TipState {
 }
 
 @Module('CountModel')
-class CountModel extends Ayanami<CountState> {
+class CountModel extends EffectModule<CountState> {
   defaultState = { count: 0, name: '' }
 
   @ImmerReducer()
@@ -66,7 +66,7 @@ class CountModel extends Ayanami<CountState> {
 }
 
 @Module('TipModel')
-class TipModel extends Ayanami<TipState> {
+class TipModel extends EffectModule<TipState> {
   defaultState = { tip: '' }
 
   @ImmerReducer()
@@ -88,7 +88,7 @@ class TipModel extends Ayanami<TipState> {
 }
 
 const Component = () => {
-  const [state, actions] = useAyanami(CountModel)
+  const [state, actions] = useEffectModule(CountModel)
   useEffect(() => {
     actions.setName('new name')
   }, [actions])
@@ -101,7 +101,7 @@ const Component = () => {
 }
 
 const ComponentWithSelector = () => {
-  const [state, actions] = useAyanami(CountModel, {
+  const [state, actions] = useEffectModule(CountModel, {
     selector: (s) => ({
       count: s.count + 1,
     }),
@@ -131,7 +131,7 @@ describe('SSR specs:', () => {
   it('should throw if module name not given', () => {
     function generateException() {
       @((Module as any)())
-      class ErrorModel extends Ayanami<any> {
+      class ErrorModel extends EffectModule<any> {
         defaultState = {}
       }
 
@@ -143,18 +143,18 @@ describe('SSR specs:', () => {
 
   it('should pass valid module name', () => {
     @Module('1')
-    class Model extends Ayanami<any> {
+    class Model extends EffectModule<any> {
       defaultState = {}
     }
 
     @Module('2')
-    class Model2 extends Ayanami<any> {
+    class Model2 extends EffectModule<any> {
       defaultState = {}
     }
 
     function generateException1() {
       @Module('1')
-      class ErrorModel1 extends Ayanami<any> {
+      class ErrorModel1 extends EffectModule<any> {
         defaultState = {}
       }
 
@@ -163,7 +163,7 @@ describe('SSR specs:', () => {
 
     function generateException2() {
       @Module('1')
-      class ErrorModel2 extends Ayanami<any> {
+      class ErrorModel2 extends EffectModule<any> {
         defaultState = {}
       }
 
@@ -172,7 +172,7 @@ describe('SSR specs:', () => {
 
     function generateException3() {
       @((Module as any)())
-      class ErrorModel extends Ayanami<any> {
+      class ErrorModel extends EffectModule<any> {
         defaultState = {}
       }
 
@@ -271,7 +271,7 @@ describe('SSR specs:', () => {
 
   it('should restore and skip first action on client side', () => {
     const Component = () => {
-      const [state, actions] = useAyanami(CountModel)
+      const [state, actions] = useEffectModule(CountModel)
       useEffect(() => {
         actions.getCount()
       }, [actions])
@@ -334,7 +334,7 @@ describe('SSR specs:', () => {
   it('should do nothing if Module contains no SSREffects', async () => {
     const req = {}
     @Module('WithoutSSR')
-    class WithoutSSRModule extends Ayanami<{ count: number }> {
+    class WithoutSSRModule extends EffectModule<{ count: number }> {
       defaultState = {
         count: 0,
       }
@@ -360,7 +360,7 @@ describe('SSR specs:', () => {
     const req = {}
     const error = new TypeError('whatever')
     @Module('ErrorModule')
-    class SSRErrorModule extends Ayanami<{ count: number }> {
+    class SSRErrorModule extends EffectModule<{ count: number }> {
       defaultState = {
         count: 0,
       }
@@ -387,7 +387,7 @@ describe('SSR specs:', () => {
     const req = {}
     const error = new TypeError('whatever')
     @Module('ErrorReducerModule')
-    class SSRErrorModule extends Ayanami<{ count: number }> {
+    class SSRErrorModule extends EffectModule<{ count: number }> {
       defaultState = {
         count: 0,
       }
@@ -417,7 +417,7 @@ describe('SSR specs:', () => {
     const req = {}
     const error = new TypeError('whatever')
     @Module('ErrorMiddlewareModule')
-    class SSRErrorModule extends Ayanami<{ count: number }> {
+    class SSRErrorModule extends EffectModule<{ count: number }> {
       defaultState = {
         count: 0,
       }
@@ -454,7 +454,7 @@ describe('SSR specs:', () => {
     await emitSSREffects(req1, [CountModel], requestId)
     await emitSSREffects(req2, [CountModel], requestId)
     const SharedComponent1 = () => {
-      const state = useAyanamiState(CountModel)
+      const state = useEffectState(CountModel)
       return (
         <>
           <span>{state.count}</span>
@@ -463,7 +463,7 @@ describe('SSR specs:', () => {
     }
 
     const SharedComponent2 = () => {
-      const state = useAyanamiState(CountModel)
+      const state = useEffectState(CountModel)
       return (
         <>
           <span>{state.count}</span>

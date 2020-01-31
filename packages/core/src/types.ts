@@ -2,7 +2,7 @@ import { Observable } from 'rxjs'
 import { Draft } from 'immer'
 import { Action } from '@sigi/types'
 
-import { Ayanami } from './ayanami'
+import { EffectModule } from './module'
 
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
 
@@ -34,23 +34,23 @@ type UnpackPayload<F, S> = UnpackEffectPayload<F> extends never
     : UnpackImmerReducerPayload<F, S>
   : UnpackEffectPayload<F>
 
-export type ActionOfAyanami<M extends Ayanami<S>, S> = Omit<
+export type ActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
   {
     [key in keyof M]: UnpackPayload<M[key], S> extends void ? () => void : (payload: UnpackPayload<M[key], S>) => void
   },
-  keyof Ayanami<S>
+  keyof EffectModule<S>
 >
 
-export type InstanceActionOfAyanami<M extends Ayanami<S>, S> = Omit<
+export type InstanceActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
   {
     [key in keyof M]: (payload: UnpackPayload<M[key], S>) => Action<UnpackPayload<M[key], S>>
   },
-  keyof Ayanami<S>
+  keyof EffectModule<S>
 >
 
-export type ActionStreamOfAyanami<M extends Ayanami<S>, S> = Omit<
+export type ActionStreamOfEffectModule<M extends EffectModule<S>, S> = Omit<
   {
     [key in keyof M]: Observable<UnpackPayload<M[key], S>>
   },
-  keyof Ayanami<S>
+  keyof EffectModule<S>
 >

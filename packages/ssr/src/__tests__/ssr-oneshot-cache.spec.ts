@@ -7,7 +7,7 @@ const unsubscribeSpy = spy()
 
 class Normal {}
 
-class MockAyanami {
+class MockEffectModule {
   state = {
     [StateInterface]: {
       unsubscribe: unsubscribeSpy,
@@ -15,7 +15,7 @@ class MockAyanami {
   }
 }
 
-class MockAyanamiLevel2 {
+class MockEffectModuleLevel2 {
   state = {
     [StateInterface]: {
       unsubscribe: unsubscribeSpy,
@@ -35,33 +35,33 @@ describe('SSROneShotCache specs', () => {
     unsubscribeSpy.resetHistory()
   })
 
-  it('should work with ayanami#1', async () => {
-    const instance = new MockAyanami()
-    cache.store(ctx, MockAyanami, instance.state)
-    expect(cache.consume(ctx, MockAyanami)).toBe(instance.state)
+  it('should work with EffectModule#1', async () => {
+    const instance = new MockEffectModule()
+    cache.store(ctx, MockEffectModule, instance.state)
+    expect(cache.consume(ctx, MockEffectModule)).toBe(instance.state)
     await Promise.resolve()
-    expect(cache.consume(ctx, MockAyanami)).toBe(undefined)
+    expect(cache.consume(ctx, MockEffectModule)).toBe(undefined)
     expect(unsubscribeSpy.callCount).toBe(1)
   })
 
-  it('should work with ayanami#2', async () => {
-    const instance = new MockAyanami()
-    const instanceLevel2 = new MockAyanamiLevel2()
+  it('should work with EffectModule#2', async () => {
+    const instance = new MockEffectModule()
+    const instanceLevel2 = new MockEffectModuleLevel2()
     const normalInstance = new Normal()
-    cache.store(ctx, MockAyanami, instance.state)
-    cache.store(ctx, MockAyanamiLevel2, instanceLevel2.state)
+    cache.store(ctx, MockEffectModule, instance.state)
+    cache.store(ctx, MockEffectModuleLevel2, instanceLevel2.state)
     cache.store(ctx, Normal, normalInstance)
-    expect(cache.consume(ctx, MockAyanami)).toBe(instance.state)
-    expect(cache.consume(ctx, MockAyanamiLevel2)).toBe(instanceLevel2.state)
+    expect(cache.consume(ctx, MockEffectModule)).toBe(instance.state)
+    expect(cache.consume(ctx, MockEffectModuleLevel2)).toBe(instanceLevel2.state)
     expect(cache.consume(ctx, Normal)).toBe(normalInstance)
     await Promise.resolve()
-    expect(cache.consume(ctx, MockAyanami)).toBe(undefined)
-    expect(cache.consume(ctx, MockAyanamiLevel2)).toBe(undefined)
+    expect(cache.consume(ctx, MockEffectModule)).toBe(undefined)
+    expect(cache.consume(ctx, MockEffectModuleLevel2)).toBe(undefined)
     expect(cache.consume(ctx, Normal)).toBe(undefined)
     expect(unsubscribeSpy.callCount).toBe(2)
   })
 
-  it('should work with non-ayanami instance', async () => {
+  it('should work with non EffectModule instance', async () => {
     const instance = new Normal()
     cache.store(ctx, Normal, instance)
     expect(cache.consume(ctx, Normal)).toBe(instance)

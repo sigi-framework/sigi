@@ -11,7 +11,7 @@ import {
   IMMER_REDUCER_DECORATOR_SYMBOL,
   DEFINE_ACTION_DECORATOR_SYMBOL,
 } from './symbols'
-import { InstanceActionOfAyanami, ActionStreamOfAyanami } from './types'
+import { InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
 import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
 import { logStateAction } from './logger'
 
@@ -31,7 +31,7 @@ const NOOP_ACTION_TYPE = (Symbol('NOOP_ACTION') as unknown) as string
 
 const effectNameSymbol: unique symbol = Symbol('effect-name')
 
-export abstract class Ayanami<S> {
+export abstract class EffectModule<S> {
   abstract readonly defaultState: S
 
   // @internal
@@ -123,15 +123,15 @@ export abstract class Ayanami<S> {
     return this.state
   }
 
-  getActions<M extends Ayanami<S>>(
+  getActions<M extends EffectModule<S>>(
     this: M,
-  ): M extends Ayanami<infer State> ? InstanceActionOfAyanami<M, State> : never {
+  ): M extends EffectModule<infer State> ? InstanceActionOfEffectModule<M, State> : never {
     return this._actions
   }
 
-  getAction$<M extends Ayanami<S>>(
+  getAction$<M extends EffectModule<S>>(
     this: M,
-  ): M extends Ayanami<infer State> ? ActionStreamOfAyanami<M, State> : ActionStreamOfAyanami<M, S> {
+  ): M extends EffectModule<infer State> ? ActionStreamOfEffectModule<M, State> : ActionStreamOfEffectModule<M, S> {
     return this._actionStreams
   }
 

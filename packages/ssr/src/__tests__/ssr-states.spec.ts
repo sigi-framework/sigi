@@ -1,12 +1,12 @@
 import Sinon from 'sinon'
 import { noop } from 'rxjs'
-import { Ayanami } from '@sigi/core'
+import { EffectModule } from '@sigi/core'
 
 import { SSRStateCache } from '../ssr-states'
 
 describe('SSRStateCacheInstance specs:', () => {
   let SSRStateCacheInstance: SSRStateCache
-  class A extends Ayanami<{}> {
+  class A extends EffectModule<{}> {
     defaultState = {}
   }
   const ctx = {}
@@ -46,7 +46,7 @@ describe('SSRStateCacheInstance specs:', () => {
     const newState = Object.create({
       unsubscribe: spy,
     })
-    class B extends Ayanami<{}> {
+    class B extends EffectModule<{}> {
       defaultState = {}
     }
     SSRStateCacheInstance.set(ctx, B, newState)

@@ -5,7 +5,7 @@ import { empty, Observable } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
 
 import { createState } from '../state'
-import { Ayanami } from '../ayanami'
+import { EffectModule } from '../module'
 import { Reducer, Effect } from '../decorators'
 import { Module } from '../module.decorator'
 
@@ -35,7 +35,7 @@ describe('Smoking tests', () => {
     const asyncTimeToDelay = 2000
     const timer = Sinon.useFakeTimers()
     @Module('Foo')
-    class FooModule extends Ayanami<{ foo: string }> {
+    class FooModule extends EffectModule<{ foo: string }> {
       defaultState = {
         foo: '1',
       }
@@ -47,7 +47,7 @@ describe('Smoking tests', () => {
     }
 
     @Module('Bar')
-    class BarModule extends Ayanami<{}> {
+    class BarModule extends EffectModule<{}> {
       defaultState = {}
 
       constructor(private readonly fooModule: FooModule) {

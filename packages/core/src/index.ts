@@ -1,4 +1,4 @@
-export * from './ayanami'
+export * from './module'
 export * from './types'
 export * from './state'
 export * from './decorators'

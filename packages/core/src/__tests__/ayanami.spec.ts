@@ -7,10 +7,10 @@ import { rootInjector } from '@sigi/di'
 import * as Sinon from 'sinon'
 import { Action, State } from '@sigi/types'
 
-import { Ayanami } from '../ayanami'
+import { EffectModule } from '../module'
 import { Module } from '../module.decorator'
 import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
-import { InstanceActionOfAyanami } from '../types'
+import { InstanceActionOfEffectModule } from '../types'
 
 interface CounterState {
   count: number
@@ -19,7 +19,7 @@ interface CounterState {
 const TIME_TO_DELAY = 300
 
 @Module('counter')
-class Counter extends Ayanami<CounterState> {
+class Counter extends EffectModule<CounterState> {
   defaultState = {
     count: 1,
   }
@@ -144,7 +144,7 @@ describe('Ayanami Class', () => {
   describe('complex shape specs', () => {
     it('should be able to create module with without epic', () => {
       @Module('WithoutEpic')
-      class WithoutEpic extends Ayanami<CounterState> {
+      class WithoutEpic extends EffectModule<CounterState> {
         defaultState = {
           count: 0,
         }
@@ -164,7 +164,7 @@ describe('Ayanami Class', () => {
 
     it('should be able to create module without reducer', () => {
       @Module('WithoutReducer')
-      class WithoutReducer extends Ayanami<CounterState> {
+      class WithoutReducer extends EffectModule<CounterState> {
         defaultState = {
           count: 0,
         }
@@ -188,12 +188,12 @@ describe('Ayanami Class', () => {
     it('should throw if module name conflict#1', () => {
       const fn = () => {
         @Module('Module')
-        class Module1 extends Ayanami<{}> {
+        class Module1 extends EffectModule<{}> {
           defaultState = {}
         }
 
         @Module('Module')
-        class Module2 extends Ayanami<{}> {
+        class Module2 extends EffectModule<{}> {
           defaultState = {}
         }
 
@@ -206,12 +206,12 @@ describe('Ayanami Class', () => {
     it('should throw if module name conflict#2', () => {
       const fn = () => {
         @Module('Module1')
-        class Module1 extends Ayanami<{}> {
+        class Module1 extends EffectModule<{}> {
           defaultState = {}
         }
 
         @Module('Module1')
-        class Module2 extends Ayanami<{}> {
+        class Module2 extends EffectModule<{}> {
           defaultState = {}
         }
 
@@ -224,7 +224,7 @@ describe('Ayanami Class', () => {
     it('should throw if config in module invalid', () => {
       const fn = () => {
         @Module({} as any)
-        class Module1 extends Ayanami<{}> {
+        class Module1 extends EffectModule<{}> {
           defaultState = {}
         }
 
@@ -237,7 +237,7 @@ describe('Ayanami Class', () => {
 
   describe('dispatcher', () => {
     let state: State<CounterState>
-    let actionsDispatcher: InstanceActionOfAyanami<Counter, CounterState>
+    let actionsDispatcher: InstanceActionOfEffectModule<Counter, CounterState>
     let spy: Sinon.SinonSpy
     let timer: Sinon.SinonFakeTimers
     beforeEach(() => {
