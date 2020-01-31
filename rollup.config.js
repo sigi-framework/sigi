@@ -1,6 +1,5 @@
 import { readdirSync, statSync } from 'fs'
 import { join } from 'path'
-import typescript from '@rollup/plugin-typescript'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 
 const pkgs = readdirSync(join(__dirname, 'packages')).filter((dir) =>

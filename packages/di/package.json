@@ -18,10 +18,6 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": [
-    "dist",
-    "esm"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
