@@ -1,3 +1,5 @@
+export * from '@sigi/types'
+
 export * from './module'
 export * from './types'
 export * from './state'
