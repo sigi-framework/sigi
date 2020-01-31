@@ -26,5 +26,14 @@
   "scripts": {
     "start": "node ./cli.js",
     "test": "jest --config ./packages/recipes-writting-tests/jest.config.js"
+  },
+  "resolutions": {
+    "@sigi/core": "../packages/core",
+    "@sigi/di": "../packages/di",
+    "@sigi/react": "../packages/react",
+    "@sigi/devtool": "../packages/devtool",
+    "@sigi/ssr": "../packages/ssr",
+    "@sigi/types": "../packages/types",
+    "@sigi/vue": "../packages/vue"
   }
 }
