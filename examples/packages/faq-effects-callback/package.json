@@ -1,0 +1,21 @@
+{
+  "name": "@sigi-example/faq-effects-callback",
+  "version": "1.0.0-alpha.6",
+  "description": "FAQ",
+  "keywords": [
+    "Sigi"
+  ],
+  "author": "LongYinan <lynweklm@gmail.com>",
+  "homepage": "https://github.com/sigi-framework/sigi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigi-framework/sigi.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/sigi-framework/sigi/issues"
+  }
+}

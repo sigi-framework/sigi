@@ -31,5 +31,9 @@
   },
   "bugs": {
     "url": "https://github.com/sigi-framework/sigi/issues"
+  },
+  "dependencies": {
+    "@sigi/core": "^1.0.0-alpha.6",
+    "@sigi/types": "^1.0.0-alpha.6"
   }
 }

@@ -2,9 +2,9 @@ import 'reflect-metadata'
 
 import React from 'react'
 import { create } from 'react-test-renderer'
+import { Injectable } from '@sigi/di'
 
-import { InjectionProvidersContext, InjectableContext, useInstance } from '../context'
-import { Injectable } from '../injectable'
+import { InjectionProvidersContext, InjectableContext, useInstance } from '../injectable-context'
 
 function render(component: React.ReactElement) {
   return create(<InjectableContext>{component}</InjectableContext>)

@@ -1,5 +1,4 @@
 import React, { useContext, useMemo, useEffect } from 'react'
-import { useInstance } from '@sigi/di'
 import { EffectModule, ActionOfEffectModule, SSR_LOADED_KEY } from '@sigi/core'
 import { ConstructorOf, State } from '@sigi/types'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
@@ -7,6 +6,7 @@ import produce, { Draft } from 'immer'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
 
 import { SSRSharedContext, SSRContext } from './ssr-context'
+import { useInstance } from './injectable-context'
 
 export type StateSelector<S, U> = {
   (state: S): U
@@ -166,3 +166,4 @@ function _useState<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { e
 }
 
 export { SSRContext, SSRSharedContext } from './ssr-context'
+export * from './injectable-context'

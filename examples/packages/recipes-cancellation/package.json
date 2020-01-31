@@ -1,0 +1,30 @@
+{
+  "name": "@sigi-example/recipes-cancellation",
+  "version": "1.0.0-alpha.6",
+  "description": "Cancellation recipe",
+  "keywords": [
+    "Sigi",
+    "framework"
+  ],
+  "author": "LongYinan <lynweklm@gmail.com>",
+  "homepage": "https://github.com/sigi-framework/sigi",
+  "license": "MIT",
+  "main": "lib/recipes-cancellation.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigi-framework/sigi.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/sigi-framework/sigi/issues"
+  }
+}

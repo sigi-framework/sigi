@@ -6,7 +6,8 @@
     { "path": "./packages/react" },
     { "path": "./packages/vue" },
     { "path": "./packages/di" },
-    { "path": "./packages/ssr" }
+    { "path": "./packages/ssr" },
+    { "path": "./packages/testing" }
   ],
   "compilerOptions": {
     "noEmit": true
