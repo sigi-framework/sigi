@@ -24,7 +24,11 @@ jobs:
         restore-keys: |
           npm-cache-
     - name: 'Install dependencies'
-      run: yarn install --frozen-lockfile --registry https://registry.npmjs.org
+      run: |
+        yarn install --frozen-lockfile --registry https://registry.npmjs.org
+        cd examples
+        yarn install --frozen-lockfile --registry https://registry.npmjs.org
+        cd ..
     - name: 'Lint'
       run: yarn lint
     - name: 'Unit tests'
