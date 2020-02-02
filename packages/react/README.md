@@ -1,11 +1,7 @@
-# `react`
-
-> TODO: description
+# `@sigi/react`
 
 ## Usage
 
-```
-const react = require('react');
+[Sigi document](https://sigi.how/en/basic/action)
 
-// TODO: DEMONSTRATE API
-```
+[Sigi 文档](https://sigi.how/zh/basic/action)

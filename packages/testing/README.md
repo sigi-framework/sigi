@@ -1,11 +1,7 @@
-# `testing`
-
-> TODO: description
+# `@sigi/testing`
 
 ## Usage
 
-```
-const testing = require('testing');
+[writting test](https://sigi.how/en/recipes/writting-tests)
 
-// TODO: DEMONSTRATE API
-```
+[编写单元测试](https://sigi.how/zh/recipes/writting-tests)

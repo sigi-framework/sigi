@@ -1,11 +1,5 @@
-# `core`
-
-> TODO: description
+# `@sigi/core`
 
 ## Usage
 
-```
-const core = require('core');
-
-// TODO: DEMONSTRATE API
-```
+[Let's start from here](https://sigi.how/en/basic)

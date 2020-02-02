@@ -1,11 +1,16 @@
-# `devtool`
-
-> TODO: description
+# `@sigi/devtool`
 
 ## Usage
 
-```
-const devtool = require('devtool');
+```ts
+import { initDevtool } from '@sigi/devtool'
+import { render } from 'react-dom'
 
-// TODO: DEMONSTRATE API
+
+render(...)
+
+initDevtool()
+
 ```
+
+Put `initDevtool` after render function.
