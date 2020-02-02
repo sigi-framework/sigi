@@ -160,7 +160,8 @@ function _useState<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { e
       : ssrContext
       ? oneShotCache.consume(ssrContext, A) ?? effectModule.createState()
       : effectModule.createState()
-  }, [effectModule, ssrContext, ssrSharedContext, A])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ssrContext, ssrSharedContext, A])
 
   return { effectModule, state }
 }
