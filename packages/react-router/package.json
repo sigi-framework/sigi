@@ -1,0 +1,40 @@
+{
+  "name": "@sigi/react-router",
+  "version": "1.0.0-alpha.10",
+  "description": "React router binding for sigi framework",
+  "keywords": [
+    "Sigi"
+  ],
+  "author": "LongYinan <lynweklm@gmail.com>",
+  "homepage": "https://sigi.how",
+  "license": "MIT",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "esnext": "dist/index.next.js",
+  "types": "esm/index.d.ts",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "esm"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigi-framework/sigi.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/sigi-framework/sigi/issues"
+  },
+  "dependencies": {
+    "@sigi/core": "^1.0.0-alpha.10"
+  },
+  "devDependencies": {
+    "@types/history": "^4.7.5"
+  }
+}

@@ -3,13 +3,12 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./esm",
-    "composite": true,
+    "composite": true
   },
   "references": [
-    { "path": "../di" },
-    { "path": "../types" }
+    { "path": "../core" }
   ],
   "include": [
-    "src"
+    "./src"
   ]
 }

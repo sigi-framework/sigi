@@ -4,10 +4,12 @@
     { "path": "./packages/core" },
     { "path": "./packages/devtool" },
     { "path": "./packages/react" },
+    { "path": "./packages/react-router" },
     { "path": "./packages/vue" },
     { "path": "./packages/di" },
     { "path": "./packages/ssr" },
-    { "path": "./packages/testing" }
+    { "path": "./packages/testing" },
+    { "path": "./packages/types" }
   ],
   "compilerOptions": {
     "noEmit": true

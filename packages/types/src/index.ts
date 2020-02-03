@@ -12,8 +12,6 @@ export type State<S> = {
 export interface Action<T = unknown> {
   readonly type: string | symbol
   readonly payload: T
-  // @internal
-  readonly state: State<any>
 }
 
 export type Option<T> = T | undefined

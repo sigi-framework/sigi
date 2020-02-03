@@ -1,7 +1,7 @@
 export * from '@sigi/types'
 
 export * from './module'
-export * from './types'
+export { ActionOfEffectModule, InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
 export * from './state'
 export * from './decorators'
 export * from './module.decorator'

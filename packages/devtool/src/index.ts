@@ -27,13 +27,13 @@ const logStateAction = (action: Action<unknown>) => {
   if (action.type === TERMINATE_ACTION.type) {
     return
   }
-  const namespace = (action.state as any).name
+  const namespace = (action as any).state.name
   const _action = {
     type: `${namespace}/${String(action.type)}`,
     params: filterParams(action.payload),
   }
 
-  STATE[namespace] = action.state.getState()
+  STATE[namespace] = (action as any).state.getState()
 
   if (!(action.type as string)?.endsWith(INIT_ACTION_TYPE)) {
     devtool.send(_action, STATE)
