@@ -1,10 +1,11 @@
 import { Observable, Subject, noop, ReplaySubject, Subscription, identity } from 'rxjs'
 import { Reducer } from 'react'
-import { State, Action, Epic, StateCreator } from '@sigi/types'
+import { State, Epic, StateCreator, Action } from '@sigi/types'
 
 import { TERMINATE_ACTION } from './constants'
 import { logStateAction } from './logger'
 import { StateInterface } from './symbols'
+import { StateAction } from './types'
 
 export function createState<S>(
   reducer: Reducer<S, Action<unknown>>,
@@ -27,7 +28,7 @@ export function createState<S>(
     const state: State<S> = Object.create(null)
     let appState = defaultState
 
-    function dispatch<T>(action: Action<T>) {
+    function dispatch<T>(action: StateAction<T>) {
       if (action.state !== state && action.type !== TERMINATE_ACTION.type) {
         action.state.dispatch(action)
         return
@@ -50,7 +51,7 @@ export function createState<S>(
       middleware(effect$).subscribe(
         (action) => {
           try {
-            dispatch(action)
+            dispatch(action as StateAction)
           } catch (e) {
             action$.error(e)
           }

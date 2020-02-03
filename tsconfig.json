@@ -23,7 +23,7 @@
     "inlineSourceMap": true,
     "esModuleInterop": true,
     "composite": true,
-    "outDir": "./lib",
+    "stripInternal": true,
     "lib": [
       "dom",
       "ES5",
@@ -40,7 +40,7 @@
         "node_modules/@types/react"
       ],
       "@sigi/*": [
-        "./*/src"
+        "./*/src/index.ts"
       ]
     }
   },

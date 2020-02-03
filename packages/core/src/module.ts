@@ -34,8 +34,7 @@ const effectNameSymbol: unique symbol = Symbol('effect-name')
 export abstract class EffectModule<S> {
   abstract readonly defaultState: S
 
-  // @internal
-  moduleName!: string
+  readonly moduleName!: string
 
   // @internal
   readonly _actionKeys: string[] = []
