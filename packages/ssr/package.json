@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ssr",
-  "version": "1.0.0-alpha.9",
+  "version": "1.0.0-alpha.10",
   "description": "Server side rendering support for sigi framework",
   "keywords": [
     "Sigi",
@@ -33,8 +33,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^1.0.0-alpha.9",
-    "@sigi/di": "^1.0.0-alpha.9",
-    "@sigi/types": "^1.0.0-alpha.9"
+    "@sigi/core": "^1.0.0-alpha.10",
+    "@sigi/di": "^1.0.0-alpha.10",
+    "@sigi/types": "^1.0.0-alpha.10"
   }
 }
