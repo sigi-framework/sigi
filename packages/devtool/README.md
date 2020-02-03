@@ -1,5 +1,7 @@
 # `@sigi/devtool`
 
+[Sigi documents](https://sigi.how)
+
 ## Usage
 
 ```ts

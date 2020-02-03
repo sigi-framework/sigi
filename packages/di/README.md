@@ -1,5 +1,7 @@
 # `@sigi/di`
 
+[Sigi documents](https://sigi.how)
+
 > Dependencies injection library
 
 ## Usage
