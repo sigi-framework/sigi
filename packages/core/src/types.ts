@@ -1,10 +1,13 @@
 import { Observable } from 'rxjs'
 import { Draft } from 'immer'
-import { Action } from '@sigi/types'
+import { State, Action } from '@sigi/types'
 
 import { EffectModule } from './module'
 
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
+export interface StateAction<T = unknown> extends Action<T> {
+  // @internal
+  readonly state: State<any>
+}
 
 type UnpackEffectPayload<Func> = Func extends (action$: Observable<infer Payload>) => Observable<Action>
   ? Payload

@@ -1,9 +1,8 @@
 {
-  "name": "@sigi/devtool",
+  "name": "@sigi/react-router",
   "version": "1.0.0-alpha.10",
-  "description": "Connect sigi to redux devtool",
+  "description": "React router intergration for sigi framework",
   "keywords": [
-    "Devtool",
     "Sigi"
   ],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -34,6 +33,10 @@
   },
   "dependencies": {
     "@sigi/core": "^1.0.0-alpha.10",
-    "@sigi/types": "^1.0.0-alpha.10"
+    "@sigi/react": "^1.0.0-alpha.10"
+  },
+  "devDependencies": {
+    "@types/history": "^4.7.5",
+    "history": "^4.10.1"
   }
 }

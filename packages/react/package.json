@@ -9,7 +9,7 @@
     "React"
   ],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
-  "homepage": "https://github.com/sigi-framework",
+  "homepage": "https://sigi.how",
   "license": "MIT",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",

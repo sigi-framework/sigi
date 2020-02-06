@@ -54,7 +54,7 @@
     "build:next": "tsc -b tsconfig.next.json",
     "build:bundle": "rollup --config rollup.config.js",
     "clean": "shx rm -rf ./packages/**/*.tsbuildinfo && shx rm -rf ./packages/**/{esm,dist}",
-    "clean:js": "shx rm -rf './packages/{core,devtool,di,react,types,ssr,vue,ts-plugin}/esm/**/*.{js,map}'",
+    "clean:js": "shx rm -rf './packages/{core,devtool,di,react,react-router,types,ssr,vue,testing,ts-plugin}/esm/**/*.{js,map}'",
     "clean:next": "shx rm -rf ./packages/**/next",
     "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
     "lint": "eslint . -c ./.eslintrc.yml 'packages/**/*.{ts,tsx}' './*.js'",

@@ -3,6 +3,7 @@ import { EffectModule, ActionOfEffectModule, SSR_LOADED_KEY } from '@sigi/core'
 import { ConstructorOf, State } from '@sigi/types'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
 import produce, { Draft } from 'immer'
+import { Subject } from 'rxjs'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
 
 import { SSRSharedContext, SSRContext } from './ssr-context'
@@ -19,7 +20,7 @@ export type StateSelectorConfig<S, U> = {
 
 function _useEffectModuleDispatchers<M extends EffectModule<S>, S = any>(effectModule: M) {
   return useMemo(() => {
-    const state = effectModule.state!
+    const state: State<S> = (effectModule as any).state!
     const actionsCreator = effectModule.getActions()
     return Object.keys(actionsCreator).reduce((acc, cur) => {
       acc[cur] = (payload: any) => {
@@ -47,7 +48,7 @@ function _useEffectState<S, U = S>(
     let initialState = state.getState()
     if (typeof mutateStateOnFirstRendering === 'function') {
       initialState = produce(initialState, mutateStateOnFirstRendering)
-      state.state$.next(initialState)
+      ;((state as any).state$ as Subject<S>).next(initialState)
     }
     return selector && !Reflect.getMetadata(SSR_LOADED_KEY, state) ? selector(initialState) : initialState
   })
@@ -56,7 +57,7 @@ function _useEffectState<S, U = S>(
   // do not put subscribe in useEffect
 
   const subscription = useMemo(() => {
-    return state.state$
+    return ((state as any).state$ as Subject<S>)
       .pipe(
         skip(1),
         map((s) => {
