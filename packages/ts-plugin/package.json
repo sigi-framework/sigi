@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ts-plugin",
-  "version": "1.0.0-alpha.10",
+  "version": "1.0.0-alpha.11",
   "description": "TypeScript plugin for Sigi framework",
   "keywords": [
     "TypeScript",
@@ -33,6 +33,6 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/types": "^1.0.0-alpha.10"
+    "@sigi/types": "^1.0.0-alpha.11"
   }
 }

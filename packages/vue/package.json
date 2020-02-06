@@ -1,6 +1,6 @@
 {
   "name": "@sigi/vue",
-  "version": "1.0.0-alpha.10",
+  "version": "1.0.0-alpha.11",
   "description": "Sigi framework binding for VueJS",
   "keywords": [
     "Vue",
@@ -35,8 +35,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^1.0.0-alpha.10",
-    "@sigi/di": "^1.0.0-alpha.10",
-    "@sigi/types": "^1.0.0-alpha.10"
+    "@sigi/core": "^1.0.0-alpha.11",
+    "@sigi/di": "^1.0.0-alpha.11",
+    "@sigi/types": "^1.0.0-alpha.11"
   }
 }
