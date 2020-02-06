@@ -7,7 +7,8 @@
     { "path": "./packages/vue" },
     { "path": "./packages/di" },
     { "path": "./packages/ssr" },
-    { "path": "./packages/testing" }
+    { "path": "./packages/testing" },
+    { "path": "./packages/ts-plugin" }
   ],
   "compilerOptions": {
     "noEmit": true
