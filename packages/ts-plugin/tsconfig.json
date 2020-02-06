@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./esm",
+    "composite": true
+  },
+  "references": [
+    { "path": "../types" }
+  ],
+  "include": [
+    "src"
+  ]
+}

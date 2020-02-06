@@ -11,6 +11,7 @@
     { "path": "./packages/vue/tsconfig.next.json" },
     { "path": "./packages/di/tsconfig.next.json" },
     { "path": "./packages/ssr/tsconfig.next.json" },
-    { "path": "./packages/testing/tsconfig.next.json" }
+    { "path": "./packages/testing/tsconfig.next.json" },
+    { "path": "./packages/ts-plugin/tsconfig.next.json" }
   ]
 }

@@ -1,0 +1,21 @@
+import { EffectModule, Module } from '@sigi/core'
+import { SSREffect as _Effect } from '@sigi/ssr'
+import { Request } from 'express'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
+
+interface AState {}
+
+@Module('A')
+export class ModuleA extends EffectModule<AState> {
+  @_Effect({
+    payloadGetter: (req: Request) => {
+      return require('md5')('hello')
+    }
+  })
+  whatever(payload$: Observable<string>) {
+    return payload$.pipe(
+      map(() => this.createNoopAction())
+    )
+  }
+}

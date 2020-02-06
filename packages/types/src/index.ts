@@ -18,6 +18,8 @@ export interface Action<T = unknown> {
 
 export type Option<T> = T | undefined
 
+export type Maybe<T> = T | null
+
 export type Epic<T> = (action$: Observable<Action<T>>, loadFromSSR: boolean) => Observable<Action<unknown>>
 
 export type StateCreator<S> = {
