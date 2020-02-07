@@ -267,6 +267,20 @@ describe('injectable specs', () => {
     expect(dep1).not.toBe(dep2)
   })
 
+  it('should initialize without cache #3', () => {
+    @Injectable()
+    class Dep {}
+
+    const injector = rootInjector
+
+    const dep1 = injector.resolveAndInstantiate(Dep)
+    const dep2 = injector.getInstance(Dep)
+    const dep3 = injector.resolveAndInstantiate(Dep)
+    expect(dep1).not.toBe(dep2)
+    expect(dep3).not.toBe(dep1)
+    expect(dep3).not.toBe(dep2)
+  })
+
   it('should resolve and create new injector', () => {
     class Dep {
       constructor() {}
