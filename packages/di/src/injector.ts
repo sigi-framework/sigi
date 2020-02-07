@@ -78,7 +78,9 @@ export class Injector {
             }
           }
         } else {
-          instance = injector.resolvedProviders.get(reflectiveProvider) as T
+          instance = useCache
+            ? (injector.resolvedProviders.get(reflectiveProvider) as T)
+            : this._resolveByReflectiveProvider(reflectiveProvider, false, this)
         }
         break
       }
