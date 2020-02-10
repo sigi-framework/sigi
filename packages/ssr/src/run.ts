@@ -7,6 +7,7 @@ import { EffectModule, TERMINATE_ACTION, SSRSymbol } from '@sigi/core'
 import { SKIP_SYMBOL } from './ssr-effect'
 import { SSRStateCacheInstance } from './ssr-states'
 import { oneShotCache } from './ssr-oneshot-cache'
+import { StateToPersist } from './state-to-persist'
 
 export type ModuleMeta = ConstructorOf<EffectModule<any>>
 
@@ -27,14 +28,14 @@ export const runSSREffects = <Context, Returned = any>(
   modules: ModuleMeta[],
   sharedCtx?: string | symbol,
   timeout = 3,
-): Promise<Returned> => {
+): Promise<StateToPersist<Returned>> => {
   const stateToSerialize: any = {}
   return modules.length === 0
-    ? Promise.resolve(stateToSerialize)
+    ? Promise.resolve(new StateToPersist(stateToSerialize))
     : race(
         from(modules).pipe(
           flatMap((constructor) => {
-            return new Observable((observer: Observer<Returned>) => {
+            return new Observable((observer: Observer<StateToPersist<Returned>>) => {
               let cleanup = noop
               const metas = Reflect.getMetadata(SSRSymbol, constructor.prototype) || []
               let effectModuleState: State<any>
@@ -113,7 +114,7 @@ export const runSSREffects = <Context, Returned = any>(
               }
               runEffects()
                 .then(() => {
-                  observer.next(stateToSerialize)
+                  observer.next(new StateToPersist(stateToSerialize))
                   observer.complete()
                 })
                 .catch((e) => {

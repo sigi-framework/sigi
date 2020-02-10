@@ -35,6 +35,11 @@
   "dependencies": {
     "@sigi/core": "^1.0.0-alpha.12",
     "@sigi/di": "^1.0.0-alpha.12",
-    "@sigi/types": "^1.0.0-alpha.12"
+    "@sigi/types": "^1.0.0-alpha.12",
+    "serialize-javascript": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.0",
+    "@types/serialize-javascript": "^1.5.0"
   }
 }

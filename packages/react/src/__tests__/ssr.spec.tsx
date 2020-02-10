@@ -188,19 +188,19 @@ describe('SSR specs:', () => {
 
   it('should run ssr effects', async () => {
     const state = await emitSSREffects({ url: 'name' } as any, [CountModel])
-    const moduleState = state['CountModel']
+    const moduleState = state['dataToPersist']['CountModel']
     expect(moduleState).not.toBe(undefined)
     expect(moduleState.count).toBe(1)
     expect(moduleState.name).toBe('name')
-    expect(state).toMatchSnapshot()
+    expect(state['dataToPersist']).toMatchSnapshot()
   })
 
   it('should skip effect if it returns SKIP_SYMBOL', async () => {
     const state = await emitSSREffects({} as any, [CountModel])
-    const moduleState = state['CountModel']
+    const moduleState = state['dataToPersist']['CountModel']
 
     expect(moduleState.name).toBe('')
-    expect(state).toMatchSnapshot()
+    expect(state['dataToPersist']).toMatchSnapshot()
   })
 
   it('should return right state in hooks', async () => {
@@ -308,11 +308,11 @@ describe('SSR specs:', () => {
       emitSSREffects({ url: 'name1' }, [CountModel, TipModel], 'concurrency1'),
       emitSSREffects({ url: 'name2' }, [CountModel, TipModel], 'concurrency2'),
     ]).then(([result1, result2]) => {
-      expect(result1['CountModel'].name).toBe('name1')
-      expect(result2['CountModel'].name).toBe('name2')
+      expect(result1['dataToPersist']['CountModel'].name).toBe('name1')
+      expect(result2['dataToPersist']['CountModel'].name).toBe('name2')
       expect({
-        firstRequest: result1,
-        secondRequest: result2,
+        firstRequest: result1['dataToPersist'],
+        secondRequest: result2['dataToPersist'],
       }).toMatchSnapshot()
     })
   })
@@ -328,7 +328,7 @@ describe('SSR specs:', () => {
   it('should resolve empty object if no modules provided', async () => {
     const req = {}
     const state = await emitSSREffects(req, [])
-    expect(state).toStrictEqual({})
+    expect(state['dataToPersist']).toStrictEqual({})
   })
 
   it('should do nothing if Module contains no SSREffects', async () => {
@@ -353,7 +353,7 @@ describe('SSR specs:', () => {
       }
     }
     const state = await emitSSREffects(req, [WithoutSSRModule])
-    expect(state).toStrictEqual({})
+    expect(state['dataToPersist']).toStrictEqual({})
   })
 
   it('should throw error if runEffects error', async () => {
