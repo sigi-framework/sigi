@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useEffect } from 'react'
 import { EffectModule, ActionOfEffectModule, SSR_LOADED_KEY } from '@sigi/core'
 import { ConstructorOf, State } from '@sigi/types'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
-import produce, { Draft } from 'immer'
+import { Draft } from 'immer'
 import { Subject } from 'rxjs'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
 
@@ -15,7 +15,6 @@ export type StateSelector<S, U> = {
 
 export type StateSelectorConfig<S, U> = {
   selector?: StateSelector<S, U>
-  mutateStateOnFirstRendering?: (s: Draft<S>) => void
 }
 
 function _useEffectModuleDispatchers<M extends EffectModule<S>, S = any>(effectModule: M) {
@@ -39,17 +38,9 @@ export function useEffectModuleDispatchers<M extends EffectModule<S>, S = any>(
   return _useEffectModuleDispatchers(effectModule)
 }
 
-function _useEffectState<S, U = S>(
-  state: State<S>,
-  selector?: StateSelector<S, U>,
-  mutateStateOnFirstRendering?: (s: Draft<S>) => void,
-): S | U {
+function _useEffectState<S, U = S>(state: State<S>, selector?: StateSelector<S, U>): S | U {
   const [appState, setState] = React.useState(() => {
-    let initialState = state.getState()
-    if (typeof mutateStateOnFirstRendering === 'function') {
-      initialState = produce(initialState, mutateStateOnFirstRendering)
-      ;((state as any).state$ as Subject<S>).next(initialState)
-    }
+    const initialState = state.getState()
     return selector && !Reflect.getMetadata(SSR_LOADED_KEY, state) ? selector(initialState) : initialState
   })
 
@@ -98,11 +89,6 @@ export function useEffectState<M extends EffectModule<any>, U>(
 
 export function useEffectState<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
-  config: M extends EffectModule<infer State>
-    ? {
-        mutateStateOnFirstRendering: (s: Draft<State>) => void
-      }
-    : never,
 ): M extends EffectModule<infer State> ? State : never
 
 export function useEffectState<M extends EffectModule<any>, U>(
@@ -110,7 +96,7 @@ export function useEffectState<M extends EffectModule<any>, U>(
   config?: M extends EffectModule<infer S> ? StateSelectorConfig<S, U> : never,
 ) {
   const { state } = _useState(A)
-  return _useEffectState(state, config?.selector, config?.mutateStateOnFirstRendering)
+  return _useEffectState(state, config?.selector)
 }
 
 export function useEffectModule<M extends EffectModule<any>>(
@@ -133,11 +119,6 @@ export function useEffectModule<M extends EffectModule<any>, U>(
 
 export function useEffectModule<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
-  config: M extends EffectModule<infer State>
-    ? {
-        mutateStateOnFirstRendering: (s: Draft<State>) => void
-      }
-    : never,
 ): M extends EffectModule<infer State> ? [State, ActionOfEffectModule<M, State>] : never
 
 export function useEffectModule<M extends EffectModule<S>, U, S>(
@@ -145,7 +126,7 @@ export function useEffectModule<M extends EffectModule<S>, U, S>(
   config?: StateSelectorConfig<S, U>,
 ) {
   const { effectModule, state } = _useState(A)
-  const appState = _useEffectState(state, config?.selector, config?.mutateStateOnFirstRendering)
+  const appState = _useEffectState(state, config?.selector)
   const appDispatcher = _useEffectModuleDispatchers(effectModule)
 
   return [appState, appDispatcher]
