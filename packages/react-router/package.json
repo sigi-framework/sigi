@@ -3,7 +3,10 @@
   "version": "1.0.0-beta.1",
   "description": "React router intergration for sigi framework",
   "keywords": [
-    "Sigi"
+    "Sigi",
+    "Router",
+    "React",
+    "RxJS"
   ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
@@ -24,9 +27,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/sigi-framework/sigi/issues"
