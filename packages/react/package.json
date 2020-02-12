@@ -1,6 +1,6 @@
 {
   "name": "@sigi/react",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-beta.0",
   "description": "React bindings for sigi framnework",
   "keywords": [
     "Hooks",
@@ -35,9 +35,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^1.0.0-alpha.12",
-    "@sigi/di": "^1.0.0-alpha.12",
-    "@sigi/ssr": "^1.0.0-alpha.12",
-    "@sigi/types": "^1.0.0-alpha.12"
+    "@sigi/core": "^1.0.0-beta.0",
+    "@sigi/di": "^1.0.0-beta.0",
+    "@sigi/ssr": "^1.0.0-beta.0",
+    "@sigi/types": "^1.0.0-beta.0"
   }
 }
