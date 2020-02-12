@@ -1,6 +1,6 @@
 {
   "name": "@sigi/react-router",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "description": "React router intergration for sigi framework",
   "keywords": [
     "Sigi",
@@ -32,8 +32,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^1.0.0-beta.1",
-    "@sigi/react": "^1.0.0-beta.1"
+    "@sigi/core": "^1.0.0",
+    "@sigi/react": "^1.0.0"
   },
   "devDependencies": {
     "@types/history": "^4.7.5",

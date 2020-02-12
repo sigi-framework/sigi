@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ssr",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0",
   "description": "Server side rendering support for sigi framework",
   "keywords": [
     "Sigi",
@@ -30,9 +30,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^1.0.0-beta.1",
-    "@sigi/di": "^1.0.0-beta.1",
-    "@sigi/types": "^1.0.0-beta.1",
+    "@sigi/core": "^1.0.0",
+    "@sigi/di": "^1.0.0",
+    "@sigi/types": "^1.0.0",
     "serialize-javascript": "^2.1.2"
   },
   "devDependencies": {
