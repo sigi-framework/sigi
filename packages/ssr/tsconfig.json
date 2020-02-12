@@ -5,9 +5,9 @@
     "outDir": "./esm",
     "composite": true,
     "types": [
-      "../../node_modules/reflect-metadata",
-      "../../node_modules/@types/jest",
-      "../../node_modules/@types/node"
+      "reflect-metadata",
+      "jest",
+      "node"
     ]
   },
   "include": [
