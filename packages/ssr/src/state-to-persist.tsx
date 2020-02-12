@@ -35,6 +35,6 @@ export class StateToPersist<T> {
 
   private serialize() {
     const content = serialize(this.dataToPersist, { isJSON: true })
-    return `window[Symbol.keyFor('${Symbol.keyFor(GLOBAL_KEY)}')]=${content}`
+    return `window[Symbol.for('${Symbol.keyFor(GLOBAL_KEY)}')]=${content}`
   }
 }
