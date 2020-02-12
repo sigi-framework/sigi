@@ -6,7 +6,22 @@ const pkgs = readdirSync(join(__dirname, 'packages')).filter((dir) =>
   statSync(join(__dirname, 'packages', dir)).isDirectory(),
 )
 
-const external = ['rxjs', '@sigi/core', '@sigi/di', 'rxjs/operators', 'immer', 'react', 'tslib']
+const external = [
+  'rxjs',
+  '@sigi/core',
+  '@sigi/di',
+  '@sigi/react',
+  '@sigi/ssr',
+  'rxjs/operators',
+  'immer',
+  'react',
+  'tslib',
+  'serialize-javascript',
+  'through',
+  'html-tokenize',
+  'multipipe',
+  'typescript',
+]
 
 export default pkgs
   .map((dir) => ({
