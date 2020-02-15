@@ -98,7 +98,7 @@ describe('Router module spec', () => {
       TestModule: SigiTestModule,
     }).compile()
 
-    testStub = testingModule.getAyanamiTestingStub(TestModule)
+    testStub = testingModule.getTestingStub(TestModule)
   })
 
   it('should invoke push', () => {

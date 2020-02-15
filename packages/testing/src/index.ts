@@ -2,8 +2,8 @@ import { TestModule, Type } from '@sigi/di'
 import { EffectModule, ActionOfEffectModule, State } from '@sigi/core'
 
 export class SigiTestModule extends TestModule {
-  getAyanamiTestingStub<M extends EffectModule<S>, S = any>(ayanamiModule: Type<M>): SigiTestStub<M, S> {
-    const moduleInstance = this.getInstance(ayanamiModule)
+  getTestingStub<M extends EffectModule<S>, S = any>(EffectModuleConstructor: Type<M>): SigiTestStub<M, S> {
+    const moduleInstance = this.getInstance(EffectModuleConstructor)
     const state = moduleInstance.createState()
     const actionsCreator: any = moduleInstance.getActions()
     const dispatcher = Object.keys(actionsCreator).reduce((acc, key) => {
