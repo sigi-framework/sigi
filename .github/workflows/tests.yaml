@@ -48,7 +48,7 @@ jobs:
         if git log -1 --pretty=%B | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+(-(alpha|beta)\.[0-9]+)?$";
         then
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-          npx lerna publish from-git --no-verify-access --yes
+          npx lerna publish from-package --no-verify-access --yes
         else
           echo "Not a release, skipping publish"
         fi
