@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "..",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "@sigi/*": [
+        "./packages/*/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "./packages/**/*.ts",
+    "./packages/**/*.tsx",
+    "./packages/**/*.vue"
+  ],
+  "exclude": ["node_modules"]
+}

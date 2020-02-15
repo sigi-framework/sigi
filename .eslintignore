@@ -6,3 +6,4 @@ next
 coverage
 .nyc_output
 *.d.ts
+packages/type-test

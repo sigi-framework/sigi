@@ -38,6 +38,9 @@
       "react": [
         "node_modules/@types/react"
       ],
+      "vue": [
+        "node_modules/vue"
+      ],
       "@sigi/*": [
         "./*/src/index.ts"
       ]
@@ -46,6 +49,6 @@
   "exclude": [
     "node_modules",
     "packages/**/fixtures",
-    "examples"
+    "examples/**/*.{ts,tsx,vue}"
   ]
 }
