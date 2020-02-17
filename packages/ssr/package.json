@@ -33,7 +33,7 @@
     "@sigi/core": "^1.0.1",
     "@sigi/di": "^1.0.0",
     "@sigi/types": "^1.0.0",
-    "serialize-javascript": "^2.1.2"
+    "serialize-javascript": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",
