@@ -2,16 +2,15 @@ import { from, race, timer, throwError, Subject, noop, Observable, Observer } fr
 import { flatMap, bufferCount, take, filter, tap } from 'rxjs/operators'
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf, Action, State } from '@sigi/types'
-import { EffectModule, TERMINATE_ACTION, SSRSymbol } from '@sigi/core'
+import { EffectModule, TERMINATE_ACTION, SSR_ACTION_META } from '@sigi/core'
 
-import { SKIP_SYMBOL } from './ssr-effect'
 import { SSRStateCacheInstance } from './ssr-states'
 import { oneShotCache } from './ssr-oneshot-cache'
 import { StateToPersist } from './state-to-persist'
 
 export type ModuleMeta = ConstructorOf<EffectModule<any>>
 
-const skipFn = () => SKIP_SYMBOL
+const skipSymbol = Symbol('skip-symbol')
 
 /**
  * Run all @SSREffect decorated effects of given modules and extract latest states.
@@ -37,7 +36,7 @@ export const runSSREffects = <Context, Returned = any>(
           flatMap((constructor) => {
             return new Observable((observer: Observer<StateToPersist<Returned>>) => {
               let cleanup = noop
-              const metas = Reflect.getMetadata(SSRSymbol, constructor.prototype) || []
+              const ssrActionsMeta = Reflect.getMetadata(SSR_ACTION_META, constructor.prototype) || []
               let effectModuleState: State<any>
               let moduleName: string
               const middleware = (effect$: Observable<Action<unknown>>) =>
@@ -64,7 +63,7 @@ export const runSSREffects = <Context, Returned = any>(
                 effectModuleState = effectModuleInstance.createState(middleware)
                 oneShotCache.store(ctx, constructor, effectModuleState)
               }
-              let effectsCount = metas.length
+              let effectsCount = ssrActionsMeta.length
               let disposeFn = noop
               cleanup = sharedCtx
                 ? () => disposeFn()
@@ -73,13 +72,13 @@ export const runSSREffects = <Context, Returned = any>(
                   }
               async function runEffects() {
                 await Promise.all(
-                  metas.map(async (meta: any) => {
-                    if (meta.middleware) {
-                      const param = await meta.middleware(ctx, skipFn)
-                      if (param !== SKIP_SYMBOL) {
+                  ssrActionsMeta.map(async (ssrActionMeta: any) => {
+                    if (ssrActionMeta.payloadGetter) {
+                      const payload = await ssrActionMeta.payloadGetter(ctx, skipSymbol)
+                      if (payload !== skipSymbol) {
                         effectModuleState.dispatch({
-                          type: meta.action,
-                          payload: param,
+                          type: ssrActionMeta.action,
+                          payload,
                           state: effectModuleState,
                         })
                       } else {
@@ -87,7 +86,7 @@ export const runSSREffects = <Context, Returned = any>(
                       }
                     } else {
                       effectModuleState.dispatch({
-                        type: meta.action,
+                        type: ssrActionMeta.action,
                         payload: undefined,
                         state: effectModuleState,
                       })
