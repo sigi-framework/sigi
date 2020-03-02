@@ -46,7 +46,7 @@
     "ts-jest": "^25.2.1",
     "ts-node": "^8.6.2",
     "tslib": "^1.11.1",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "build": "run-s clean build:esm build:next build:bundle clean:js clean:next clean:tests",
