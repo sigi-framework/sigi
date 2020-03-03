@@ -35,6 +35,8 @@ jobs:
       run: yarn test
       env:
         CI: true
+    - name: 'Typings test'
+      run: yarn test:type
     - name: 'Build'
       run: yarn build
       env:
