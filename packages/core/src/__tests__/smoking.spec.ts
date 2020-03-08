@@ -4,14 +4,14 @@ import * as Sinon from 'sinon'
 import { empty, Observable } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
 
-import { createState } from '../state'
+import { createStore } from '../state'
 import { EffectModule } from '../module'
 import { Reducer, Effect } from '../decorators'
 import { Module } from '../module.decorator'
 
 describe('Smoking tests', () => {
   it('Module should be able to work without effects', () => {
-    const { stateCreator } = createState(
+    const { setup } = createStore(
       (state: { name: string }, action) => {
         if (action.type === 'foo') {
           return { ...state, name: action.payload as string }
@@ -21,7 +21,7 @@ describe('Smoking tests', () => {
       () => empty(),
     )
 
-    const state = stateCreator({ name: 'bar' })
+    const state = setup({ name: 'bar' })
     const action = {
       type: 'foo',
       payload: 'foo',
@@ -65,8 +65,8 @@ describe('Smoking tests', () => {
 
     const fooModuleState = rootInjector.getInstance(FooModule)
     const barModuleState = rootInjector.getInstance(BarModule)
-    const fooState = fooModuleState.createState()
-    const barState = barModuleState.createState()
+    const fooState = fooModuleState.createStore()
+    const barState = barModuleState.createStore()
 
     const payload = 'whatever'
     const action = barModuleState.getActions().asyncSetFoo(payload)

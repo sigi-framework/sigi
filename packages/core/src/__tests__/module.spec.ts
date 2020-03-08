@@ -5,7 +5,7 @@ import { delay, map, withLatestFrom, takeUntil, tap } from 'rxjs/operators'
 import { Draft } from 'immer'
 import { rootInjector } from '@sigi/di'
 import * as Sinon from 'sinon'
-import { Action, State } from '@sigi/types'
+import { Action, Store } from '@sigi/types'
 
 import { EffectModule } from '../module'
 import { Module } from '../module.decorator'
@@ -156,7 +156,7 @@ describe('Ayanami Class', () => {
       }
 
       const onlyReducer = new WithoutEpic()
-      const state = onlyReducer.createState()
+      const state = onlyReducer.createStore()
       const actionCreator = onlyReducer.getActions()
       state.dispatch(actionCreator.set(1))
       expect(state.getState().count).toBe(1)
@@ -179,10 +179,10 @@ describe('Ayanami Class', () => {
       }
 
       const withoutReducer = new WithoutReducer()
-      const state = withoutReducer.createState()
-      const actionCreator = withoutReducer.getActions()
-      state.dispatch(actionCreator.set(1))
-      expect(state.getState().count).toBe(withoutReducer.defaultState.count)
+      const store = withoutReducer.createStore()
+      const actions = withoutReducer.getActions()
+      store.dispatch(actions.set(1))
+      expect(store.getState().count).toBe(withoutReducer.defaultState.count)
     })
 
     it('should throw if module name conflict#1', () => {
@@ -236,30 +236,30 @@ describe('Ayanami Class', () => {
   })
 
   describe('dispatcher', () => {
-    let state: State<CounterState>
+    let store: Store<CounterState>
     let actionsDispatcher: InstanceActionOfEffectModule<Counter, CounterState>
     let spy: Sinon.SinonSpy
     let timer: Sinon.SinonFakeTimers
     beforeEach(() => {
       const actions = counter.getActions()
-      state = counter.createState()
+      store = counter.createStore()
       actionsDispatcher = Object.keys(actions).reduce((acc, key) => {
         acc[key] = (p: any) => {
           const action = (actions as any)[key](p)
-          state.dispatch(action)
+          store.dispatch(action)
           return action
         }
         return acc
       }, {} as any)
       spy = Sinon.spy()
-      state.subscribeAction(spy)
+      store.subscribeAction(spy)
       timer = Sinon.useFakeTimers()
     })
 
     afterEach(() => {
       spy.resetHistory()
       timer.restore()
-      state.unsubscribe()
+      store.unsubscribe()
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #void', () => {
@@ -267,7 +267,7 @@ describe('Ayanami Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(state.getState().count).toBe(counter.defaultState.count + 1)
+      expect(store.getState().count).toBe(counter.defaultState.count + 1)
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #param', () => {
@@ -276,7 +276,7 @@ describe('Ayanami Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(state.getState().count).toBe(newCount)
+      expect(store.getState().count).toBe(newCount)
     })
 
     it('should be able to dispatch immer reducer action by actions dispatcher #void', () => {
@@ -284,7 +284,7 @@ describe('Ayanami Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(state.getState().count).toBe(counter.defaultState.count + 1)
+      expect(store.getState().count).toBe(counter.defaultState.count + 1)
     })
 
     it('should be able to dispatch immer reducer action by actions dispatcher #param', () => {
@@ -293,7 +293,7 @@ describe('Ayanami Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(state.getState().count).toBe(newCount.valueOf())
+      expect(store.getState().count).toBe(newCount.valueOf())
     })
 
     it('should be able to dispatch epic action by actions dispatcher #void', () => {
@@ -301,7 +301,7 @@ describe('Ayanami Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(state.getState().count).toBe(counter.defaultState.count)
+      expect(store.getState().count).toBe(counter.defaultState.count)
       timer.tick(TIME_TO_DELAY)
       const [, [arg1]] = spy.args
       expect(arg1).toStrictEqual(counter.getActions().setCount(counter.defaultState.count + 1))
@@ -314,7 +314,7 @@ describe('Ayanami Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(state.getState().count).toBe(counter.defaultState.count)
+      expect(store.getState().count).toBe(counter.defaultState.count)
       timer.tick(TIME_TO_DELAY)
       const [, [arg1]] = spy.args
       expect(arg1).toStrictEqual(counter.getActions().asyncAddCountString(`${newCount}`))
@@ -328,7 +328,7 @@ describe('Ayanami Class', () => {
       actionsDispatcher.dispose$()
       timer.tick(TIME_TO_DELAY)
       expect(spy.callCount).toBe(2)
-      expect(state.getState()).toStrictEqual(counter.defaultState)
+      expect(store.getState()).toStrictEqual(counter.defaultState)
     })
 
     it('should be able to dispatch noop action', () => {
@@ -337,7 +337,7 @@ describe('Ayanami Class', () => {
       expect(arg1).toStrictEqual(action)
       expect(typeof arg2.type).toBe('symbol')
       expect(spy.callCount).toBe(2)
-      expect(state.getState()).toStrictEqual(counter.defaultState)
+      expect(store.getState()).toStrictEqual(counter.defaultState)
     })
   })
 })
