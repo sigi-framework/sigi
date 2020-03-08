@@ -1,13 +1,13 @@
 import 'reflect-metadata'
 import React from 'react'
 import { render } from 'react-dom'
-import { useEffectModule } from '@sigi/react'
+import { useModule } from '@sigi/react'
 import { initDevtool } from '@sigi/devtool'
 
 import { AppModule } from './app.module'
 
 function App() {
-  const [{ list }, dispatcher] = useEffectModule(AppModule)
+  const [{ list }, dispatcher] = useModule(AppModule)
 
   const loading = !list ? <div>loading</div> : null
 

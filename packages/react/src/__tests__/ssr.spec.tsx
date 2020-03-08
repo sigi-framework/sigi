@@ -12,7 +12,7 @@ import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
 import uniqueId from 'lodash/uniqueId'
 
-import { SSRSharedContext, SSRContext, useEffectModule, useEffectState } from '../index'
+import { SSRSharedContext, SSRContext, useModule, useModuleState } from '../index'
 
 interface CountState {
   count: number
@@ -90,7 +90,7 @@ class TipModel extends EffectModule<TipState> {
 }
 
 const Component = () => {
-  const [state, actions] = useEffectModule(CountModel)
+  const [state, actions] = useModule(CountModel)
   useEffect(() => {
     actions.setName('new name')
   }, [actions])
@@ -103,7 +103,7 @@ const Component = () => {
 }
 
 const ComponentWithSelector = () => {
-  const [state, actions] = useEffectModule(CountModel, {
+  const [state, actions] = useModule(CountModel, {
     selector: (s) => ({
       count: s.count + 1,
     }),
@@ -273,7 +273,7 @@ describe('SSR specs:', () => {
 
   it('should restore and skip first action on client side', () => {
     const Component = () => {
-      const [state, actions] = useEffectModule(CountModel)
+      const [state, actions] = useModule(CountModel)
       useEffect(() => {
         actions.getCount()
       }, [actions])
@@ -456,7 +456,7 @@ describe('SSR specs:', () => {
     await emitSSREffects(req1, [CountModel], requestId)
     await emitSSREffects(req2, [CountModel], requestId)
     const SharedComponent1 = () => {
-      const state = useEffectState(CountModel)
+      const state = useModuleState(CountModel)
       return (
         <>
           <span>{state.count}</span>
@@ -465,7 +465,7 @@ describe('SSR specs:', () => {
     }
 
     const SharedComponent2 = () => {
-      const state = useEffectState(CountModel)
+      const state = useModuleState(CountModel)
       return (
         <>
           <span>{state.count}</span>

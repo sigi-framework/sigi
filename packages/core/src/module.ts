@@ -2,9 +2,9 @@ import { Observable, merge, identity } from 'rxjs'
 import { map, filter, publish, refCount, skip } from 'rxjs/operators'
 import { Reducer } from 'react'
 import produce, { Draft } from 'immer'
-import { Action, Epic, State, StateCreator } from '@sigi/types'
+import { Action, Epic, Store, StoreCreator } from '@sigi/types'
 
-import { createState } from './state'
+import { createStore } from './state'
 import {
   EFFECT_DECORATOR_SYMBOL,
   REDUCER_DECORATOR_SYMBOL,
@@ -13,7 +13,7 @@ import {
 } from './symbols'
 import { InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
 import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
-import { logStateAction } from './logger'
+import { logStoreAction } from './logger'
 
 type Effect<T> = (payload$: Observable<T>) => Observable<Action<unknown>>
 
@@ -40,11 +40,11 @@ export abstract class EffectModule<S> {
   readonly _actionKeys: string[] = []
 
   // @internal
-  state: State<S> | null = null
+  store: Store<S> | null = null
 
   state$: Observable<S>
 
-  private stateCreator!: StateCreator<S>
+  private setupStore!: StoreCreator<S>
 
   private readonly _actions!: any
 
@@ -61,8 +61,8 @@ export abstract class EffectModule<S> {
     this.effect = this.combineEffects()
     this.reducer = this.combineReducers()
 
-    const { stateCreator, action$, state$ } = createState(this.reducer, this.effect)
-    this.stateCreator = stateCreator
+    const { setup, action$, state$ } = createStore(this.reducer, this.effect)
+    this.setupStore = setup
     this.action$ = action$
     this.state$ = state$
 
@@ -74,8 +74,8 @@ export abstract class EffectModule<S> {
           type: key,
           payload,
         }
-        Object.defineProperty(action, 'state', {
-          value: this.state,
+        Object.defineProperty(action, 'store', {
+          value: this.store,
           enumerable: false,
           configurable: false,
           writable: false,
@@ -95,8 +95,8 @@ export abstract class EffectModule<S> {
     }, {} as any)
   }
 
-  createState(middleware: (effect$: Observable<Action<unknown>>) => Observable<Action<unknown>> = identity) {
-    if (this.state) return this.state
+  createStore(middleware: (effect$: Observable<Action<unknown>>) => Observable<Action<unknown>> = identity) {
+    if (this.store) return this.store
     const ssrCache = (_globalThis as any)[Symbol.for(Symbol.keyFor(GLOBAL_KEY)!)]
     let loadFromSSR = false
     let preloadState: S | undefined
@@ -104,22 +104,22 @@ export abstract class EffectModule<S> {
       preloadState = ssrCache[this.moduleName]
       loadFromSSR = true
     }
-    this.state = this.stateCreator(preloadState ?? this.defaultState, middleware, loadFromSSR)
-    Reflect.defineMetadata(SSR_LOADED_KEY, loadFromSSR, this.state)
+    this.store = this.setupStore(preloadState ?? this.defaultState, middleware, loadFromSSR)
+    Reflect.defineMetadata(SSR_LOADED_KEY, loadFromSSR, this.store)
     if (process.env.NODE_ENV !== 'production') {
-      Object.defineProperty(this.state, 'name', {
+      Object.defineProperty(this.store, 'name', {
         value: this.moduleName,
         configurable: false,
         enumerable: false,
         writable: false,
       })
-      logStateAction({
+      logStoreAction({
         type: INIT_ACTION_TYPE,
-        state: this.state,
+        store: this.store,
         payload: null,
       })
     }
-    return this.state
+    return this.store
   }
 
   getActions<M extends EffectModule<S>>(
@@ -138,7 +138,7 @@ export abstract class EffectModule<S> {
     return {
       type: NOOP_ACTION_TYPE,
       payload: null,
-      state: this.state!,
+      state: this.store!,
     }
   }
 

@@ -1,7 +1,7 @@
 import { from, race, timer, throwError, Subject, noop, Observable, Observer } from 'rxjs'
 import { flatMap, bufferCount, take, filter, tap } from 'rxjs/operators'
 import { rootInjector } from '@sigi/di'
-import { ConstructorOf, Action, State } from '@sigi/types'
+import { ConstructorOf, Action, Store } from '@sigi/types'
 import { EffectModule, TERMINATE_ACTION, SSR_ACTION_META } from '@sigi/core'
 
 import { SSRStateCacheInstance } from './ssr-states'
@@ -37,7 +37,7 @@ export const runSSREffects = <Context, Returned = any>(
             return new Observable((observer: Observer<StateToPersist<Returned>>) => {
               let cleanup = noop
               const ssrActionsMeta = Reflect.getMetadata(SSR_ACTION_META, constructor.prototype) || []
-              let effectModuleState: State<any>
+              let store: Store<any>
               let moduleName: string
               const middleware = (effect$: Observable<Action<unknown>>) =>
                 effect$.pipe(
@@ -49,26 +49,26 @@ export const runSSREffects = <Context, Returned = any>(
                 )
               if (sharedCtx) {
                 if (SSRStateCacheInstance.has(sharedCtx, constructor)) {
-                  effectModuleState = SSRStateCacheInstance.get(sharedCtx, constructor)!
+                  store = SSRStateCacheInstance.get(sharedCtx, constructor)!
                   moduleName = constructor.prototype.moduleName
                 } else {
                   const effectModuleInstance: EffectModule<unknown> = rootInjector.resolveAndInstantiate(constructor)
                   moduleName = effectModuleInstance.moduleName
-                  effectModuleState = effectModuleInstance.createState(middleware)
-                  SSRStateCacheInstance.set(sharedCtx, constructor, effectModuleState)
+                  store = effectModuleInstance.createStore(middleware)
+                  SSRStateCacheInstance.set(sharedCtx, constructor, store)
                 }
               } else {
                 const effectModuleInstance: EffectModule<unknown> = rootInjector.resolveAndInstantiate(constructor)
                 moduleName = effectModuleInstance.moduleName
-                effectModuleState = effectModuleInstance.createState(middleware)
-                oneShotCache.store(ctx, constructor, effectModuleState)
+                store = effectModuleInstance.createStore(middleware)
+                oneShotCache.store(ctx, constructor, store)
               }
               let effectsCount = ssrActionsMeta.length
               let disposeFn = noop
               cleanup = sharedCtx
                 ? () => disposeFn()
                 : () => {
-                    effectModuleState.unsubscribe()
+                    store.unsubscribe()
                   }
               async function runEffects() {
                 await Promise.all(
@@ -76,19 +76,19 @@ export const runSSREffects = <Context, Returned = any>(
                     if (ssrActionMeta.payloadGetter) {
                       const payload = await ssrActionMeta.payloadGetter(ctx, skipSymbol)
                       if (payload !== skipSymbol) {
-                        effectModuleState.dispatch({
+                        store.dispatch({
                           type: ssrActionMeta.action,
                           payload,
-                          state: effectModuleState,
+                          state: store,
                         })
                       } else {
                         effectsCount -= 1
                       }
                     } else {
-                      effectModuleState.dispatch({
+                      store.dispatch({
                         type: ssrActionMeta.action,
                         payload: undefined,
-                        state: effectModuleState,
+                        state: store,
                       })
                     }
                   }),
@@ -96,7 +96,7 @@ export const runSSREffects = <Context, Returned = any>(
 
                 if (effectsCount > 0) {
                   const action$ = new Subject<Action<unknown>>()
-                  disposeFn = effectModuleState.subscribeAction((action) => {
+                  disposeFn = store.subscribeAction((action) => {
                     action$.next(action)
                   })
                   await action$
@@ -107,7 +107,7 @@ export const runSSREffects = <Context, Returned = any>(
                     )
                     .toPromise()
 
-                  const state = effectModuleState.getState()
+                  const state = store.getState()
                   stateToSerialize[moduleName] = state
                 }
               }
