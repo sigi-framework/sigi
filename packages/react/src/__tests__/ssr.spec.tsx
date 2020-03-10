@@ -7,7 +7,7 @@ import { Draft } from 'immer'
 import { rootInjector } from '@sigi/di'
 import { TERMINATE_ACTION, GLOBAL_KEY, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
 import { Action } from '@sigi/types'
-import { emitSSREffects, SSREffect, SSRStateCacheInstance } from '@sigi/ssr'
+import { emitSSREffects, SSRStateCacheInstance } from '@sigi/ssr'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
 import uniqueId from 'lodash/uniqueId'
@@ -37,7 +37,9 @@ class CountModel extends EffectModule<CountState> {
     state.name = name
   }
 
-  @SSREffect()
+  @Effect({
+    ssr: true,
+  })
   getCount(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
       flatMap(() =>
@@ -49,8 +51,8 @@ class CountModel extends EffectModule<CountState> {
     )
   }
 
-  @SSREffect({
-    payloadGetter: (ctx: { url: string }, skip) => ctx.url || skip(),
+  @Effect({
+    payloadGetter: (ctx: { url: string }, skip) => ctx.url || skip,
     skipFirstClientDispatch: false,
   })
   skippedEffect(payload$: Observable<string>): Observable<Action> {
@@ -74,7 +76,7 @@ class TipModel extends EffectModule<TipState> {
     state.tip = tip
   }
 
-  @SSREffect()
+  @Effect({ ssr: true })
   getTip(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
       mergeMap(() =>
@@ -365,7 +367,7 @@ describe('SSR specs:', () => {
         count: 0,
       }
 
-      @SSREffect()
+      @Effect({ ssr: true })
       addOne(payload$: Observable<void>): Observable<Action> {
         return payload$.pipe(
           withLatestFrom(this.state$),
@@ -397,7 +399,7 @@ describe('SSR specs:', () => {
         throw error
       }
 
-      @SSREffect()
+      @Effect({ ssr: true })
       addOne(payload$: Observable<void>): Observable<Action> {
         return payload$.pipe(
           withLatestFrom(this.state$),
@@ -427,7 +429,7 @@ describe('SSR specs:', () => {
         return { ...state, count: payload }
       }
 
-      @SSREffect({
+      @Effect({
         payloadGetter: () => {
           throw error
         },

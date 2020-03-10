@@ -1,8 +1,8 @@
 import * as ts from 'typescript'
 import { Maybe } from '@sigi/types'
 
-const EffectLibraryName = '@sigi/ssr'
-const EffectName = 'SSREffect'
+const EffectLibraryName = '@sigi/core'
+const EffectName = 'Effect'
 const PayloadGetterName = 'payloadGetter'
 
 enum ImportType {

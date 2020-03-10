@@ -1,5 +1,4 @@
-import { EffectModule, Module } from '@sigi/core'
-import { SSREffect as _Effect } from '@sigi/ssr'
+import { EffectModule, Module, Effect as _Effect } from '@sigi/core'
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'

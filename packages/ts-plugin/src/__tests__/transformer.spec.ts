@@ -52,25 +52,24 @@ describe('ts-plugin specs', () => {
     })
   })
 
-  it('should throw if SSREffect option is dynamic', () => {
+  it('should throw if Effect option is dynamic', () => {
     const code = `
-    import { EffectModule, Module } from '@sigi/core'
-    import { SSREffect } from '@sigi/ssr'
+    import { EffectModule, Module, Effect } from '@sigi/core'
     import { Request } from 'express'
     import { Observable } from 'rxjs'
     import { map } from 'rxjs/operators'
     
     interface AState {}
     
-    const ssrEffectOption = {
+    const effectOption = {
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
       }
     }
 
-    @Module('A')
+    @EffectModule('A')
     export class ModuleA extends EffectModule<AState> {
-      @SSREffect(ssrEffectOption)
+      @Effect(effectOption)
       whatever(payload$: Observable<string>) {
         return payload$.pipe(
           map(() => this.createNoopAction())

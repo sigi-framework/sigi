@@ -45,6 +45,7 @@
   },
   "exclude": [
     "node_modules",
-    "packages/**/fixtures"
+    "packages/**/fixtures",
+    "examples"
   ]
 }
