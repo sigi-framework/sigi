@@ -1045,7 +1045,7 @@
   dependencies:
     "@sigi/di" "^1.0.0"
     "@sigi/types" "^1.0.0"
-    immer "^5.3.6"
+    immer "^6.0.1"
 
 "@sigi/devtool@../packages/devtool":
   version "1.0.1"
@@ -1064,15 +1064,13 @@
     "@sigi/ssr" "^1.0.1"
     "@sigi/types" "^1.0.0"
 
-"@sigi/ssr@^1.0.1":
+"@sigi/ssr@../packages/ssr", "@sigi/ssr@^1.0.1":
   version "1.0.1"
-  resolved "https://registry.npmjs.org/@sigi/ssr/-/ssr-1.0.1.tgz#70ead432b1f9621d459a56ff8574f24e89c6a00b"
-  integrity sha512-zM5H8uO5g1uBbDXIg/LCNLNOoVMmb4RTAlJC8mmb62jGmr4Qi9uQn3MEav9ilBYDR/6/S5OAWo6/jmL7hSuqSQ==
   dependencies:
     "@sigi/core" "^1.0.1"
     "@sigi/di" "^1.0.0"
     "@sigi/types" "^1.0.0"
-    serialize-javascript "^2.1.2"
+    serialize-javascript "^3.0.0"
 
 "@sigi/testing@../packages/testing":
   version "1.0.1"
@@ -1080,10 +1078,15 @@
     "@sigi/core" "^1.0.1"
     "@sigi/di" "^1.0.0"
 
-"@sigi/types@^1.0.0":
+"@sigi/types@../packages/types", "@sigi/types@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.npmjs.org/@sigi/types/-/types-1.0.0.tgz#304e4ba1457eaab43298eba40b99e8cf8103cfda"
-  integrity sha512-wYoCW3P5IFS1iBKUZCHxFTHBf7xX5n3/BHzn7PrFrmenbYv/5pEL6GPXeo6rbYiHbODSqE5w1pVrCqjUg08b8w==
+
+"@sigi/vue@../packages/vue":
+  version "1.0.1"
+  dependencies:
+    "@sigi/core" "^1.0.1"
+    "@sigi/di" "^1.0.0"
+    "@sigi/types" "^1.0.0"
 
 "@sinonjs/commons@^1.7.0":
   version "1.7.0"
@@ -3523,10 +3526,10 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
-immer@^5.3.6:
-  version "5.3.6"
-  resolved "https://registry.npmjs.org/immer/-/immer-5.3.6.tgz#51eab8cbbeb13075fe2244250f221598818cac04"
-  integrity sha512-pqWQ6ozVfNOUDjrLfm4Pt7q4Q12cGw2HUZgry4Q5+Myxu9nmHRkWBpI0J4+MK0AxbdFtdMTwEGVl7Vd+vEiK+A==
+immer@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.npmjs.org/immer/-/immer-6.0.1.tgz#7af35e35753d9da6bc9123f0cc99f7e8f2e10681"
+  integrity sha512-oXwigCKgznQywsXi1VgrqgWbQEU3wievNCVc4Fcwky6mwXU6YHj6JuYp0WEM/B1EphkqsLr0x18lm5OiuemPcA==
 
 immutable@^3.7.4:
   version "3.8.2"
@@ -6717,10 +6720,10 @@ send@0.17.1:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
-serialize-javascript@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-2.1.2.tgz#ecec53b0e0317bdc95ef76ab7074b7384785fa61"
-  integrity sha512-rs9OggEUF0V4jUSecXazOYsLfu7OGK2qIn3c7IPBiffz32XniEp/TX9Xmc9LQfK2nQ2QKHvZ2oygKUGU0lG4jQ==
+serialize-javascript@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/serialize-javascript/-/serialize-javascript-3.0.0.tgz#492e489a2d77b7b804ad391a5f5d97870952548e"
+  integrity sha512-skZcHYw2vEX4bw90nAr2iTTsz6x2SrHEnfxgKYmZlvJYBEZrvbKtobJWlQ20zczKb3bsHHXXTYt48zBA7ni9cw==
 
 serialize-to-js@^3.0.0:
   version "3.1.1"
