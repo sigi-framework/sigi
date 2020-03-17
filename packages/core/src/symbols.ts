@@ -8,5 +8,4 @@ export const IMMER_REDUCER_DECORATOR_SYMBOL =
 export const DEFINE_ACTION_DECORATOR_SYMBOL =
   process.env.NODE_ENV === 'production' ? Symbol() : Symbol('decorator:define-action')
 
-export const StateInterface = process.env.NODE_ENV === 'production' ? Symbol() : Symbol('effect-state')
-export const SKIP_EFFECT = Symbol('skip-effect')
+export const StoreInterface = process.env.NODE_ENV === 'production' ? Symbol() : Symbol('effect-state')

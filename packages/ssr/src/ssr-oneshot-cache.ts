@@ -1,5 +1,5 @@
 import { Type } from '@sigi/di'
-import { StateInterface } from '@sigi/core'
+import { StoreInterface } from '@sigi/core'
 
 export class SSROneShotCache {
   private readonly cache = new Map<any, Map<Type<any>, any>>()
@@ -32,8 +32,8 @@ export class SSROneShotCache {
       this.activedCtx.delete(ctx)
       if (this.cache.has(ctx)) {
         for (const instance of this.cache.get(ctx)!.values()) {
-          if (instance && instance[StateInterface]) {
-            instance[StateInterface].unsubscribe()
+          if (instance && instance[StoreInterface]) {
+            instance[StoreInterface].unsubscribe()
           }
         }
         this.cache.delete(ctx)

@@ -2,9 +2,9 @@ import { Reducer } from 'react'
 import { identity } from 'rxjs'
 import { filter, map, delay } from 'rxjs/operators'
 import * as Sinon from 'sinon'
-import { Action, Epic, StateCreator, State } from '@sigi/types'
+import { Action, Epic, StoreCreator, Store } from '@sigi/types'
 
-import { createState } from '../state'
+import { createStore } from '../state'
 
 interface StateProps {
   foo: string
@@ -26,27 +26,27 @@ describe('state specs', () => {
     return prevState
   }
 
-  let state: State<StateProps>
+  let store: Store<StateProps>
 
   const mockEpic: Epic<unknown> = (action$) =>
     action$.pipe(
       filter(({ type }) => type === ASYNC_UPDATE_FOO),
-      map(() => ({ type: 'noop', payload: null, state })),
+      map(() => ({ type: 'noop', payload: null, state: store })),
     )
 
-  describe('stateCreator', () => {
+  describe('StoreCreator', () => {
     const defaultState = {
       foo: '1',
       bar: null,
     }
-    const { stateCreator } = createState<StateProps>(mockReducer, identity)
+    const { setup } = createStore<StateProps>(mockReducer, identity)
     it('should be able to create state', () => {
-      expect(stateCreator(defaultState).getState()).toBe(defaultState)
+      expect(setup(defaultState).getState()).toBe(defaultState)
     })
 
     it('should be able to create state with new defaultState', () => {
       const newDefaultState = { ...defaultState }
-      expect(stateCreator(newDefaultState).getState()).toBe(newDefaultState)
+      expect(setup(newDefaultState).getState()).toBe(newDefaultState)
     })
   })
 
@@ -56,50 +56,50 @@ describe('state specs', () => {
       bar: null,
     }
     it('should be able to change state via dispatch action', () => {
-      const { stateCreator } = createState(mockReducer, mockEpic)
+      const { setup } = createStore(mockReducer, mockEpic)
 
-      const state = stateCreator(defaultState)
-      state.dispatch({ type: UPDATE_FOO, payload: '2', state })
-      expect(state.getState().foo).toBe('2')
+      const store = setup(defaultState)
+      store.dispatch({ type: UPDATE_FOO, payload: '2', store })
+      expect(store.getState().foo).toBe('2')
     })
 
     it('should do nothing when action type is not matched any reducer', () => {
-      const { stateCreator } = createState<StateProps>(mockReducer, mockEpic)
+      const { setup } = createStore<StateProps>(mockReducer, mockEpic)
 
-      const state = stateCreator(defaultState)
-      state.dispatch({ type: '__NOOP__', payload: '2', state })
-      expect(state.getState().foo).toBe(defaultState.foo)
+      const store = setup(defaultState)
+      store.dispatch({ type: '__NOOP__', payload: '2', store })
+      expect(store.getState().foo).toBe(defaultState.foo)
     })
 
     it('should run epic', () => {
-      const { stateCreator } = createState(mockReducer, mockEpic)
+      const { setup } = createStore(mockReducer, mockEpic)
 
-      const state = stateCreator(defaultState)
-      state.dispatch({ type: UPDATE_FOO, payload: '2', state })
-      expect(state.getState().foo).toBe('2')
+      const store = setup(defaultState)
+      store.dispatch({ type: UPDATE_FOO, payload: '2', store })
+      expect(store.getState().foo).toBe('2')
     })
 
     describe('effect', () => {
-      let stateCreator: StateCreator<StateProps>
+      let setup: StoreCreator<StateProps>
       let timer: Sinon.SinonFakeTimers
       const bar = 100
 
       const delayTime = 300
 
       beforeEach(() => {
-        const { stateCreator: _stateCreator } = createState<StateProps>(mockReducer, (action$) =>
+        const { setup: _setup } = createStore<StateProps>(mockReducer, (action$) =>
           action$.pipe(
             filter(({ type }) => type === ASYNC_UPDATE_BAR),
             delay(delayTime),
             map(() => ({
               type: UPDATE_BAR,
               payload: bar,
-              state,
+              store,
             })),
           ),
         )
 
-        stateCreator = _stateCreator
+        setup = _setup
 
         timer = Sinon.useFakeTimers()
       })
@@ -109,14 +109,14 @@ describe('state specs', () => {
       })
 
       it('should be able to change state by effect', () => {
-        state = stateCreator(defaultState)
-        state.dispatch({
+        store = setup(defaultState)
+        store.dispatch({
           type: ASYNC_UPDATE_BAR,
           payload: null,
-          state,
+          store,
         })
         timer.tick(delayTime)
-        expect(state.getState().bar).toBe(bar)
+        expect(store.getState().bar).toBe(bar)
       })
     })
   })

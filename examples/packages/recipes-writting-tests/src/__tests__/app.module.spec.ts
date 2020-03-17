@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 
-import { State, InstanceActionOfEffectModule } from '@sigi/core'
+import { Store, InstanceActionOfEffectModule } from '@sigi/core'
 import { Test } from '@sigi/testing'
 import { Subject } from 'rxjs'
 import * as Sinon from 'sinon'
@@ -10,7 +10,7 @@ import { AppModule, AppState } from '../app.module'
 
 describe('app module test', () => {
   let getStub: Sinon.SinonStub
-  let appState: State<AppState>
+  let appStore: Store<AppState>
   let actionsCreator: InstanceActionOfEffectModule<AppModule, AppState>
   let dataStream$: Subject<any>
 
@@ -25,7 +25,7 @@ describe('app module test', () => {
       })
       .compile()
     const appModule = testbed.getInstance(AppModule)
-    appState = appModule.createState()
+    appStore = appModule.createStore()
     actionsCreator = appModule.getActions()
     dataStream$ = new Subject()
     getStub.returns(dataStream$)
@@ -36,29 +36,29 @@ describe('app module test', () => {
   })
 
   it('should handle loading/success state', () => {
-    appState.dispatch(actionsCreator.fetchList())
+    appStore.dispatch(actionsCreator.fetchList())
     expect(getStub.callCount).toBe(1)
-    expect(appState.getState().list).toBe(null)
+    expect(appStore.getState().list).toBe(null)
     dataStream$.next([])
-    expect(appState.getState().list).toEqual([])
+    expect(appStore.getState().list).toEqual([])
   })
 
   it('should handle loading/error state', () => {
-    appState.dispatch(actionsCreator.fetchList())
+    appStore.dispatch(actionsCreator.fetchList())
     expect(getStub.callCount).toBe(1)
-    expect(appState.getState().list).toBe(null)
+    expect(appStore.getState().list).toBe(null)
     const errMsg = 'whatever'
     dataStream$.error(new TypeError(errMsg))
-    expect(appState.getState().list).toEqual(new TypeError(errMsg))
+    expect(appStore.getState().list).toEqual(new TypeError(errMsg))
   })
 
   it('should handle cancel', () => {
-    const defaultState = appState.getState()
-    appState.dispatch(actionsCreator.fetchList())
+    const defaultState = appStore.getState()
+    appStore.dispatch(actionsCreator.fetchList())
     expect(getStub.callCount).toBe(1)
-    expect(appState.getState().list).toBe(null)
-    appState.dispatch(actionsCreator.cancel())
+    expect(appStore.getState().list).toBe(null)
+    appStore.dispatch(actionsCreator.cancel())
     dataStream$.next([1, 2, 3])
-    expect(appState.getState()).toEqual(defaultState)
+    expect(appStore.getState()).toEqual(defaultState)
   })
 })

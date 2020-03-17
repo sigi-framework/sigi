@@ -27,7 +27,7 @@ const logStateAction = (action: Action<unknown>) => {
   if (action.type === TERMINATE_ACTION.type) {
     return
   }
-  const namespace = (action as any).state.name
+  const namespace = (action as any).store.name
   const _action = {
     type: `${namespace}/${String(action.type)}`,
     params: filterParams(action.payload),

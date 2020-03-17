@@ -1,5 +1,5 @@
 import { spy } from 'sinon'
-import { StateInterface } from '@sigi/core'
+import { StoreInterface } from '@sigi/core'
 
 import { SSROneShotCache } from '../ssr-oneshot-cache'
 
@@ -9,7 +9,7 @@ class Normal {}
 
 class MockEffectModule {
   state = {
-    [StateInterface]: {
+    [StoreInterface]: {
       unsubscribe: unsubscribeSpy,
     },
   }
@@ -17,7 +17,7 @@ class MockEffectModule {
 
 class MockEffectModuleLevel2 {
   state = {
-    [StateInterface]: {
+    [StoreInterface]: {
       unsubscribe: unsubscribeSpy,
     },
   }
