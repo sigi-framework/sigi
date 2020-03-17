@@ -3,6 +3,7 @@
 - rename internal state owner to `store`
 
 ## Breaking changes
+- merge `@SSREffect` into `@Effect`
 - rename `useEffectModule` => `useModule`
 - rename `useEffectState` => `useModuleState`
 - rename `useEffectModuleDispatchers` => `useDispatchers`
