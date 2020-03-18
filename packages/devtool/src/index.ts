@@ -35,7 +35,7 @@ const logStateAction = (action: Action<unknown>) => {
 
   STATE[namespace] = (action as any).state.getState()
 
-  if (!(action.type as string)?.endsWith(INIT_ACTION_TYPE)) {
+  if (!(action.type as string)?.endsWith?.(INIT_ACTION_TYPE)) {
     devtool.send(_action, STATE)
   }
 }
