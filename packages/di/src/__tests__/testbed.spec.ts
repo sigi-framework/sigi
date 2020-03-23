@@ -69,10 +69,7 @@ describe('testbed spec', () => {
       constructor(@Inject(token) public dep: typeof whatever) {}
     }
 
-    const testModule = Test.createTestingModule()
-      .overrideProvider(token)
-      .useValue(replacement)
-      .compile()
+    const testModule = Test.createTestingModule().overrideProvider(token).useValue(replacement).compile()
     const service = testModule.getInstance(Service)
     expect(service instanceof Service).toBeTruthy()
     expect(service.dep).toBe(replacement)
@@ -91,10 +88,7 @@ describe('testbed spec', () => {
     @Injectable()
     class BetterDep {}
 
-    const testModule = Test.createTestingModule()
-      .overrideProvider(Dep)
-      .useClass(BetterDep)
-      .compile()
+    const testModule = Test.createTestingModule().overrideProvider(Dep).useClass(BetterDep).compile()
 
     const service = testModule.getInstance(Service)
     expect(service instanceof Service).toBeTruthy()
