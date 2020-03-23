@@ -92,6 +92,7 @@ describe('injectable specs', () => {
   })
 
   it('should be able to inject by useValue', () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     function whatever() {}
     const token = new InjectionToken<typeof whatever>('whatever')
 
@@ -217,9 +218,7 @@ describe('injectable specs', () => {
 
   it('should be able to inject by useClass', () => {
     @Injectable()
-    class Dep {
-      constructor() {}
-    }
+    class Dep {}
 
     const token = new InjectionToken<Dep>('whatever')
 
@@ -282,9 +281,7 @@ describe('injectable specs', () => {
   })
 
   it('should resolve and create new injector', () => {
-    class Dep {
-      constructor() {}
-    }
+    class Dep {}
 
     const token = new InjectionToken<Dep>('whatever')
 

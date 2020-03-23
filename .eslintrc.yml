@@ -12,6 +12,10 @@ env:
   node: true
   jest: true
 
+globals:
+  # false means readonly
+  globalThis: false
+
 plugins:
   - import
   - sonarjs
@@ -30,8 +34,6 @@ settings:
 
 rules: 
   # 0 = off, 1 = warn, 2 = error
-  'space-before-function-paren': 0
-  'no-useless-constructor': 0
   'no-undef': 2
   'no-console': [2, { allow: ['error', 'warn', 'info', 'assert']}]
   'comma-dangle': ['error', 'only-multiline']
@@ -89,11 +91,18 @@ overrides:
     parserOptions:
       project: ./tsconfig.json
     rules:
-      # eslint will treat TS type as undefined stuff
-      'no-undef': 0
+      # constructor(private readonly foo: string) {} style declaration
+      'no-useless-constructor': 0
+      '@typescript-eslint/no-useless-constructor': 2
 
       # conflict function override
       'no-dupe-class-members': 0
+      '@typescript-eslint/no-dupe-class-members': 2
+
+      # constructor(private readonly foo: string) {} style declaration
+      'no-empty-function': 0
+
+      '@typescript-eslint/no-empty-function': 2
 
       'react/jsx-no-bind': 2
 
