@@ -27,18 +27,6 @@ import { reactive } from '@sigi/vue'
 import { CommitsModule } from './commits.module'
 
 export default reactive(CommitsModule, {
-  data: function() {
-    return {
-      currentBranch: 'master',
-    }
-  },
-
-  watch: {
-    currentBranch: function(currentBranch: string) {
-      this.fetchRepo(currentBranch)
-    }
-  },
-
   filters: {
     truncate: function (v: string) {
       const newline = v.indexOf('\n')
@@ -49,8 +37,10 @@ export default reactive(CommitsModule, {
     }
   },
 
+  syncToSigi: ['currentBranch'],
+
   created: function() {
-    this.fetchRepo(this.currentBranch)
+    this.observeRepos()
   },
 })
 </script>

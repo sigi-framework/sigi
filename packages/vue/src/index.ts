@@ -1,15 +1,21 @@
 import Vue, { ComponentOptions, WatchOptionsWithHandler } from 'vue'
 import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
-import { ConstructorOf } from '@sigi/types'
-import { Observable } from 'rxjs'
+import { ConstructorOf, Store as PublicStore } from '@sigi/types'
+import { Subject } from 'rxjs'
 import { DefaultProps } from 'vue/types/options'
+
+import { cloneDeepPoj } from './utils'
 
 export type Prop<T> = { (): T } | { new (...args: never[]): T & object } | { new (...args: string[]): Function }
 
 export type PropType<T> = Prop<T> | Prop<T>[]
 
 export type PropValidator<T> = PropOptions<T> | PropType<T>
+
+interface Store<S = any> extends PublicStore<S> {
+  state$: Subject<S>
+}
 
 export interface PropOptions<T = any> {
   type?: PropType<T>
@@ -74,6 +80,7 @@ export type ReactiveComponentOptions<
           : never
       }
     : never
+  syncToSigi?: (keyof StateInEffectModule<M>)[]
   created?(): void
   beforeDestroy?(): void
   destroyed?(): void
@@ -98,38 +105,60 @@ export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Prop
   Props extends unknown ? RecordPropsDefinition<DefaultProps> : Props
 > => {
   const effectModule = rootInjector.getInstance(EffectModuleConstructor)
-  const state = effectModule.createState()
-  const initialState: StateInEffectModule<M> = state.getState()
+  const store = effectModule.createStore() as Store
+  const initialState: StateInEffectModule<M> = store.getState()
   const statePassToVue = { ...initialState }
-  const subscription = ((state as any).state$ as Observable<StateInEffectModule<M>>).subscribe((state) => {
+  const subscription = store.state$.subscribe((state) => {
     Object.assign(statePassToVue, state)
   })
   const actionsCreator = effectModule.getActions()
   const dispatchProps = Object.keys(actionsCreator).reduce((acc, cur) => {
     acc[cur] = (payload: any) => {
       const action = (actionsCreator as any)[cur](payload)
-      state.dispatch(action)
+      store.dispatch(action)
     }
     return acc
   }, Object.create(null))
 
-  const { beforeDestroy } = componentOptions
+  const { beforeDestroy: originalBeforeDestory } = componentOptions
 
-  componentOptions.beforeDestroy = function () {
+  componentOptions.beforeDestroy = function beforeDestroy() {
     subscription.unsubscribe()
-    typeof beforeDestroy === 'function' ? beforeDestroy.call(this) : void 0
+    typeof originalBeforeDestory === 'function' ? originalBeforeDestory.call(this) : void 0
   }
   componentOptions.methods = componentOptions.methods ?? ({} as Methods)
   Object.assign(componentOptions.methods, dispatchProps)
-  const { data } = componentOptions
-  componentOptions.data = function () {
-    if (typeof data === 'function') {
-      return Object.assign(statePassToVue, (data as Function).call(this))
-    }
-    if (process.env.NODE_ENV !== 'production' && !!data) {
-      console.warn(`data property is not function, ignored`)
+  const { data: originalData } = componentOptions
+  componentOptions.data = function data() {
+    if (typeof originalData === 'function') {
+      return Object.assign(statePassToVue, (originalData as Function).call(this))
     }
     return statePassToVue
   }
+
+  const syncToSigi = componentOptions.syncToSigi ?? []
+  const { beforeUpdate: originalBeforeUpdate } = componentOptions
+
+  componentOptions.beforeUpdate = function beforeUpdate() {
+    let latestState = store.getState()
+    let changed = false
+    for (const prop of syncToSigi) {
+      if (!(prop in statePassToVue) && process.env.NODE_ENV === 'development') {
+        console.warn(`${prop} in syncToSigi option is not existed in defaultProps property in Sigi module`)
+      }
+      const propValue = (this as any)[prop]
+      if (propValue !== latestState[prop]) {
+        latestState = { ...latestState, [prop]: cloneDeepPoj(propValue) }
+        changed = true
+      }
+    }
+    if (changed) {
+      store.state$.next(latestState)
+    }
+    if (typeof originalBeforeUpdate === 'function') {
+      originalBeforeUpdate.call(this)
+    }
+  }
+
   return componentOptions
 }

@@ -112,11 +112,64 @@ describe('VueJS reative binding', () => {
     })
     const vm = new Vue(reactiveOptions)
 
-    expect(vm['foo']).toBe('1')
+    expect(vm.foo).toBe('1')
 
-    vm['setFoo']()
+    vm.setFoo()
 
-    expect(vm['foo']).toBe('2')
+    expect(vm.foo).toBe('2')
+  })
+
+  it('should be able to syncToSigi', () => {
+    const newName = 'fake new name'
+    const reactiveOptions = reactive(VueTestingModule, {
+      data() {
+        return {
+          foo: 1,
+        }
+      },
+
+      syncToSigi: ['name'],
+
+      render(h) {
+        return h('div', [h('span', this.name)])
+      },
+    })
+
+    const vm = new Vue(reactiveOptions)
+    vm.name = newName
+    vm.$options.beforeUpdate![0].call(vm)
+    expect(testingStub.getState().name).toBe(newName)
+  })
+
+  it('should merge original beforeUpdate lifecycle', () => {
+    const spy = Sinon.spy()
+    const reactiveOptions = reactive(VueTestingModule, {
+      syncToSigi: ['name'],
+      beforeUpdate: spy,
+    })
+
+    const vm = new Vue(reactiveOptions)
+    vm.$options.beforeUpdate![0].call(vm)
+    expect(spy.callCount).toBe(1)
+  })
+
+  it('should warn if property which syncToSigi not existed', () => {
+    const spy = Sinon.spy(console, 'warn')
+    const reactiveOptions = reactive(VueTestingModule, {
+      syncToSigi: ['name-n' as any],
+    })
+
+    const vm = new Vue(reactiveOptions)
+
+    const { NODE_ENV } = process.env
+
+    process.env.NODE_ENV = 'development'
+
+    vm.$options.beforeUpdate![0].call(vm)
+    expect(spy.callCount).toBe(1)
+
+    spy.restore()
+    process.env.NODE_ENV = NODE_ENV
   })
 
   it('should ignore non-function data property', () => {

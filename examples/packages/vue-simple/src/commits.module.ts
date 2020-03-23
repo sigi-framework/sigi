@@ -1,6 +1,6 @@
 import { Module, EffectModule, Effect, ImmerReducer } from '@sigi/core'
 import { Observable } from 'rxjs'
-import { exhaustMap, map } from 'rxjs/operators'
+import { map, combineLatest, switchMap, distinctUntilKeyChanged } from 'rxjs/operators'
 import { Draft } from 'immer'
 
 import { HttpService } from './http.service'
@@ -8,12 +8,14 @@ import { HttpService } from './http.service'
 export interface CommitsStateProps {
   commits: any[]
   branches: string[]
+  currentBranch: string
 }
 
 @Module('Commits')
 export class CommitsModule extends EffectModule<CommitsStateProps> {
   defaultState = {
     commits: [],
+    currentBranch: 'master',
     branches: ['master', 'dev'],
   }
 
@@ -27,11 +29,12 @@ export class CommitsModule extends EffectModule<CommitsStateProps> {
   }
 
   @Effect()
-  fetchRepo(payload$: Observable<string>) {
+  observeRepos(payload$: Observable<void>) {
     return payload$.pipe(
-      exhaustMap((currentBranch) => {
+      combineLatest(this.state$.pipe(distinctUntilKeyChanged('currentBranch'))),
+      switchMap(([_, state]) => {
         return this.httpClient
-          .get<any[]>(`https://api.github.com/repos/vuejs/vue/commits?per_page=3&sha=${currentBranch}`)
+          .get<any[]>(`https://api.github.com/repos/vuejs/vue/commits?per_page=3&sha=${state.currentBranch}`)
           .pipe(map((response) => this.getActions().setRepos(response)))
       }),
     )
