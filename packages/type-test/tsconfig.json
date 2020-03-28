@@ -1,18 +1,17 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "rootDir": "./src",
     "outDir": "./esm",
-    "module": "esnext", 
     "composite": true
   },
   "references": [
-    { "path": "../core" },
     { "path": "../di" },
-    { "path": "../testing" },
-    { "path": "../types" }
+    { "path": "../vue" }
   ],
   "include": [
-    "./src"
+    "src"
   ]
 }

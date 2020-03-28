@@ -11,6 +11,7 @@
   ],
   "private": true,
   "dependencies": {
+    "@abraham/reflection": "^0.7.0",
     "@sigi/core": "../packages/core",
     "@sigi/di": "../packages/di",
     "@sigi/react": "../packages/react",

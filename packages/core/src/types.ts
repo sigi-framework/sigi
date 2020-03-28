@@ -57,3 +57,5 @@ export type ActionStreamOfEffectModule<M extends EffectModule<S>, S> = Omit<
   },
   keyof EffectModule<S>
 >
+
+export type StateInEffectModule<M extends EffectModule<any>> = M extends EffectModule<infer S> ? S : never

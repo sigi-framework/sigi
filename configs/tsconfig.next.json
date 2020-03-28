@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2018",
+    "noEmit": true
+  },
+  "references": [
+    { "path": "../packages/core/tsconfig.next.json" },
+    { "path": "../packages/devtool/tsconfig.next.json" },
+    { "path": "../packages/react/tsconfig.next.json" },
+    { "path": "../packages/react-router/tsconfig.next.json" },
+    { "path": "../packages/vue/tsconfig.next.json" },
+    { "path": "../packages/di/tsconfig.next.json" },
+    { "path": "../packages/ssr/tsconfig.next.json" },
+    { "path": "../packages/testing/tsconfig.next.json" },
+    { "path": "../packages/ts-plugin/tsconfig.next.json" },
+    { "path": "../packages/types/tsconfig.next.json" }
+  ]
+}
