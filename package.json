@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.150",
-    "@types/node": "^13.13.0",
+    "@types/node": "^13.13.1",
     "@types/react-dom": "^16.9.6",
     "@types/react-test-renderer": "^16.9.2",
     "@types/sinon": "^9.0.0",
