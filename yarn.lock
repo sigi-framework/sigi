@@ -7058,10 +7058,10 @@ rimraf@^3.0.0:
   dependencies:
     glob "^7.1.3"
 
-rollup-plugin-sourcemaps@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-sourcemaps/-/rollup-plugin-sourcemaps-0.6.0.tgz#fcfa6dc7ac58c97d5ab911b99588656fb6d88e30"
-  integrity sha512-w8VaINTIqa2pbQEgDpkbPYdTc4Y2btgdJg4Tqwr8mtpdRgvEXprNWsLoCJphe4NRFKqeMedBjZ4m2FbrEtA3dQ==
+rollup-plugin-sourcemaps@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-sourcemaps/-/rollup-plugin-sourcemaps-0.6.1.tgz#32dc6f237ee235f10de56c829f31e39bd57a3eab"
+  integrity sha512-XNA1KSNPL75Niu1w5cxGXwXrY3YNkdkknK20ZupcDIx7utm0fxXcDvtyfBQVLJgxJiDFN8AVNcSO1fm5/9Di4Q==
   dependencies:
     "@rollup/pluginutils" "^3.0.9"
     source-map-resolve "^0.6.0"
