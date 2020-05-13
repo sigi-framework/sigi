@@ -46,7 +46,7 @@
     "ts-jest": "^25.5.1",
     "ts-node": "^8.10.1",
     "tslib": "^1.11.2",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.2",
     "vue": "^2.6.11"
   },
   "scripts": {
