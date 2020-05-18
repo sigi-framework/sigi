@@ -41,7 +41,7 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
                 return decorator
               }
               if (!ts.isObjectLiteralExpression(argument)) {
-                throw new TypeError('Only support object literal parameter in SSREffect')
+                throw new TypeError('Only support object literal parameter in Effect decorator')
               }
               hasModifiedDecorator = true
               return ts.updateDecorator(

@@ -59,7 +59,7 @@ export default reactive(CommitsModule, {
       value.toUpperCase()
     },
     a: {
-      handler(value: number) {},
+      handler(_value: number) {},
       deep: true,
     },
   },

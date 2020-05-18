@@ -30,14 +30,5 @@
     "@vue/component-compiler-utils": "^3.1.1",
     "stylus": "^0.54.7",
     "vue-template-compiler": "^2.6.11"
-  },
-  "alias": {
-    "@sigi/core": "../../../packages/core/src",
-    "@sigi/di": "../../../packages/di/src",
-    "@sigi/react": "../../../packages/react/src",
-    "@sigi/devtool": "../../../packages/devtool/src",
-    "@sigi/ssr": "../../../packages/ssr/src",
-    "@sigi/types": "../../../packages/types/src",
-    "@sigi/vue": "../../../packages/vue/src"
   }
 }

@@ -1,13 +1,19 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "..",
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "baseUrl": "../packages",
     "paths": {
-      "@sigi/*": ["./packages/*/src/index.ts"]
+      "@sigi/*": [
+        "./*/src/index.ts"
+      ]
     }
   },
-  "include": ["./packages/**/*.ts", "./packages/**/*.tsx", "./packages/**/*.vue"],
-  "exclude": ["node_modules"]
+  "include": [
+    "./**/*",
+  ]
 }

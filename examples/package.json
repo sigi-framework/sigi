@@ -1,38 +1,36 @@
 {
   "name": "sigi-example",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Examples for sigi framework",
-  "main": "index.js",
   "repository": "https://github.com/sigi-framework/sigi",
   "author": "lynweklm@gmail.com",
   "license": "MIT",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "../packages/*",
+    "./packages/*"
+  ],
   "private": true,
   "dependencies": {
     "@abraham/reflection": "^0.7.0",
-    "@sigi/core": "../packages/core",
-    "@sigi/di": "../packages/di",
-    "@sigi/react": "../packages/react",
+    "@sigi/core": "^1.0.0",
+    "@sigi/devtool": "^1.0.0",
+    "@sigi/di": "^1.0.0",
+    "@sigi/react": "^1.0.0",
+    "@sigi/react-router": "^1.0.0",
+    "@sigi/ssr": "^1.0.0",
+    "@sigi/testing": "^1.0.0",
+    "@sigi/vue": "^1.0.0",
     "antd": "^3.26.7",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@sigi/devtool": "../packages/devtool",
+    "@types/parcel-env": "^0.0.0",
     "parcel": "^1.12.4"
   },
   "scripts": {
     "start": "node ./cli.js",
     "test": "jest --config ./packages/recipes-writting-tests/jest.config.js"
-  },
-  "resolutions": {
-    "@sigi/core": "../packages/core",
-    "@sigi/di": "../packages/di",
-    "@sigi/react": "../packages/react",
-    "@sigi/devtool": "../packages/devtool",
-    "@sigi/ssr": "../packages/ssr",
-    "@sigi/types": "../packages/types",
-    "@sigi/vue": "../packages/vue"
   }
 }
