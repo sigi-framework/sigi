@@ -58,14 +58,7 @@ rules:
 
   'import/first': 2
   'import/newline-after-import': 2
-  'import/order':
-    [
-      2,
-      {
-        'newlines-between': 'always',
-        'alphabetize': { 'order': 'asc', 'caseInsensitive': true },
-      },
-    ]
+  'import/order': [2, { 'newlines-between': 'always', 'alphabetize': { 'order': 'asc', 'caseInsensitive': true } }]
 
   'react/prop-types': 0
   'react/jsx-no-multiline-js': 0
@@ -116,13 +109,20 @@ overrides:
 
       '@typescript-eslint/consistent-type-assertions': 2
 
-      '@typescript-eslint/ban-types': ['error', { 'types': {
+      '@typescript-eslint/ban-types':
+        [
+          'error',
+          {
+            'types':
+              {
                 'String': { 'message': 'Use string instead', 'fixWith': 'string' },
                 'Number': { 'message': 'Use number instead', 'fixWith': 'number' },
                 'Boolean': { 'message': 'Use boolean instead', 'fixWith': 'boolean' },
                 'Function': { 'message': 'Use explicit type instead' },
                 '{}': { 'message': 'Use object instead', 'fixWith': 'object' },
-              } }]
+              },
+          },
+        ]
 
       '@typescript-eslint/explicit-member-accessibility':
         [

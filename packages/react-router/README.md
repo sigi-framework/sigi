@@ -17,15 +17,9 @@ export class AppModule extends EffectModule<{}> {
   getUser(payload$: Observable<void>) {
     return payload$.pipe(
       exhaustMap(() => {
-        service.getUser().pipe(
-          mergeMap((res) => of(
-            this.getActions().getUserResponse(res),
-            this.router.push('/home')
-          ))
-        )
-      })
+        service.getUser().pipe(mergeMap((res) => of(this.getActions().getUserResponse(res), this.router.push('/home'))))
+      }),
     )
   }
 }
-
 ```

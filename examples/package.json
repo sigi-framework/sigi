@@ -6,9 +6,7 @@
   "repository": "https://github.com/sigi-framework/sigi",
   "author": "lynweklm@gmail.com",
   "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "private": true,
   "dependencies": {
     "@abraham/reflection": "^0.7.0",

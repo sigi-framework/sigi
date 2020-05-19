@@ -5,15 +5,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
-      "@sigi/*": [
-        "./packages/*/src/index.ts"
-      ]
+      "@sigi/*": ["./packages/*/src/index.ts"]
     }
   },
-  "include": [
-    "./packages/**/*.ts",
-    "./packages/**/*.tsx",
-    "./packages/**/*.vue"
-  ],
+  "include": ["./packages/**/*.ts", "./packages/**/*.tsx", "./packages/**/*.vue"],
   "exclude": ["node_modules"]
 }

@@ -20,7 +20,7 @@ export default reactive(CommitsModule, {
   propsData: {
     msg: 'Hello',
   },
-  data: function() {
+  data: function () {
     this.$mount
     this.size
     return {
@@ -45,11 +45,11 @@ export default reactive(CommitsModule, {
   },
 
   filters: {
-    truncate: function(v: string) {
+    truncate: function (v: string) {
       const newline = v.indexOf('\n')
       return newline > 0 ? v.slice(0, newline) : v
     },
-    formatDate: function(v: string) {
+    formatDate: function (v: string) {
       return v.replace(/T|Z/g, ' ')
     },
   },
@@ -74,7 +74,7 @@ export default reactive(CommitsModule, {
     },
   },
 
-  created: function() {
+  created: function () {
     this.onClick(1, '2')
     this.fetchRepo(this.currentBranch)
   },

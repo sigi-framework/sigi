@@ -2,10 +2,7 @@
   "name": "@sigi-example/dynamic-import",
   "version": "1.0.0-alpha.6",
   "description": "Dynamic import example for Sigi framework",
-  "keywords": [
-    "Sigi",
-    "framework"
-  ],
+  "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework/sigi",
   "license": "MIT",
@@ -14,9 +11,7 @@
     "lib": "lib",
     "test": "__tests__"
   },
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"

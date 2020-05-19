@@ -4,18 +4,8 @@
     "rootDir": "./src",
     "outDir": "./esm",
     "composite": true,
-    "types": [
-      "reflect-metadata",
-      "jest",
-      "node"
-    ]
+    "types": ["reflect-metadata", "jest", "node"]
   },
-  "include": [
-    "./src"
-  ],
-  "references": [
-    { "path": "../di" },
-    { "path": "../types" },
-    { "path": "../core" }
-  ]
+  "include": ["./src"],
+  "references": [{ "path": "../di" }, { "path": "../types" }, { "path": "../core" }]
 }

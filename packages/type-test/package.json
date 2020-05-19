@@ -3,11 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "description": "Type tests for Sigi framework bindings",
-  "keywords": [
-    "Sigi",
-    "Vue",
-    "VueJS"
-  ],
+  "keywords": ["Sigi", "Vue", "VueJS"],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",

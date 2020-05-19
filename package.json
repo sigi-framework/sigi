@@ -7,9 +7,7 @@
   "author": "lynweklm@gmail.com",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "@types/lodash": "^4.14.151",
@@ -59,14 +57,19 @@
     "clean:next": "shx rm -rf ./packages/**/next",
     "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
     "lint": "eslint . -c ./.eslintrc.yml 'packages/**/*.{ts,tsx}' './configs/**/*.js'",
+    "format": "run-p format:md format:json format:source format:yml",
+    "format:json": "prettier --parser json --write '**/*.json'",
+    "format:md": "prettier --parser markdown --write './*.md' './{examples,packages}/**/*.md'",
+    "format:source": "prettier --config ./package.json './{examples,packages}/**/*.{ts,tsx,js}' --write",
+    "format:yml": "prettier --parser yaml --write './*.{yml,yaml}'",
     "test": "jest --config ./configs/jest.config.js --collectCoverage",
     "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose"
   },
   "lint-staged": {
-    "*.@(js|ts|tsx)": [
-      "prettier --write",
-      "eslint -c .eslintrc.yml --fix"
-    ]
+    "*.@(js|ts|tsx)": ["prettier --write", "eslint -c .eslintrc.yml --fix"],
+    "*.@(yml|yaml)": ["prettier --parser yaml --write"],
+    "*.md": ["prettier --parser markdown --write"],
+    "*.json": ["prettier --parser json --write"]
   },
   "prettier": {
     "printWidth": 120,
