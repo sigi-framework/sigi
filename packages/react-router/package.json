@@ -36,7 +36,7 @@
     "@sigi/react": "^1.0.1"
   },
   "devDependencies": {
-    "@types/history": "^4.7.5",
+    "@types/history": "^4.7.6",
     "history": "^4.10.1"
   }
 }
