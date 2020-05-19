@@ -1,5 +1,5 @@
-import { TestModule, Type } from '@sigi/di'
 import { EffectModule, ActionOfEffectModule, Store } from '@sigi/core'
+import { TestModule, Type } from '@sigi/di'
 
 export class SigiTestModule extends TestModule {
   getTestingStub<M extends EffectModule<S>, S = any>(EffectModuleConstructor: Type<M>): SigiTestStub<M, S> {

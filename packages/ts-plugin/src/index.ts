@@ -1,5 +1,5 @@
-import * as ts from 'typescript'
 import { Maybe } from '@sigi/types'
+import * as ts from 'typescript'
 
 const EffectLibraryName = '@sigi/core'
 const EffectName = 'Effect'

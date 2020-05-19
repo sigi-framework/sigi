@@ -1,6 +1,6 @@
+import { GLOBAL_KEY } from '@sigi/core'
 import React from 'react'
 import serialize from 'serialize-javascript'
-import { GLOBAL_KEY } from '@sigi/core'
 
 const ScriptId = 'sigi-persisted-data'
 

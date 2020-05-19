@@ -1,5 +1,5 @@
-import { spy } from 'sinon'
 import { StoreInterface } from '@sigi/core'
+import { spy } from 'sinon'
 
 import { SSROneShotCache } from '../ssr-oneshot-cache'
 

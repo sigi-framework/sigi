@@ -1,3 +1,5 @@
+import { ReflectiveProvider } from './injector-provider'
+import { InjectionProvider } from './provider'
 import {
   Provider,
   ValueProvider,
@@ -8,8 +10,6 @@ import {
   Type,
   InjectionToken,
 } from './type'
-import { ReflectiveProvider } from './injector-provider'
-import { InjectionProvider } from './provider'
 
 export class Injector {
   readonly provider = new InjectionProvider()
@@ -31,11 +31,11 @@ export class Injector {
   }
 
   getInstance<T>(provider: Provider<T>): T {
-    return this._getInstance(provider, true)
+    return this.getInstanceInternal(provider, true)
   }
 
   resolveAndInstantiate<T>(provider: Provider<T>): T {
-    return this._getInstance(provider, false)
+    return this.getInstanceInternal(provider, false)
   }
 
   createChild(providers: Provider<unknown>[]): Injector {
@@ -56,11 +56,11 @@ export class Injector {
     return reflectiveProvider
   }
 
-  private _getInstance<T>(provider: Provider<T>, useCache: boolean): T {
+  private getInstanceInternal<T>(provider: Provider<T>, useCache: boolean): T {
     let injector: Injector | null = this
     let instance: T | null = null
     let reflectiveProvider: ReflectiveProvider<T> | null = null
-    const deps = this._findDeps(provider)
+    const deps = this.findDeps(provider)
     while (injector) {
       reflectiveProvider = injector.resolveReflectiveProvider(provider)
       if (!reflectiveProvider) {
@@ -69,10 +69,10 @@ export class Injector {
       }
       if (injector.resolvedProviders.has(reflectiveProvider)) {
         if (deps) {
-          if (useCache && (injector === this || this._checkDepenciesClean(injector, deps))) {
+          if (useCache && (injector === this || this.checkDepenciesClean(injector, deps))) {
             instance = injector.resolvedProviders.get(reflectiveProvider) as T
           } else {
-            instance = this._resolveByReflectiveProvider(reflectiveProvider, false, this)
+            instance = this.resolveByReflectiveProvider(reflectiveProvider, false, this)
             if (useCache) {
               this.resolvedProviders.set(reflectiveProvider, instance)
             }
@@ -80,11 +80,11 @@ export class Injector {
         } else {
           instance = useCache
             ? (injector.resolvedProviders.get(reflectiveProvider) as T)
-            : this._resolveByReflectiveProvider(reflectiveProvider, false, this)
+            : this.resolveByReflectiveProvider(reflectiveProvider, false, this)
         }
         break
       }
-      instance = injector._resolveByReflectiveProvider(reflectiveProvider, useCache, this)
+      instance = injector.resolveByReflectiveProvider(reflectiveProvider, useCache, this)
       if (instance) {
         if (useCache) {
           injector.resolvedProviders.set(reflectiveProvider!, instance)
@@ -100,7 +100,7 @@ export class Injector {
     return instance
   }
 
-  private _resolveByReflectiveProvider<T>(
+  private resolveByReflectiveProvider<T>(
     reflectiveProvider: ReflectiveProvider<T>,
     useCache = true,
     leaf = this,
@@ -109,20 +109,22 @@ export class Injector {
     const { provider, name } = reflectiveProvider
     if (typeof provider === 'function') {
       const deps: Array<Type<unknown> | InjectionToken<T>> = Reflect.getMetadata('design:paramtypes', provider) ?? []
-      const depsInstance = deps.map((dep) => leaf._getInstance(leaf._findExisting(dep), useCache))
+      const depsInstance = deps.map((dep) => leaf.getInstanceInternal(leaf.findExisting(dep), useCache))
       instance = new provider(...depsInstance)
     } else if ((provider as ValueProvider<T>).useValue) {
       instance = (provider as ValueProvider<T>).useValue
     } else if ((provider as ClassProvider<T>).useClass) {
-      instance = leaf._getInstance((provider as ClassProvider<T>).useClass, useCache)
+      instance = leaf.getInstanceInternal((provider as ClassProvider<T>).useClass, useCache)
     } else if ((provider as FactoryProvider<T>).useFactory) {
       let deps: unknown[] = []
       if ((provider as FactoryProvider<T>).deps) {
-        deps = (provider as FactoryProvider<T>).deps!.map((dep) => leaf._getInstance(leaf._findExisting(dep), useCache))
+        deps = (provider as FactoryProvider<T>).deps!.map((dep) =>
+          leaf.getInstanceInternal(leaf.findExisting(dep), useCache),
+        )
       }
       instance = (provider as FactoryProvider<T>).useFactory(...deps)
     } else if ((provider as ExistingProvider<T>).useExisting) {
-      instance = leaf._getInstance(this._findExisting((provider as ExistingProvider<T>).useExisting)!, useCache)
+      instance = leaf.getInstanceInternal(this.findExisting((provider as ExistingProvider<T>).useExisting)!, useCache)
     }
     if (!instance) {
       throw new TypeError(`Can not resolve ${name}, it's not a valid provider`)
@@ -130,7 +132,7 @@ export class Injector {
     return instance
   }
 
-  private _findExisting<T>(token: Token<T>): Provider<T> {
+  private findExisting<T>(token: Token<T>): Provider<T> {
     let provider: Provider<T> | null = null
     let injector: Injector | null = this
     while (injector) {
@@ -147,7 +149,7 @@ export class Injector {
     return provider
   }
 
-  private _findDeps<T>(provider: Provider<T>): Token<unknown>[] {
+  private findDeps<T>(provider: Provider<T>): Token<unknown>[] {
     return typeof provider === 'function'
       ? Reflect.getMetadata('design:paramtypes', provider)
       : (provider as ClassProvider<T>).useClass
@@ -157,14 +159,14 @@ export class Injector {
       : null
   }
 
-  private _checkDepenciesClean(leaf: Injector, deps: Token<unknown>[]): boolean {
+  private checkDepenciesClean(leaf: Injector, deps: Token<unknown>[]): boolean {
     return deps.every((dep) => {
-      const depInLeaf = leaf._findExisting(dep)
-      const depInRoot = this._findExisting(dep)
+      const depInLeaf = leaf.findExisting(dep)
+      const depInRoot = this.findExisting(dep)
       const isEqual = depInLeaf === depInRoot
-      const deps = this._findDeps(depInLeaf)
+      const deps = this.findDeps(depInLeaf)
       if (deps) {
-        return this._checkDepenciesClean(leaf, deps) && isEqual
+        return this.checkDepenciesClean(leaf, deps) && isEqual
       }
       return isEqual
     })

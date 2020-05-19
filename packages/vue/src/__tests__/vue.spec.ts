@@ -2,9 +2,9 @@ import 'reflect-metadata'
 
 import { EffectModule, Module, ImmerReducer, Effect } from '@sigi/core'
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
+import { Draft } from 'immer'
 import { Observable, timer } from 'rxjs'
 import { flatMap, map, switchMap } from 'rxjs/operators'
-import { Draft } from 'immer'
 import * as Sinon from 'sinon'
 import Vue from 'vue'
 

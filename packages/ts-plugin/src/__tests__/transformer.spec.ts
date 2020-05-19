@@ -1,6 +1,7 @@
-import * as ts from 'typescript'
 import * as fs from 'fs'
 import { resolve } from 'path'
+
+import * as ts from 'typescript'
 
 import { SigiTransformer } from '../index'
 

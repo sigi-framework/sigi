@@ -1,13 +1,16 @@
-import Vue, { ComponentOptions, WatchOptionsWithHandler } from 'vue'
 import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf, Store as PublicStore } from '@sigi/types'
 import { Subject } from 'rxjs'
+import Vue, { ComponentOptions, WatchOptionsWithHandler } from 'vue'
 import { DefaultProps } from 'vue/types/options'
 
 import { cloneDeepPoj } from './utils'
 
-export type Prop<T> = { (): T } | { new (...args: never[]): T & object } | { new (...args: string[]): Function }
+export type Prop<T> =
+  | { (): T }
+  | { new (...args: never[]): T & object }
+  | { new (...args: string[]): (...args: any[]) => any }
 
 export type PropType<T> = Prop<T> | Prop<T>[]
 
@@ -21,7 +24,7 @@ export interface PropOptions<T = any> {
   type?: PropType<T>
   required?: boolean
   default?: T | null | undefined | (() => T | null | undefined)
-  validator?(value: T): boolean
+  validator?: (value: T) => boolean
 }
 
 export type RecordPropsDefinition<T> = {
@@ -81,15 +84,15 @@ export type ReactiveComponentOptions<
       }
     : never
   syncToSigi?: (keyof StateInEffectModule<M>)[]
-  created?(): void
-  beforeDestroy?(): void
-  destroyed?(): void
-  beforeMount?(): void
-  mounted?(): void
-  beforeUpdate?(): void
-  updated?(): void
-  activated?(): void
-  deactivated?(): void
+  created?: () => void
+  beforeDestroy?: () => void
+  destroyed?: () => void
+  beforeMount?: () => void
+  mounted?: () => void
+  beforeUpdate?: () => void
+  updated?: () => void
+  activated?: () => void
+  deactivated?: () => void
 } & ThisType<
     V & Methods & Computed & D & StateInEffectModule<M> & ActionOfEffectModule<M, StateInEffectModule<M>> & Props
   >
@@ -99,8 +102,8 @@ export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Prop
   componentOptions: ReactiveComponentOptions<M, Vue, D, Methods, Computed, Props>,
 ): ComponentOptions<
   Vue,
-  D extends never ? {} : D & StateInEffectModule<M>,
-  (Methods extends undefined ? {} : Methods) & ActionOfEffectModule<M, StateInEffectModule<M>>,
+  D extends never ? object : D & StateInEffectModule<M>,
+  (Methods extends undefined ? object : Methods) & ActionOfEffectModule<M, StateInEffectModule<M>>,
   Computed,
   Props extends unknown ? RecordPropsDefinition<DefaultProps> : Props
 > => {
@@ -131,6 +134,7 @@ export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Prop
   const { data: originalData } = componentOptions
   componentOptions.data = function data() {
     if (typeof originalData === 'function') {
+      // eslint-disable-next-line @typescript-eslint/ban-types
       return Object.assign(statePassToVue, (originalData as Function).call(this))
     }
     return statePassToVue

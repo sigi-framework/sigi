@@ -1,7 +1,7 @@
 import { Token, Provider, ValueProvider, Type } from './type'
 
 export class InjectionProvider {
-  private providersMap = new Map<Token<unknown>, Provider<unknown>>()
+  private readonly providersMap = new Map<Token<unknown>, Provider<unknown>>()
 
   addProvider<T extends Provider<any>>(provider: T): T {
     this.providersMap.set((provider as ValueProvider<T>).provide ?? (provider as Type<T>), provider)

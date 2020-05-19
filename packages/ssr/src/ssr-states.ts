@@ -1,8 +1,8 @@
-import { ConstructorOf, Store } from '@sigi/types'
 import { EffectModule } from '@sigi/core'
+import { ConstructorOf, Store } from '@sigi/types'
 
 export class SSRStateCache {
-  private SSRStates = new Map<ConstructorOf<EffectModule<any>>, Map<any, Store<any>>>()
+  private readonly SSRStates = new Map<ConstructorOf<EffectModule<any>>, Map<any, Store<any>>>()
 
   private size = 1000
 

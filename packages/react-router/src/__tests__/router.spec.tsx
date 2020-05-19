@@ -1,15 +1,15 @@
 import 'reflect-metadata'
-import React from 'react'
 import { EffectModule, Effect, Module, Reducer, Action, DefineAction } from '@sigi/core'
+import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
+import { History, createMemoryHistory } from 'history'
+import React from 'react'
+import { create, act, ReactTestRenderer } from 'react-test-renderer'
 import { Observable, noop } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'
-import { History, createMemoryHistory } from 'history'
-import { create, act, ReactTestRenderer } from 'react-test-renderer'
 import * as Sinon from 'sinon'
-import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 
-import { RouterModule, RouterChanged } from '../router.module'
 import { SigiRouterProvider } from '../router-provider'
+import { RouterModule, RouterChanged } from '../router.module'
 
 interface TestState {
   event: RouterChanged | null
@@ -90,6 +90,7 @@ describe('Router module spec', () => {
   const history: History = createMemoryHistory()
   let testStub: SigiTestStub<TestModule, TestState>
   let renderer: ReactTestRenderer
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   act(() => {
     renderer = create(<SigiRouterProvider history={history}>1</SigiRouterProvider>)
   })
@@ -162,6 +163,7 @@ describe('Router module spec', () => {
     const warnStub = Sinon.stub(console, 'warn')
     const { NODE_ENV } = process.env
     process.env.NODE_ENV = 'development'
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => {
       renderer.update(<SigiRouterProvider history={newHistory}>2</SigiRouterProvider>)
     })

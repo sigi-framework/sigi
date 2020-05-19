@@ -1,12 +1,12 @@
-import { noop } from 'rxjs'
 import { TERMINATE_ACTION, replaceLogger } from '@sigi/core'
 import { Action } from '@sigi/types'
+import { noop } from 'rxjs'
 
 interface GlobalState {
   [modelName: string]: object
 }
 
-let devtool: { send: Function; init: Function } = {
+let devtool: { send: (...args: any[]) => void; init: (...args: any[]) => void } = {
   send: noop,
   init: noop,
 }

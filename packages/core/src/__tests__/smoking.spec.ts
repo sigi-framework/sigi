@@ -1,13 +1,13 @@
 import 'reflect-metadata'
 import { rootInjector } from '@sigi/di'
-import * as Sinon from 'sinon'
 import { empty, Observable } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
+import * as Sinon from 'sinon'
 
-import { createStore } from '../state'
-import { EffectModule } from '../module'
 import { Reducer, Effect } from '../decorators'
+import { EffectModule } from '../module'
 import { Module } from '../module.decorator'
+import { createStore } from '../state'
 
 describe('Smoking tests', () => {
   it('Module should be able to work without effects', () => {
@@ -47,7 +47,7 @@ describe('Smoking tests', () => {
     }
 
     @Module('Bar')
-    class BarModule extends EffectModule<{}> {
+    class BarModule extends EffectModule<object> {
       defaultState = {}
 
       constructor(private readonly fooModule: FooModule) {

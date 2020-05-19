@@ -1,13 +1,13 @@
-import React, { useContext, useMemo, useEffect } from 'react'
 import { EffectModule, ActionOfEffectModule, SSR_LOADED_KEY } from '@sigi/core'
-import { ConstructorOf, Store } from '@sigi/types'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
+import { ConstructorOf, Store } from '@sigi/types'
 import { Draft } from 'immer'
+import React, { useContext, useMemo, useEffect } from 'react'
 import { Subject } from 'rxjs'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
 
-import { SSRSharedContext, SSRContext } from './ssr-context'
 import { useInstance } from './injectable-context'
+import { SSRSharedContext, SSRContext } from './ssr-context'
 
 export type StateSelector<S, U> = {
   (state: S): U

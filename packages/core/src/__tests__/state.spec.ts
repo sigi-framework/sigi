@@ -1,8 +1,8 @@
+import { Action, Epic, StoreCreator, Store } from '@sigi/types'
 import { Reducer } from 'react'
 import { identity } from 'rxjs'
 import { filter, map, delay } from 'rxjs/operators'
 import * as Sinon from 'sinon'
-import { Action, Epic, StoreCreator, Store } from '@sigi/types'
 
 import { createStore } from '../state'
 

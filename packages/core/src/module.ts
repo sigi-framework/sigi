@@ -1,9 +1,11 @@
+import { Action, Epic, Store, StoreCreator } from '@sigi/types'
+import produce, { Draft } from 'immer'
+import { Reducer } from 'react'
 import { Observable, merge, identity } from 'rxjs'
 import { map, filter, publish, refCount, skip } from 'rxjs/operators'
-import { Reducer } from 'react'
-import produce, { Draft } from 'immer'
-import { Action, Epic, Store, StoreCreator } from '@sigi/types'
 
+import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
+import { logStoreAction } from './logger'
 import { createStore } from './state'
 import {
   EFFECT_DECORATOR_SYMBOL,
@@ -12,8 +14,6 @@ import {
   DEFINE_ACTION_DECORATOR_SYMBOL,
 } from './symbols'
 import { InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
-import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
-import { logStoreAction } from './logger'
 
 type Effect<T> = (payload$: Observable<T>) => Observable<Action<unknown>>
 
@@ -44,13 +44,13 @@ export abstract class EffectModule<S> {
 
   state$: Observable<S>
 
-  private setupStore!: StoreCreator<S>
+  private readonly setupStore!: StoreCreator<S>
 
-  private readonly _actions!: any
+  private readonly actions!: any
 
-  private readonly _actionStreams!: any
+  private readonly actionStreams!: any
 
-  private _defineActionKeys!: string[]
+  private defineActionKeys!: string[]
 
   private readonly action$: Observable<Action<unknown>>
 
@@ -68,7 +68,7 @@ export abstract class EffectModule<S> {
 
     this.combineDefineActions()
 
-    this._actions = this._actionKeys.reduce((acc, key) => {
+    this.actions = this._actionKeys.reduce((acc, key) => {
       acc[key] = (payload: unknown) => {
         const action = {
           type: key,
@@ -85,7 +85,7 @@ export abstract class EffectModule<S> {
       return acc
     }, Object.create(null))
 
-    this._actionStreams = this._actionKeys.reduce((acc, key) => {
+    this.actionStreams = this._actionKeys.reduce((acc, key) => {
       acc[key] = this.action$.pipe(
         filter(({ type }) => type === key),
         map(({ payload }) => payload),
@@ -100,7 +100,7 @@ export abstract class EffectModule<S> {
     const ssrCache = (_globalThis as any)[Symbol.for(Symbol.keyFor(GLOBAL_KEY)!)]
     let loadFromSSR = false
     let preloadState: S | undefined
-    if (ssrCache && ssrCache[this.moduleName]) {
+    if (ssrCache?.[this.moduleName]) {
       preloadState = ssrCache[this.moduleName]
       loadFromSSR = true
     }
@@ -125,13 +125,13 @@ export abstract class EffectModule<S> {
   getActions<M extends EffectModule<S>>(
     this: M,
   ): M extends EffectModule<infer State> ? InstanceActionOfEffectModule<M, State> : never {
-    return this._actions
+    return this.actions
   }
 
   getAction$<M extends EffectModule<S>>(
     this: M,
   ): M extends EffectModule<infer State> ? ActionStreamOfEffectModule<M, State> : ActionStreamOfEffectModule<M, S> {
-    return this._actionStreams
+    return this.actionStreams
   }
 
   protected createNoopAction(): Action<null> {
@@ -200,11 +200,11 @@ export abstract class EffectModule<S> {
   }
 
   private combineDefineActions() {
-    this._defineActionKeys = (Reflect.getMetadata(DEFINE_ACTION_DECORATOR_SYMBOL, this.constructor) as string[]) || []
+    this.defineActionKeys = (Reflect.getMetadata(DEFINE_ACTION_DECORATOR_SYMBOL, this.constructor) as string[]) || []
 
-    this._actionKeys.push(...this._defineActionKeys)
+    this._actionKeys.push(...this.defineActionKeys)
 
-    for (const actionType of this._defineActionKeys) {
+    for (const actionType of this.defineActionKeys) {
       ;(this as any)[actionType] = this.action$.pipe(
         filter(({ type }) => type === actionType),
         map(({ payload }) => payload),

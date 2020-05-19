@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import 'reflect-metadata'
 
-import React, { useEffect } from 'react'
-import { Observable, timer } from 'rxjs'
-import { endWith, switchMap, map, mergeMap, flatMap, withLatestFrom } from 'rxjs/operators'
-import { Draft } from 'immer'
-import { rootInjector } from '@sigi/di'
 import { TERMINATE_ACTION, GLOBAL_KEY, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
-import { Action } from '@sigi/types'
+import { rootInjector } from '@sigi/di'
 import { emitSSREffects, SSRStateCacheInstance } from '@sigi/ssr'
+import { Action } from '@sigi/types'
+import { Draft } from 'immer'
+import uniqueId from 'lodash/uniqueId'
+import React, { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
-import uniqueId from 'lodash/uniqueId'
+import { Observable, timer } from 'rxjs'
+import { endWith, switchMap, map, mergeMap, flatMap, withLatestFrom } from 'rxjs/operators'
 
 import { SSRSharedContext, SSRContext, useModule, useModuleState } from '../index'
 
@@ -218,7 +219,7 @@ describe('SSR specs:', () => {
   })
 
   it('should restore state from global', () => {
-    // @ts-ignore
+    // @ts-expect-error
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 1,
@@ -230,13 +231,13 @@ describe('SSR specs:', () => {
       testRenderer.update(<Component />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-    // @ts-ignore
+    // @ts-expect-error
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should restore state from global #with selector', () => {
-    // @ts-ignore
+    // @ts-expect-error
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 10,
@@ -248,13 +249,13 @@ describe('SSR specs:', () => {
       testRenderer.update(<ComponentWithSelector />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('10')
-    // @ts-ignore
+    // @ts-expect-error
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should not restore state from global if state is null', () => {
-    // @ts-ignore
+    // @ts-expect-error
     global[GLOBAL_KEY] = {
       OtherModule: {
         count: 10,
@@ -266,7 +267,7 @@ describe('SSR specs:', () => {
       testRenderer.update(<ComponentWithSelector />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-    // @ts-ignore
+    // @ts-expect-error
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
@@ -285,7 +286,7 @@ describe('SSR specs:', () => {
       )
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 2,
@@ -300,7 +301,7 @@ describe('SSR specs:', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('2')
 
-    // @ts-ignore
+    // @ts-expect-error
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })

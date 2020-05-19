@@ -1,11 +1,11 @@
-import { from, race, timer, throwError, Subject, noop, Observable, Observer } from 'rxjs'
-import { flatMap, bufferCount, take, filter, tap } from 'rxjs/operators'
+import { EffectModule, TERMINATE_ACTION, SSR_ACTION_META } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf, Action, Store } from '@sigi/types'
-import { EffectModule, TERMINATE_ACTION, SSR_ACTION_META } from '@sigi/core'
+import { from, race, timer, throwError, Subject, noop, Observable, Observer } from 'rxjs'
+import { flatMap, bufferCount, take, filter, tap } from 'rxjs/operators'
 
-import { SSRStateCacheInstance } from './ssr-states'
 import { oneShotCache } from './ssr-oneshot-cache'
+import { SSRStateCacheInstance } from './ssr-states'
 import { StateToPersist } from './state-to-persist'
 
 export type ModuleMeta = ConstructorOf<EffectModule<any>>
