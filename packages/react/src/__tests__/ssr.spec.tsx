@@ -219,7 +219,6 @@ describe('SSR specs:', () => {
   })
 
   it('should restore state from global', () => {
-    // @ts-expect-error
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 1,
@@ -231,13 +230,12 @@ describe('SSR specs:', () => {
       testRenderer.update(<Component />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-    // @ts-expect-error
+
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should restore state from global #with selector', () => {
-    // @ts-expect-error
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 10,
@@ -249,13 +247,12 @@ describe('SSR specs:', () => {
       testRenderer.update(<ComponentWithSelector />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('10')
-    // @ts-expect-error
+
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should not restore state from global if state is null', () => {
-    // @ts-expect-error
     global[GLOBAL_KEY] = {
       OtherModule: {
         count: 10,
@@ -267,7 +264,7 @@ describe('SSR specs:', () => {
       testRenderer.update(<ComponentWithSelector />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-    // @ts-expect-error
+
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
@@ -286,7 +283,6 @@ describe('SSR specs:', () => {
       )
     }
 
-    // @ts-expect-error
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 2,
@@ -301,7 +297,6 @@ describe('SSR specs:', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('2')
 
-    // @ts-expect-error
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })

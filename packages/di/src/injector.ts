@@ -115,6 +115,7 @@ export class Injector {
       instance = (provider as ValueProvider<T>).useValue
     } else if ((provider as ClassProvider<T>).useClass) {
       instance = leaf.getInstanceInternal((provider as ClassProvider<T>).useClass, useCache)
+      // @ts-expect-error
     } else if ((provider as FactoryProvider<T>).useFactory) {
       let deps: unknown[] = []
       if ((provider as FactoryProvider<T>).deps) {

@@ -35,16 +35,18 @@ describe('SSROneShotCache specs', () => {
     unsubscribeSpy.resetHistory()
   })
 
-  it('should work with EffectModule#1', async () => {
+  it('should work with EffectModule#1', (done) => {
     const instance = new MockEffectModule()
     cache.store(ctx, MockEffectModule, instance.state)
     expect(cache.consume(ctx, MockEffectModule)).toBe(instance.state)
-    await Promise.resolve()
-    expect(cache.consume(ctx, MockEffectModule)).toBe(undefined)
-    expect(unsubscribeSpy.callCount).toBe(1)
+    process.nextTick(() => {
+      expect(cache.consume(ctx, MockEffectModule)).toBe(undefined)
+      expect(unsubscribeSpy.callCount).toBe(1)
+      done()
+    })
   })
 
-  it('should work with EffectModule#2', async () => {
+  it('should work with EffectModule#2', (done) => {
     const instance = new MockEffectModule()
     const instanceLevel2 = new MockEffectModuleLevel2()
     const normalInstance = new Normal()
@@ -54,19 +56,23 @@ describe('SSROneShotCache specs', () => {
     expect(cache.consume(ctx, MockEffectModule)).toBe(instance.state)
     expect(cache.consume(ctx, MockEffectModuleLevel2)).toBe(instanceLevel2.state)
     expect(cache.consume(ctx, Normal)).toBe(normalInstance)
-    await Promise.resolve()
-    expect(cache.consume(ctx, MockEffectModule)).toBe(undefined)
-    expect(cache.consume(ctx, MockEffectModuleLevel2)).toBe(undefined)
-    expect(cache.consume(ctx, Normal)).toBe(undefined)
-    expect(unsubscribeSpy.callCount).toBe(2)
+    process.nextTick(() => {
+      expect(cache.consume(ctx, MockEffectModule)).toBe(undefined)
+      expect(cache.consume(ctx, MockEffectModuleLevel2)).toBe(undefined)
+      expect(cache.consume(ctx, Normal)).toBe(undefined)
+      expect(unsubscribeSpy.callCount).toBe(2)
+      done()
+    })
   })
 
-  it('should work with non EffectModule instance', async () => {
+  it('should work with non EffectModule instance', (done) => {
     const instance = new Normal()
     cache.store(ctx, Normal, instance)
     expect(cache.consume(ctx, Normal)).toBe(instance)
-    await Promise.resolve()
-    expect(cache.consume(ctx, Normal)).toBe(undefined)
-    expect(unsubscribeSpy.callCount).toBe(0)
+    process.nextTick(() => {
+      expect(cache.consume(ctx, Normal)).toBe(undefined)
+      expect(unsubscribeSpy.callCount).toBe(0)
+      done()
+    })
   })
 })

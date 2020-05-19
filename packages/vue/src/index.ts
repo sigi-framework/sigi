@@ -163,6 +163,6 @@ export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Prop
       originalBeforeUpdate.call(this)
     }
   }
-
+  // @ts-expect-error
   return componentOptions
 }

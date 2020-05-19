@@ -15,15 +15,17 @@ interface TransformBaseline {
 
 expect.addSnapshotSerializer({
   test: (obj: any) => obj && obj.type === 'transform-baseline',
-  print: (obj: TransformBaseline, _print: (object: any) => string, indent: (str: string) => string) =>
-    `
+  print: (val, _print, indent) => {
+    const obj = val as TransformBaseline
+    return `
 File: ${obj.filename}
 TypeScript before transform:
 ${indent(obj.content)}
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
 ${indent(obj.transformed).replace(/ {4}/g, '  ')}
-`,
+`
+  },
 })
 
 describe('ts-plugin specs', () => {
