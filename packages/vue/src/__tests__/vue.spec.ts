@@ -41,7 +41,8 @@ class VueTestingModule extends EffectModule<VueTestingState> {
 }
 
 describe('VueJS reative binding', () => {
-  let vm = new Vue(reactive(VueTestingModule, {}))
+  const options = reactive(VueTestingModule, {})
+  let vm = new Vue(options)
   let testingStub: SigiTestStub<VueTestingModule, VueTestingState>
   let timer: Sinon.SinonFakeTimers
 

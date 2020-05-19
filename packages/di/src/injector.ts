@@ -1,15 +1,6 @@
 import { ReflectiveProvider } from './injector-provider'
 import { InjectionProvider } from './provider'
-import {
-  Provider,
-  ValueProvider,
-  ClassProvider,
-  FactoryProvider,
-  ExistingProvider,
-  Token,
-  Type,
-  InjectionToken,
-} from './type'
+import { Provider, ValueProvider, ClassProvider, FactoryProvider, Token, Type, InjectionToken } from './type'
 
 export class Injector {
   readonly provider = new InjectionProvider()
@@ -111,21 +102,18 @@ export class Injector {
       const deps: Array<Type<unknown> | InjectionToken<T>> = Reflect.getMetadata('design:paramtypes', provider) ?? []
       const depsInstance = deps.map((dep) => leaf.getInstanceInternal(leaf.findExisting(dep), useCache))
       instance = new provider(...depsInstance)
-    } else if ((provider as ValueProvider<T>).useValue) {
-      instance = (provider as ValueProvider<T>).useValue
-    } else if ((provider as ClassProvider<T>).useClass) {
-      instance = leaf.getInstanceInternal((provider as ClassProvider<T>).useClass, useCache)
-      // @ts-expect-error
-    } else if ((provider as FactoryProvider<T>).useFactory) {
+    } else if ('useValue' in provider) {
+      instance = provider.useValue
+    } else if ('useClass' in provider) {
+      instance = leaf.getInstanceInternal(provider.useClass, useCache)
+    } else if ('useFactory' in provider) {
       let deps: unknown[] = []
-      if ((provider as FactoryProvider<T>).deps) {
-        deps = (provider as FactoryProvider<T>).deps!.map((dep) =>
-          leaf.getInstanceInternal(leaf.findExisting(dep), useCache),
-        )
+      if (provider.deps) {
+        deps = provider.deps!.map((dep) => leaf.getInstanceInternal(leaf.findExisting(dep), useCache))
       }
-      instance = (provider as FactoryProvider<T>).useFactory(...deps)
-    } else if ((provider as ExistingProvider<T>).useExisting) {
-      instance = leaf.getInstanceInternal(this.findExisting((provider as ExistingProvider<T>).useExisting)!, useCache)
+      instance = provider.useFactory(...deps)
+    } else if ('useExisting' in provider) {
+      instance = leaf.getInstanceInternal(this.findExisting(provider.useExisting), useCache)
     }
     if (!instance) {
       throw new TypeError(`Can not resolve ${name}, it's not a valid provider`)

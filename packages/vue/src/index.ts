@@ -2,110 +2,58 @@ import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/c
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf, Store as PublicStore } from '@sigi/types'
 import { Subject } from 'rxjs'
-import Vue, { ComponentOptions, WatchOptionsWithHandler } from 'vue'
-import { DefaultProps } from 'vue/types/options'
+import Vue, { ComponentOptions } from 'vue'
+import { RecordPropsDefinition, DataDef } from 'vue/types/options'
+import { CombinedVueInstance } from 'vue/types/vue'
 
 import { cloneDeepPoj } from './utils'
-
-export type Prop<T> =
-  | { (): T }
-  | { new (...args: never[]): T & object }
-  | { new (...args: string[]): (...args: any[]) => any }
-
-export type PropType<T> = Prop<T> | Prop<T>[]
-
-export type PropValidator<T> = PropOptions<T> | PropType<T>
 
 interface Store<S = any> extends PublicStore<S> {
   state$: Subject<S>
 }
 
-export interface PropOptions<T = any> {
-  type?: PropType<T>
-  required?: boolean
-  default?: T | null | undefined | (() => T | null | undefined)
-  validator?: (value: T) => boolean
-}
+type ReactiveComponentOptions<M extends EffectModule<any>, V extends Vue, Data, Methods, Computed, Prop> = {
+  syncToSigi?: Array<keyof StateInEffectModule<M>>
+} & (Prop extends string
+  ? ComponentOptions<V, DataDef<Data, Record<Prop, any>, V>, Methods, Computed, Prop[], Record<Prop, any>> &
+      ThisType<
+        CombinedVueInstance<
+          V,
+          StateInEffectModule<M> & Data,
+          ActionOfEffectModule<M, StateInEffectModule<M>> & Methods,
+          Computed,
+          Readonly<Record<Prop, any>>
+        >
+      >
+  : ComponentOptions<V, DataDef<Data, Prop, V>, Methods, Computed, RecordPropsDefinition<Prop>, Prop> &
+      ThisType<
+        CombinedVueInstance<
+          V,
+          StateInEffectModule<M> & Data,
+          ActionOfEffectModule<M, StateInEffectModule<M>> & Methods,
+          Computed,
+          Readonly<Prop>
+        >
+      >)
 
-export type RecordPropsDefinition<T> = {
-  [K in keyof T]: PropValidator<T[K]>
-}
-export type ArrayPropsDefinition<T> = (keyof T)[]
-export type PropsDefinition<T> = ArrayPropsDefinition<T> | RecordPropsDefinition<T>
-
-export type WatchHandler<T> = {
-  (value: T, oldValue: T): void
-}
-
-export type ReactiveComponentOptions<
+export const reactive = <
   M extends EffectModule<any>,
   V extends Vue,
-  D,
+  Data,
   Methods,
   Computed,
-  Props,
-  Watch extends {
-    [key in keyof D]?: WatchHandler<unknown> | WatchOptionsWithHandler<unknown>
-  } = {
-    [key in keyof D]?: WatchHandler<any> | WatchOptionsWithHandler<any>
-  }
-> = Omit<
-  ComponentOptions<V, unknown, Methods, Computed, Props>,
-  | 'data'
-  | 'methods'
-  | 'props'
-  | 'watch'
-  | 'created'
-  | 'beforeDestroy'
-  | 'destroyed'
-  | 'beforeMount'
-  | 'mounted'
-  | 'beforeUpdate'
-  | 'updated'
-  | 'activated'
-  | 'deactivated'
-> & {
-  data?: () => D
-  methods?: Methods
-  props?: PropsDefinition<Props>
-  watch?: Watch extends {
-    [key in keyof D]?: infer V
-  }
-    ? {
-        [key in keyof D]?: V extends WatchHandler<infer Value>
-          ? Value extends any
-            ? WatchHandler<D[key]>
-            : WatchHandler<Value>
-          : V extends WatchOptionsWithHandler<infer Value>
-          ? Value extends any
-            ? WatchOptionsWithHandler<D[key]>
-            : WatchOptionsWithHandler<Value>
-          : never
-      }
-    : never
-  syncToSigi?: (keyof StateInEffectModule<M>)[]
-  created?: () => void
-  beforeDestroy?: () => void
-  destroyed?: () => void
-  beforeMount?: () => void
-  mounted?: () => void
-  beforeUpdate?: () => void
-  updated?: () => void
-  activated?: () => void
-  deactivated?: () => void
-} & ThisType<
-    V & Methods & Computed & D & StateInEffectModule<M> & ActionOfEffectModule<M, StateInEffectModule<M>> & Props
-  >
-
-export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Props>(
+  PropDef = object,
+  Props = object
+>(
   EffectModuleConstructor: ConstructorOf<M>,
-  componentOptions: ReactiveComponentOptions<M, Vue, D, Methods, Computed, Props>,
+  componentOptions: ReactiveComponentOptions<M, V, Data, Methods, Computed, PropDef>,
 ): ComponentOptions<
-  Vue,
-  D extends never ? object : D & StateInEffectModule<M>,
-  (Methods extends undefined ? object : Methods) & ActionOfEffectModule<M, StateInEffectModule<M>>,
+  V,
+  StateInEffectModule<M> & (Data extends never ? object : Data extends (...args: any) => any ? ReturnType<Data> : Data),
+  ActionOfEffectModule<M, StateInEffectModule<M>> & (Methods extends never ? object : Methods),
   Computed,
-  Props extends unknown ? RecordPropsDefinition<DefaultProps> : Props
+  PropDef,
+  Props
 > => {
   const effectModule = rootInjector.getInstance(EffectModuleConstructor)
   const store = effectModule.createStore() as Store
@@ -129,14 +77,16 @@ export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Prop
     subscription.unsubscribe()
     typeof originalBeforeDestory === 'function' ? originalBeforeDestory.call(this) : void 0
   }
-  componentOptions.methods = componentOptions.methods ?? ({} as Methods)
-  Object.assign(componentOptions.methods, dispatchProps)
+
+  componentOptions.methods = Object.assign(dispatchProps, componentOptions.methods ?? {})
+
   const { data: originalData } = componentOptions
-  componentOptions.data = function data() {
+  componentOptions.data = function data(this: Vue) {
     if (typeof originalData === 'function') {
       // eslint-disable-next-line @typescript-eslint/ban-types
       return Object.assign(statePassToVue, (originalData as Function).call(this))
     }
+
     return statePassToVue
   }
 
@@ -163,6 +113,7 @@ export const reactive = <M extends EffectModule<any>, D, Methods, Computed, Prop
       originalBeforeUpdate.call(this)
     }
   }
+
   // @ts-expect-error
   return componentOptions
 }

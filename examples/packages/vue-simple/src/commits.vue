@@ -37,6 +37,24 @@ export default reactive(CommitsModule, {
     }
   },
 
+  data() {
+    return {
+      a: this.branches
+    }
+  },
+
+  methods: {
+    getCurrentBranch() {
+      return this.currentBranch
+    }
+  },
+
+  computed: {
+    branchCount(): number {
+      return this.branches.length
+    }
+  },
+
   syncToSigi: ['currentBranch'],
 
   created: function() {
