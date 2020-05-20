@@ -1,15 +1,15 @@
 import 'reflect-metadata'
 
+import { rootInjector } from '@sigi/di'
+import { Action, Store } from '@sigi/types'
+import { Draft } from 'immer'
 import { Observable, noop } from 'rxjs'
 import { delay, map, withLatestFrom, takeUntil, tap } from 'rxjs/operators'
-import { Draft } from 'immer'
-import { rootInjector } from '@sigi/di'
 import * as Sinon from 'sinon'
-import { Action, Store } from '@sigi/types'
 
+import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
 import { EffectModule } from '../module'
 import { Module } from '../module.decorator'
-import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
 import { InstanceActionOfEffectModule } from '../types'
 
 interface CounterState {
@@ -188,12 +188,12 @@ describe('EffectModule Class', () => {
     it('should throw if module name conflict#1', () => {
       const fn = () => {
         @Module('Module')
-        class Module1 extends EffectModule<{}> {
+        class Module1 extends EffectModule<object> {
           defaultState = {}
         }
 
         @Module('Module')
-        class Module2 extends EffectModule<{}> {
+        class Module2 extends EffectModule<object> {
           defaultState = {}
         }
 
@@ -206,12 +206,12 @@ describe('EffectModule Class', () => {
     it('should throw if module name conflict#2', () => {
       const fn = () => {
         @Module('Module1')
-        class Module1 extends EffectModule<{}> {
+        class Module1 extends EffectModule<object> {
           defaultState = {}
         }
 
         @Module('Module1')
-        class Module2 extends EffectModule<{}> {
+        class Module2 extends EffectModule<object> {
           defaultState = {}
         }
 
@@ -224,7 +224,7 @@ describe('EffectModule Class', () => {
     it('should throw if config in module invalid', () => {
       const fn = () => {
         @Module({} as any)
-        class Module1 extends EffectModule<{}> {
+        class Module1 extends EffectModule<object> {
           defaultState = {}
         }
 

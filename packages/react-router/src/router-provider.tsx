@@ -1,6 +1,6 @@
-import React, { memo, useEffect } from 'react'
-import { History } from 'history'
 import { useDispatchers } from '@sigi/react'
+import { History } from 'history'
+import React, { memo, useEffect } from 'react'
 
 import { RouterModule } from './router.module'
 

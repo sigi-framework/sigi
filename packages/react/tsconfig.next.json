@@ -10,7 +10,5 @@
     { "path": "../core/tsconfig.next.json" },
     { "path": "../ssr/tsconfig.next.json" }
   ],
-  "include": [
-    "./src"
-  ]
+  "include": ["./src"]
 }

@@ -12,9 +12,9 @@
 
 Sigi is a effect management framenwork for complex frontend app.
 
-* **Type safe**: Sigi provides **Type Safe** APIs which connect the gap between your `Component` and `Side Effect` codes in compile time.
-* **Dependencies Injection**: Sigi contains a tiny denpendencies injection implmentation. Which allow you easier to compose your `Modules` and `Services`. And it is also provide huge benifit when you want to write some tests.
-* **Muti platfroms support**: Sigi now support `React/React Native` and `Vue@2.x`, we will also provide support for `Flutter` with very similiar APIs in very soon.
+- **Type safe**: Sigi provides **Type Safe** APIs which connect the gap between your `Component` and `Side Effect` codes in compile time.
+- **Dependencies Injection**: Sigi contains a tiny denpendencies injection implmentation. Which allow you easier to compose your `Modules` and `Services`. And it is also provide huge benifit when you want to write some tests.
+- **Muti platfroms support**: Sigi now support `React/React Native` and `Vue@2.x`, we will also provide support for `Flutter` with very similiar APIs in very soon.
 
 ## Documentation
 
@@ -24,13 +24,12 @@ And you can also read higher level introduction article in Chinese [中文介绍
 
 ## Ecosystem
 
-| **Project**                             | **Status**                                                   | **Description**                                              |
-| --------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [vue](./packages/vue)                   | ![](https://img.shields.io/npm/v/@sigi/vue.svg?sanitize=true) | VueJS integration library                                    |
-| [react](./packages/react)               | ![](https://img.shields.io/npm/v/@sigi/react.svg?sanitize=true) | React Hooks APIs                                             |
-| [react-router](./pacakges/react-router) | ![](https://img.shields.io/npm/v/@sigi/react-router.svg?sanitize=true) | React router integration                                     |
-| [ssr](./pacakges/ssr)                   | ![](https://img.shields.io/npm/v/@sigi/ssr.svg?sanitize=true) | Server side rendering support for `Vue/React`                |
-| [devtool](./packages/devtool)           | ![](https://img.shields.io/npm/v/@sigi/devtool.svg?sanitize=true) | Redux devtool integration                                    |
-| [di](./packages/di)                     | ![](https://img.shields.io/npm/v/@sigi/di.svg?sanitize=true) | Dependencies injection library which allow you compose your own class with `Sigi Modules` |
-| [testing](./packages/testing)           | ![](https://img.shields.io/npm/v/@sigi/testing.svg?sanitize=true) | Test helper library                                          |
-
+| **Project**                             | **Status**                                                             | **Description**                                                                           |
+| --------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [vue](./packages/vue)                   | ![](https://img.shields.io/npm/v/@sigi/vue.svg?sanitize=true)          | VueJS integration library                                                                 |
+| [react](./packages/react)               | ![](https://img.shields.io/npm/v/@sigi/react.svg?sanitize=true)        | React Hooks APIs                                                                          |
+| [react-router](./pacakges/react-router) | ![](https://img.shields.io/npm/v/@sigi/react-router.svg?sanitize=true) | React router integration                                                                  |
+| [ssr](./pacakges/ssr)                   | ![](https://img.shields.io/npm/v/@sigi/ssr.svg?sanitize=true)          | Server side rendering support for `Vue/React`                                             |
+| [devtool](./packages/devtool)           | ![](https://img.shields.io/npm/v/@sigi/devtool.svg?sanitize=true)      | Redux devtool integration                                                                 |
+| [di](./packages/di)                     | ![](https://img.shields.io/npm/v/@sigi/di.svg?sanitize=true)           | Dependencies injection library which allow you compose your own class with `Sigi Modules` |
+| [testing](./packages/testing)           | ![](https://img.shields.io/npm/v/@sigi/testing.svg?sanitize=true)      | Test helper library                                                                       |

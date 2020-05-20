@@ -7,11 +7,6 @@
     "outDir": "./esm",
     "composite": true
   },
-  "references": [
-    { "path": "../di" },
-    { "path": "../vue" }
-  ],
-  "include": [
-    "src"
-  ]
+  "references": [{ "path": "../di" }, { "path": "../vue" }],
+  "include": ["src"]
 }

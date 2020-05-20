@@ -1,6 +1,6 @@
-import { Observable, Subject, noop, ReplaySubject, Subscription, identity } from 'rxjs'
-import { Reducer } from 'react'
 import { Store, Epic, StoreCreator, Action } from '@sigi/types'
+import { Reducer } from 'react'
+import { Observable, Subject, noop, ReplaySubject, Subscription, identity } from 'rxjs'
 
 import { TERMINATE_ACTION } from './constants'
 import { logStoreAction } from './logger'

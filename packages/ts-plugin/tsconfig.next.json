@@ -4,10 +4,6 @@
     "target": "ES2018",
     "outDir": "./next"
   },
-  "references": [
-    { "path": "../types/tsconfig.next.json" }
-  ],
-  "include": [
-    "src"
-  ]
+  "references": [{ "path": "../types/tsconfig.next.json" }],
+  "include": ["src"]
 }

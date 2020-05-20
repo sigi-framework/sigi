@@ -1,6 +1,7 @@
-import { Observable } from 'rxjs'
-import { Draft } from 'immer'
+/* eslint-disable @typescript-eslint/no-invalid-void-type */
 import { Store, Action } from '@sigi/types'
+import { Draft } from 'immer'
+import { Observable } from 'rxjs'
 
 import { EffectModule } from './module'
 

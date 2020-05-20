@@ -1,19 +1,19 @@
-import { Observable } from 'rxjs'
-import { Draft } from 'immer'
 import { Action } from '@sigi/types'
+import { Draft } from 'immer'
+import { Observable } from 'rxjs'
 
+import { SSR_ACTION_META, ACTION_TO_SKIP_KEY } from './constants'
 import {
   IMMER_REDUCER_DECORATOR_SYMBOL,
   REDUCER_DECORATOR_SYMBOL,
   EFFECT_DECORATOR_SYMBOL,
   DEFINE_ACTION_DECORATOR_SYMBOL,
 } from './symbols'
-import { SSR_ACTION_META, ACTION_TO_SKIP_KEY } from './constants'
 
 function createActionDecorator(decoratorSymbol: symbol) {
   return () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const constructor = target.constructor
-    const decoratedActionNames: string[] = Reflect.getMetadata(decoratorSymbol, constructor) || []
+    const decoratedActionNames: string[] = Reflect.getMetadata(decoratorSymbol, constructor) ?? []
     Reflect.defineMetadata(decoratorSymbol, [...decoratedActionNames, propertyKey], constructor)
     return descriptor
   }
@@ -24,6 +24,7 @@ interface DecoratorReturnType<V> {
 }
 
 export const ImmerReducer: <S = any>() => DecoratorReturnType<
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
   (state: Draft<S>, params: any) => undefined | void
 > = createActionDecorator(IMMER_REDUCER_DECORATOR_SYMBOL)
 
@@ -41,7 +42,7 @@ interface EffectOptions {
    * @param ctx context
    * @param skipSymbol the skip symbol
    */
-  payloadGetter?: (ctx: any, skipSymbol: Symbol) => any | Promise<any>
+  payloadGetter?: (ctx: any, skipSymbol: symbol) => any | Promise<any>
 
   /**
    * Whether skip first effect dispatching in client if effect ever got dispatched when SSR
@@ -76,7 +77,7 @@ export const Effect: <A = any>(
     return (target: any, method: string, descriptor: PropertyDescriptor) => {
       addSSRMeta(target, method, payloadGetter)
       if (skipFirstClientDispatch) {
-        const actionsToSkip: Set<string> = Reflect.getMetadata(ACTION_TO_SKIP_KEY, target) || new Set()
+        const actionsToSkip: Set<string> = Reflect.getMetadata(ACTION_TO_SKIP_KEY, target) ?? new Set()
         actionsToSkip.add(method)
         Reflect.defineMetadata(ACTION_TO_SKIP_KEY, actionsToSkip, target)
       }

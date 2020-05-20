@@ -5,12 +5,6 @@
     "outDir": "./esm",
     "composite": true
   },
-  "references": [
-    { "path": "../core" },
-    { "path": "../react" },
-    { "path": "../testing" }
-  ],
-  "include": [
-    "./src"
-  ]
+  "references": [{ "path": "../core" }, { "path": "../react" }, { "path": "../testing" }],
+  "include": ["./src"]
 }

@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 
 import { Inject, Test, Injectable, InjectionToken, AbstractTestModule } from '../index'
-import { rootInjector } from '../root-injector'
 import { Injector } from '../injector'
+import { rootInjector } from '../root-injector'
 
 describe('testbed spec', () => {
   it('should resolve dep instance', () => {
@@ -122,7 +122,7 @@ describe('testbed spec', () => {
 
   it('should override TestModule', () => {
     class BetterTestModule implements AbstractTestModule {
-      private injector!: Injector
+      private readonly injector!: Injector
 
       getInstance<T>(target: any): T {
         return this.injector.getInstance(target)

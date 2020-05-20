@@ -1045,7 +1045,7 @@
   dependencies:
     "@sigi/di" "^1.0.0"
     "@sigi/types" "^1.0.0"
-    immer "^6.0.2"
+    immer "^6.0.5"
 
 "@sigi/devtool@../packages/devtool":
   version "1.0.1"
@@ -3526,10 +3526,10 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
-immer@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.npmjs.org/immer/-/immer-6.0.2.tgz#5bc08dc4930c756d0749533a2afbd88c8de0cd19"
-  integrity sha512-56CMvUMZl4kkWJFFUe1TjBgGbyb9ibzpLyHD+RSKSVdytuDXgT/HXO1S+GJVywMVl5neGTdAogoR15eRVEd10Q==
+immer@^6.0.5:
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.5.tgz#77187d13b71c6cee40dde3b8e87a50a7a636d630"
+  integrity sha512-Q2wd90qrgFieIpLzAO2q9NLEdmyp/sr76Ml4Vm5peUKgyTa2CQa3ey8zuzwSKOlKH7grCeGBGUcLLVCVW1aguA==
 
 immutable@^3.7.4:
   version "3.8.2"

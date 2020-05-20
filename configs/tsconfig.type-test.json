@@ -1,8 +1,6 @@
 {
   "extends": "../tsconfig.json",
-  "references": [
-    { "path": "../packages/type-test" }
-  ],
+  "references": [{ "path": "../packages/type-test" }],
   "compilerOptions": {
     "noEmit": true
   }

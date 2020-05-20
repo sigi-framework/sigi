@@ -2,12 +2,7 @@
   "name": "@sigi-example/vue-simple",
   "version": "1.0.0",
   "description": "Simple VueJS application using Sigi framework",
-  "keywords": [
-    "Sigi",
-    "Vue",
-    "VueJS",
-    "RxJS"
-  ],
+  "keywords": ["Sigi", "Vue", "VueJS", "RxJS"],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -16,9 +11,7 @@
     "lib": "lib",
     "test": "__tests__"
   },
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
