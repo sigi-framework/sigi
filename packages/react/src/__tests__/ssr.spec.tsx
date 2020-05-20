@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import 'reflect-metadata'
 
 import { TERMINATE_ACTION, GLOBAL_KEY, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'

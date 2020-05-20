@@ -90,7 +90,6 @@ describe('Router module spec', () => {
   const history: History = createMemoryHistory()
   let testStub: SigiTestStub<TestModule, TestState>
   let renderer: ReactTestRenderer
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   act(() => {
     renderer = create(<SigiRouterProvider history={history}>1</SigiRouterProvider>)
   })
@@ -163,7 +162,6 @@ describe('Router module spec', () => {
     const warnStub = Sinon.stub(console, 'warn')
     const { NODE_ENV } = process.env
     process.env.NODE_ENV = 'development'
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     act(() => {
       renderer.update(<SigiRouterProvider history={newHistory}>2</SigiRouterProvider>)
     })

@@ -13,7 +13,7 @@ import {
 function createActionDecorator(decoratorSymbol: symbol) {
   return () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const constructor = target.constructor
-    const decoratedActionNames: string[] = Reflect.getMetadata(decoratorSymbol, constructor) || []
+    const decoratedActionNames: string[] = Reflect.getMetadata(decoratorSymbol, constructor) ?? []
     Reflect.defineMetadata(decoratorSymbol, [...decoratedActionNames, propertyKey], constructor)
     return descriptor
   }
@@ -77,7 +77,7 @@ export const Effect: <A = any>(
     return (target: any, method: string, descriptor: PropertyDescriptor) => {
       addSSRMeta(target, method, payloadGetter)
       if (skipFirstClientDispatch) {
-        const actionsToSkip: Set<string> = Reflect.getMetadata(ACTION_TO_SKIP_KEY, target) || new Set()
+        const actionsToSkip: Set<string> = Reflect.getMetadata(ACTION_TO_SKIP_KEY, target) ?? new Set()
         actionsToSkip.add(method)
         Reflect.defineMetadata(ACTION_TO_SKIP_KEY, actionsToSkip, target)
       }

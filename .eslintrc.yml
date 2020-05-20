@@ -84,11 +84,6 @@ rules:
 
 overrides:
   - files:
-      - packages/**/*.{ts,tsx}
-    rules:
-      'no-unused-vars': [2, { varsIgnorePattern: '^_', argsIgnorePattern: '^_', ignoreRestSiblings: true }]
-
-  - files:
       - packages/**/*{.ts,.tsx}
     plugins:
       - '@typescript-eslint'
@@ -222,3 +217,7 @@ overrides:
               ],
           },
         ]
+  - files:
+      - packages/**/*.spec{.ts,.tsx}
+    rules:
+      '@typescript-eslint/no-floating-promises': 0
