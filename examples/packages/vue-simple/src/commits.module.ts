@@ -1,7 +1,7 @@
 import { Module, EffectModule, Effect, ImmerReducer } from '@sigi/core'
+import { Draft } from 'immer'
 import { Observable } from 'rxjs'
 import { map, combineLatest, switchMap, distinctUntilKeyChanged } from 'rxjs/operators'
-import { Draft } from 'immer'
 
 import { HttpService } from './http.service'
 

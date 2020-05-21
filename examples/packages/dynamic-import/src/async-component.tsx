@@ -1,5 +1,5 @@
-import React from 'react'
 import { useModule } from '@sigi/react'
+import React from 'react'
 
 import { AsyncModule } from './async.module'
 

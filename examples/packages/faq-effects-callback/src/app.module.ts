@@ -1,7 +1,7 @@
 import { Module, EffectModule, Reducer, Effect, Action } from '@sigi/core'
+import { message } from 'antd'
 import { Observable, of } from 'rxjs'
 import { exhaustMap, takeUntil, map, tap, startWith, catchError } from 'rxjs/operators'
-import { message } from 'antd'
 
 import { HttpClient } from './http.service'
 

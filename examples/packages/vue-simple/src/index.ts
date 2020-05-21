@@ -1,6 +1,6 @@
 import '@abraham/reflection'
-import Vue from 'vue'
 import { initDevtool } from '@sigi/devtool'
+import Vue from 'vue'
 
 import Commits from './commits.vue'
 
