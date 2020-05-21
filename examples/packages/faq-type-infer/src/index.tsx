@@ -1,8 +1,8 @@
 import 'reflect-metadata'
+import { initDevtool } from '@sigi/devtool'
+import { useModule } from '@sigi/react'
 import * as React from 'react'
 import { render } from 'react-dom'
-import { useModule } from '@sigi/react'
-import { initDevtool } from '@sigi/devtool'
 
 import { CountModule } from './app.module'
 

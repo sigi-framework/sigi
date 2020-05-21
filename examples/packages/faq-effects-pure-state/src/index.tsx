@@ -1,10 +1,10 @@
 import 'reflect-metadata'
 import 'antd/dist/antd.css'
+import { initDevtool } from '@sigi/devtool'
+import { useModule } from '@sigi/react'
+import { Modal } from 'antd'
 import React, { useState, useCallback } from 'react'
 import { render } from 'react-dom'
-import { useModule } from '@sigi/react'
-import { initDevtool } from '@sigi/devtool'
-import { Modal } from 'antd'
 
 import { AppModule } from './app.module'
 

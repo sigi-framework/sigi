@@ -1,12 +1,12 @@
 import 'reflect-metadata'
-import React from 'react'
-import { render } from 'react-dom'
 import { ClassProvider } from '@sigi/di'
 import { useModule, InjectionProvidersContext } from '@sigi/react'
-import { HttpErrorClient } from './http-with-error.service'
-import { HttpBetterClient } from './http-better.service'
+import React from 'react'
+import { render } from 'react-dom'
 
 import { AppModule } from './app.module'
+import { HttpBetterClient } from './http-better.service'
+import { HttpErrorClient } from './http-with-error.service'
 
 const AppContainer = React.memo(({ appTitle }: { appTitle: string }) => {
   const [{ list }, dispatcher] = useModule(AppModule)

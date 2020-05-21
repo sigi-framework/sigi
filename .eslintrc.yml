@@ -85,6 +85,7 @@ rules:
 overrides:
   - files:
       - packages/**/*{.ts,.tsx}
+      - examples/**/*{.ts,.tsx}
     plugins:
       - '@typescript-eslint'
     parserOptions:
@@ -219,5 +220,6 @@ overrides:
         ]
   - files:
       - packages/**/*.spec{.ts,.tsx}
+      - examples/**/*{.ts,.tsx}
     rules:
       '@typescript-eslint/no-floating-promises': 0

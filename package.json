@@ -56,7 +56,7 @@
     "clean:js": "shx rm -rf './packages/**/esm/**/*.{js,map}'",
     "clean:next": "shx rm -rf ./packages/**/next",
     "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
-    "lint": "eslint . -c ./.eslintrc.yml 'packages/**/*.{ts,tsx}' './configs/**/*.js'",
+    "lint": "eslint . -c ./.eslintrc.yml '{packages,examples,configs}/**/*.{js,ts,tsx}'",
     "format": "run-p format:md format:json format:source format:yml",
     "format:json": "prettier --parser json --write '**/*.json'",
     "format:md": "prettier --parser markdown --write './*.md' './{examples,packages}/**/*.md'",

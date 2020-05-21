@@ -1,22 +1,21 @@
 import 'reflect-metadata'
 
-import { Store, InstanceActionOfEffectModule } from '@sigi/core'
-import { Test } from '@sigi/testing'
+import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { Subject } from 'rxjs'
 import * as Sinon from 'sinon'
 
-import { HttpClient } from '../http.service'
 import { AppModule, AppState } from '../app.module'
+import { HttpClient } from '../http.service'
 
 describe('app module test', () => {
   let getStub: Sinon.SinonStub
-  let appStore: Store<AppState>
-  let actionsCreator: InstanceActionOfEffectModule<AppModule, AppState>
+  let moduleStub: SigiTestStub<AppModule, AppState>
   let dataStream$: Subject<any>
 
   beforeEach(() => {
     getStub = Sinon.stub()
     const testbed = Test.createTestingModule({
+      TestModule: SigiTestModule,
       providers: [AppModule, HttpClient],
     })
       .overrideProvider(HttpClient)
@@ -24,9 +23,7 @@ describe('app module test', () => {
         get: getStub,
       })
       .compile()
-    const appModule = testbed.getInstance(AppModule)
-    appStore = appModule.createStore()
-    actionsCreator = appModule.getActions()
+    moduleStub = testbed.getTestingStub(AppModule)
     dataStream$ = new Subject()
     getStub.returns(dataStream$)
   })
@@ -36,29 +33,29 @@ describe('app module test', () => {
   })
 
   it('should handle loading/success state', () => {
-    appStore.dispatch(actionsCreator.fetchList())
+    moduleStub.dispatcher.fetchList()
     expect(getStub.callCount).toBe(1)
-    expect(appStore.getState().list).toBe(null)
+    expect(moduleStub.getState().list).toBe(null)
     dataStream$.next([])
-    expect(appStore.getState().list).toEqual([])
+    expect(moduleStub.getState().list).toEqual([])
   })
 
   it('should handle loading/error state', () => {
-    appStore.dispatch(actionsCreator.fetchList())
+    moduleStub.dispatcher.fetchList()
     expect(getStub.callCount).toBe(1)
-    expect(appStore.getState().list).toBe(null)
+    expect(moduleStub.getState().list).toBe(null)
     const errMsg = 'whatever'
     dataStream$.error(new TypeError(errMsg))
-    expect(appStore.getState().list).toEqual(new TypeError(errMsg))
+    expect(moduleStub.getState().list).toEqual(new TypeError(errMsg))
   })
 
   it('should handle cancel', () => {
-    const defaultState = appStore.getState()
-    appStore.dispatch(actionsCreator.fetchList())
+    const defaultState = moduleStub.getState()
+    moduleStub.dispatcher.fetchList()
     expect(getStub.callCount).toBe(1)
-    expect(appStore.getState().list).toBe(null)
-    appStore.dispatch(actionsCreator.cancel())
+    expect(moduleStub.getState().list).toBe(null)
+    moduleStub.dispatcher.cancel()
     dataStream$.next([1, 2, 3])
-    expect(appStore.getState()).toEqual(defaultState)
+    expect(moduleStub.getState()).toEqual(defaultState)
   })
 })
