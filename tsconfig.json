@@ -31,5 +31,5 @@
       "@sigi/*": ["./*/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "packages/**/fixtures", "examples/**/*.{ts,tsx,vue}"]
+  "include": ["./packages/**/*"]
 }

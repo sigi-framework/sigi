@@ -5,6 +5,7 @@ import { Observable, merge, identity } from 'rxjs'
 import { map, filter, publish, refCount, skip } from 'rxjs/operators'
 
 import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
+import { hmrEnabled, hmrInstanceCache } from './hmr'
 import { logStoreAction } from './logger'
 import { createStore } from './state'
 import {
@@ -103,6 +104,12 @@ export abstract class EffectModule<S> {
     if (ssrCache?.[this.moduleName]) {
       preloadState = ssrCache[this.moduleName]
       loadFromSSR = true
+    }
+    if (hmrEnabled) {
+      const hmrCache = hmrInstanceCache.get(this.moduleName)
+      if (hmrCache) {
+        preloadState = hmrCache.store.getState()
+      }
     }
     this.store = this.setupStore(preloadState ?? this.defaultState, middleware, loadFromSSR)
     Reflect.defineMetadata(SSR_LOADED_KEY, loadFromSSR, this.store)

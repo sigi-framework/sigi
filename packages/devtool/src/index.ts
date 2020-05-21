@@ -16,7 +16,7 @@ const FakeReduxDevTools = {
   connect: () => devtool,
 }
 
-export const INIT_ACTION_TYPE = 'INIT_AYANAMI_STATE'
+export const INIT_ACTION_TYPE = 'INIT_SIGI_STATE'
 
 const ReduxDevTools =
   (typeof window !== 'undefined' && (window as any).__REDUX_DEVTOOLS_EXTENSION__) ?? FakeReduxDevTools
@@ -43,7 +43,7 @@ const logStateAction = (action: Action<unknown>) => {
 export const initDevtool = () => {
   if (process.env.NODE_ENV === 'development') {
     devtool = ReduxDevTools.connect({
-      name: `Ayanami`,
+      name: `Sigi`,
     })
     devtool.init(STATE)
     replaceLogger(logStateAction)

@@ -1,13 +1,15 @@
 {
   "name": "sigi",
   "version": "0.0.0",
-  "description": "Well designed effect management framenwork for complex frontend app ",
+  "description": "Well designed effect management framework for complex frontend app",
   "main": "none",
   "repository": "git@github.com:sigi-framework/sigi.git",
   "author": "lynweklm@gmail.com",
   "license": "MIT",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "@types/lodash": "^4.14.152",
@@ -66,10 +68,19 @@
     "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose"
   },
   "lint-staged": {
-    "*.@(js|ts|tsx)": ["prettier --write", "eslint -c .eslintrc.yml --fix"],
-    "*.@(yml|yaml)": ["prettier --parser yaml --write"],
-    "*.md": ["prettier --parser markdown --write"],
-    "*.json": ["prettier --parser json --write"]
+    "*.@(js|ts|tsx)": [
+      "prettier --write",
+      "eslint -c .eslintrc.yml --fix"
+    ],
+    "*.@(yml|yaml)": [
+      "prettier --parser yaml --write"
+    ],
+    "*.md": [
+      "prettier --parser markdown --write"
+    ],
+    "*.json": [
+      "prettier --parser json --write"
+    ]
   },
   "prettier": {
     "printWidth": 120,

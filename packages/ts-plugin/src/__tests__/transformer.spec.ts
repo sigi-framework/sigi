@@ -83,6 +83,37 @@ describe('ts-plugin specs', () => {
 
     const source = ts.createSourceFile('dynamic-option', code, ts.ScriptTarget.ESNext, true)
     const transpile = () => ts.transform(source, [SigiTransformer])
-    expect(transpile).toThrow('Only support object literal parameter in SSREffect')
+    expect(transpile).toThrow('Only support object literal parameter in Effect decorator')
+  })
+
+  it('should output hmr codes', () => {
+    const { NODE_ENV } = process.env
+    process.env.NODE_ENV = 'development'
+    const code = `
+    import { Module, Effect } from '@sigi/core'
+    import { Request } from 'express'
+    import { Observable } from 'rxjs'
+    import { map } from 'rxjs/operators'
+    
+    interface AState {}
+
+    @Module('MA')
+    export class ModuleA extends EffectModule<AState> {
+      @Effect()
+      whatever(payload$: Observable<string>) {
+        return payload$.pipe(
+          map(() => this.createNoopAction())
+        )
+      }
+    }
+    `
+    const printer = ts.createPrinter()
+    const source = ts.createSourceFile('hmr', code, ts.ScriptTarget.ESNext, true)
+    const output = ts.transform(source, [SigiTransformer])
+
+    const [outputCode] = output.transformed
+    const resultCode = printer.printFile(outputCode)
+    expect(resultCode).toMatchSnapshot()
+    process.env.NODE_ENV = NODE_ENV
   })
 })
