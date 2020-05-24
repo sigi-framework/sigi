@@ -145,7 +145,7 @@ export abstract class EffectModule<S> {
     return {
       type: NOOP_ACTION_TYPE,
       payload: null,
-      state: this.store!,
+      store: this.store!,
     }
   }
 
