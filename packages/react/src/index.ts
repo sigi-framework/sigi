@@ -50,7 +50,7 @@ function _useModuleState<S, U = S>(store: Store<S>, selector?: StateSelector<S, 
         skip(1),
         map((s) => {
           if (Reflect.getMetadata(SSR_LOADED_KEY, store)) {
-            Reflect.deleteMetadata(SSR_LOADED_KEY, store)
+            Reflect.defineMetadata(SSR_LOADED_KEY, false, store)
             return s
           } else {
             return selector ? selector(s) : s
