@@ -242,11 +242,7 @@ describe('SSR specs:', () => {
       },
     }
     const testRenderer = create(<ComponentWithSelector />)
-    act(() => {
-      testRenderer.update(<ComponentWithSelector />)
-    })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('10')
-
+    expect(testRenderer.root.findByType('span').children[0]).toBe('11')
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })

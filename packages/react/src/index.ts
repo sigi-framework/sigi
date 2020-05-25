@@ -1,4 +1,4 @@
-import { EffectModule, ActionOfEffectModule, SSR_LOADED_KEY } from '@sigi/core'
+import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
 import { ConstructorOf, Store } from '@sigi/types'
 import React, { useContext, useMemo, useEffect } from 'react'
@@ -38,24 +38,16 @@ export function useDispatchers<M extends EffectModule<S>, S = any>(A: Constructo
 function _useModuleState<S, U = S>(store: Store<S>, selector?: StateSelector<S, U>): S | U {
   const [appState, setState] = React.useState(() => {
     const initialState = store.getState()
-    return selector && !Reflect.getMetadata(SSR_LOADED_KEY, store) ? selector(initialState) : initialState
+    return selector ? selector(initialState) : initialState
   })
 
   // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
   // do not put subscribe in useEffect
-
   const subscription = useMemo(() => {
     return ((store as any).state$ as Subject<S>)
       .pipe(
         skip(1),
-        map((s) => {
-          if (Reflect.getMetadata(SSR_LOADED_KEY, store)) {
-            Reflect.defineMetadata(SSR_LOADED_KEY, false, store)
-            return s
-          } else {
-            return selector ? selector(s) : s
-          }
-        }),
+        map((s) => (selector ? selector(s) : s)),
         distinctUntilChanged(),
       )
       .subscribe(setState)

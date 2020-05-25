@@ -1,3 +1,9 @@
+# untagged
+
+## @sigi/react
+
+- remove useless `SSR_LOADED_KEY` and related logic
+
 # v2.0.1
 
 ## @sigi/react

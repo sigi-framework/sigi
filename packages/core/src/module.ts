@@ -4,7 +4,7 @@ import { Reducer } from 'react'
 import { Observable, merge, identity } from 'rxjs'
 import { map, filter, publish, refCount, skip } from 'rxjs/operators'
 
-import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
+import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, INIT_ACTION_TYPE } from './constants'
 import { hmrEnabled, hmrInstanceCache } from './hmr'
 import { logStoreAction } from './logger'
 import { createStore } from './state'
@@ -112,7 +112,6 @@ export abstract class EffectModule<S> {
       }
     }
     this.store = this.setupStore(preloadState ?? this.defaultState, middleware, loadFromSSR)
-    Reflect.defineMetadata(SSR_LOADED_KEY, loadFromSSR, this.store)
     if (process.env.NODE_ENV !== 'production') {
       Object.defineProperty(this.store, 'name', {
         value: this.moduleName,
