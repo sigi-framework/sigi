@@ -1,18 +1,18 @@
 import 'reflect-metadata'
 
-import React, { useEffect } from 'react'
-import { Observable, timer } from 'rxjs'
-import { endWith, switchMap, map, mergeMap, flatMap, withLatestFrom } from 'rxjs/operators'
-import { Draft } from 'immer'
-import { rootInjector } from '@sigi/di'
 import { TERMINATE_ACTION, GLOBAL_KEY, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
+import { rootInjector } from '@sigi/di'
+import { emitSSREffects, SSRStateCacheInstance } from '@sigi/ssr'
 import { Action } from '@sigi/types'
-import { emitSSREffects, SSREffect, SSRStateCacheInstance } from '@sigi/ssr'
+import { Draft } from 'immer'
+import uniqueId from 'lodash/uniqueId'
+import React, { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
-import uniqueId from 'lodash/uniqueId'
+import { Observable, timer } from 'rxjs'
+import { endWith, switchMap, map, mergeMap, flatMap, withLatestFrom } from 'rxjs/operators'
 
-import { SSRSharedContext, SSRContext, useEffectModule, useEffectState } from '../index'
+import { SSRSharedContext, SSRContext, useModule, useModuleState } from '../index'
 
 interface CountState {
   count: number
@@ -37,7 +37,9 @@ class CountModel extends EffectModule<CountState> {
     state.name = name
   }
 
-  @SSREffect()
+  @Effect({
+    ssr: true,
+  })
   getCount(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
       flatMap(() =>
@@ -49,8 +51,8 @@ class CountModel extends EffectModule<CountState> {
     )
   }
 
-  @SSREffect({
-    payloadGetter: (ctx: { url: string }, skip) => ctx.url || skip(),
+  @Effect({
+    payloadGetter: (ctx: { url: string }, skip) => ctx.url || skip,
     skipFirstClientDispatch: false,
   })
   skippedEffect(payload$: Observable<string>): Observable<Action> {
@@ -74,7 +76,7 @@ class TipModel extends EffectModule<TipState> {
     state.tip = tip
   }
 
-  @SSREffect()
+  @Effect({ ssr: true })
   getTip(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
       mergeMap(() =>
@@ -88,7 +90,7 @@ class TipModel extends EffectModule<TipState> {
 }
 
 const Component = () => {
-  const [state, actions] = useEffectModule(CountModel)
+  const [state, actions] = useModule(CountModel)
   useEffect(() => {
     actions.setName('new name')
   }, [actions])
@@ -101,7 +103,7 @@ const Component = () => {
 }
 
 const ComponentWithSelector = () => {
-  const [state, actions] = useEffectModule(CountModel, {
+  const [state, actions] = useModule(CountModel, {
     selector: (s) => ({
       count: s.count + 1,
     }),
@@ -216,7 +218,6 @@ describe('SSR specs:', () => {
   })
 
   it('should restore state from global', () => {
-    // @ts-ignore
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 1,
@@ -228,13 +229,12 @@ describe('SSR specs:', () => {
       testRenderer.update(<Component />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-    // @ts-ignore
+
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should restore state from global #with selector', () => {
-    // @ts-ignore
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 10,
@@ -246,13 +246,12 @@ describe('SSR specs:', () => {
       testRenderer.update(<ComponentWithSelector />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('10')
-    // @ts-ignore
+
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should not restore state from global if state is null', () => {
-    // @ts-ignore
     global[GLOBAL_KEY] = {
       OtherModule: {
         count: 10,
@@ -264,14 +263,14 @@ describe('SSR specs:', () => {
       testRenderer.update(<ComponentWithSelector />)
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-    // @ts-ignore
+
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
 
   it('should restore and skip first action on client side', () => {
     const Component = () => {
-      const [state, actions] = useEffectModule(CountModel)
+      const [state, actions] = useModule(CountModel)
       useEffect(() => {
         actions.getCount()
       }, [actions])
@@ -283,7 +282,6 @@ describe('SSR specs:', () => {
       )
     }
 
-    // @ts-ignore
     global[GLOBAL_KEY] = {
       CountModel: {
         count: 2,
@@ -298,7 +296,6 @@ describe('SSR specs:', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('2')
 
-    // @ts-ignore
     delete global[GLOBAL_KEY]
     testRenderer.unmount()
   })
@@ -365,7 +362,7 @@ describe('SSR specs:', () => {
         count: 0,
       }
 
-      @SSREffect()
+      @Effect({ ssr: true })
       addOne(payload$: Observable<void>): Observable<Action> {
         return payload$.pipe(
           withLatestFrom(this.state$),
@@ -397,7 +394,7 @@ describe('SSR specs:', () => {
         throw error
       }
 
-      @SSREffect()
+      @Effect({ ssr: true })
       addOne(payload$: Observable<void>): Observable<Action> {
         return payload$.pipe(
           withLatestFrom(this.state$),
@@ -427,7 +424,7 @@ describe('SSR specs:', () => {
         return { ...state, count: payload }
       }
 
-      @SSREffect({
+      @Effect({
         payloadGetter: () => {
           throw error
         },
@@ -454,7 +451,7 @@ describe('SSR specs:', () => {
     await emitSSREffects(req1, [CountModel], requestId)
     await emitSSREffects(req2, [CountModel], requestId)
     const SharedComponent1 = () => {
-      const state = useEffectState(CountModel)
+      const state = useModuleState(CountModel)
       return (
         <>
           <span>{state.count}</span>
@@ -463,7 +460,7 @@ describe('SSR specs:', () => {
     }
 
     const SharedComponent2 = () => {
-      const state = useEffectState(CountModel)
+      const state = useModuleState(CountModel)
       return (
         <>
           <span>{state.count}</span>

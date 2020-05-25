@@ -3,15 +3,9 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./esm",
-    "module": "esnext", 
+    "module": "esnext",
     "composite": true
   },
-  "references": [
-    { "path": "../core" },
-    { "path": "../di" },
-    { "path": "../types" }
-  ],
-  "include": [
-    "./src"
-  ]
+  "references": [{ "path": "../core" }, { "path": "../di" }, { "path": "../testing" }, { "path": "../types" }],
+  "include": ["./src"]
 }

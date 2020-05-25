@@ -1,5 +1,5 @@
 import { EffectModule, Module } from '@sigi/core'
-import { SSREffect } from 'not-sigi'
+import { Effect } from 'not-sigi'
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -8,7 +8,7 @@ interface AState {}
 
 @Module('A')
 export class ModuleA extends EffectModule<AState> {
-  @SSREffect({
+  @Effect({
     payloadGetter: (req: Request) => {
       return require('md5')('hello')
     }

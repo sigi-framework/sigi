@@ -4,7 +4,5 @@
     "target": "ES2018",
     "outDir": "./next"
   },
-  "include": [
-    "./src"
-  ]
+  "include": ["./src"]
 }

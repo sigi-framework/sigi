@@ -1,4 +1,5 @@
 export class InjectionToken<T> {
+  // @internal
   readonly _phantom?: T
 
   constructor(private readonly desc: string) {}

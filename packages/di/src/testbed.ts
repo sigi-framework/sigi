@@ -1,6 +1,6 @@
+import { Injector } from './injector'
 import { rootInjector } from './root-injector'
 import { Type, InjectionToken, Provider, Token, ValueProvider } from './type'
-import { Injector } from './injector'
 
 export class Test<M extends AbstractTestModule> {
   static createTestingModule<M extends AbstractTestModule>(overrideConfig?: {
@@ -8,14 +8,14 @@ export class Test<M extends AbstractTestModule> {
     providers?: Provider[]
   }) {
     return new Test<M>(
-      overrideConfig && overrideConfig.providers ? overrideConfig.providers : [],
-      overrideConfig && overrideConfig.TestModule ? overrideConfig.TestModule : (TestModule as any),
+      overrideConfig?.providers ? overrideConfig.providers : [],
+      overrideConfig?.TestModule ? overrideConfig.TestModule : (TestModule as any),
     )
   }
 
   readonly providersMap = new Map<Token<unknown>, Provider>()
 
-  private constructor(providers: Provider[], private TestModule: Type<M>) {
+  private constructor(providers: Provider[], private readonly TestModule: Type<M>) {
     for (const provier of providers) {
       this.providersMap.set((provier as ValueProvider<unknown>).provide ?? provier, provier)
     }
@@ -32,7 +32,7 @@ export class Test<M extends AbstractTestModule> {
 }
 
 export class MockProvider<T, M extends AbstractTestModule> {
-  constructor(private test: Test<M>, private token: Type<T> | InjectionToken<T>) {}
+  constructor(private readonly test: Test<M>, private readonly token: Type<T> | InjectionToken<T>) {}
 
   useClass(value: Type<T>) {
     this.test.providersMap.set(this.token, { provide: this.token, useClass: value })
@@ -55,7 +55,7 @@ export abstract class AbstractTestModule {
 }
 
 export class TestModule implements AbstractTestModule {
-  constructor(private injector: Injector) {}
+  constructor(private readonly injector: Injector) {}
 
   getInstance<T>(token: Provider<T>): T {
     return this.injector.getInstance(token)

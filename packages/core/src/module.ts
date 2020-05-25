@@ -1,10 +1,13 @@
+import { Action, Epic, Store, StoreCreator } from '@sigi/types'
+import produce, { Draft } from 'immer'
+import { Reducer } from 'react'
 import { Observable, merge, identity } from 'rxjs'
 import { map, filter, publish, refCount, skip } from 'rxjs/operators'
-import { Reducer } from 'react'
-import produce, { Draft } from 'immer'
-import { Action, Epic, State, StateCreator } from '@sigi/types'
 
-import { createState } from './state'
+import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
+import { hmrEnabled, hmrInstanceCache } from './hmr'
+import { logStoreAction } from './logger'
+import { createStore } from './state'
 import {
   EFFECT_DECORATOR_SYMBOL,
   REDUCER_DECORATOR_SYMBOL,
@@ -12,8 +15,6 @@ import {
   DEFINE_ACTION_DECORATOR_SYMBOL,
 } from './symbols'
 import { InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
-import { GLOBAL_KEY, ACTION_TO_SKIP_KEY, SSR_LOADED_KEY, INIT_ACTION_TYPE } from './constants'
-import { logStateAction } from './logger'
 
 type Effect<T> = (payload$: Observable<T>) => Observable<Action<unknown>>
 
@@ -40,17 +41,17 @@ export abstract class EffectModule<S> {
   readonly _actionKeys: string[] = []
 
   // @internal
-  state: State<S> | null = null
+  store: Store<S> | null = null
 
   state$: Observable<S>
 
-  private stateCreator!: StateCreator<S>
+  private readonly setupStore!: StoreCreator<S>
 
-  private readonly _actions!: any
+  private readonly actions!: any
 
-  private readonly _actionStreams!: any
+  private readonly actionStreams!: any
 
-  private _defineActionKeys!: string[]
+  private defineActionKeys!: string[]
 
   private readonly action$: Observable<Action<unknown>>
 
@@ -61,21 +62,21 @@ export abstract class EffectModule<S> {
     this.effect = this.combineEffects()
     this.reducer = this.combineReducers()
 
-    const { stateCreator, action$, state$ } = createState(this.reducer, this.effect)
-    this.stateCreator = stateCreator
+    const { setup, action$, state$ } = createStore(this.reducer, this.effect)
+    this.setupStore = setup
     this.action$ = action$
     this.state$ = state$
 
     this.combineDefineActions()
 
-    this._actions = this._actionKeys.reduce((acc, key) => {
+    this.actions = this._actionKeys.reduce((acc, key) => {
       acc[key] = (payload: unknown) => {
         const action = {
           type: key,
           payload,
         }
-        Object.defineProperty(action, 'state', {
-          value: this.state,
+        Object.defineProperty(action, 'store', {
+          value: this.store,
           enumerable: false,
           configurable: false,
           writable: false,
@@ -85,7 +86,7 @@ export abstract class EffectModule<S> {
       return acc
     }, Object.create(null))
 
-    this._actionStreams = this._actionKeys.reduce((acc, key) => {
+    this.actionStreams = this._actionKeys.reduce((acc, key) => {
       acc[key] = this.action$.pipe(
         filter(({ type }) => type === key),
         map(({ payload }) => payload),
@@ -95,50 +96,56 @@ export abstract class EffectModule<S> {
     }, {} as any)
   }
 
-  createState(middleware: (effect$: Observable<Action<unknown>>) => Observable<Action<unknown>> = identity) {
-    if (this.state) return this.state
+  createStore(middleware: (effect$: Observable<Action<unknown>>) => Observable<Action<unknown>> = identity) {
+    if (this.store) return this.store
     const ssrCache = (_globalThis as any)[Symbol.for(Symbol.keyFor(GLOBAL_KEY)!)]
     let loadFromSSR = false
     let preloadState: S | undefined
-    if (ssrCache && ssrCache[this.moduleName]) {
+    if (ssrCache?.[this.moduleName]) {
       preloadState = ssrCache[this.moduleName]
       loadFromSSR = true
     }
-    this.state = this.stateCreator(preloadState ?? this.defaultState, middleware, loadFromSSR)
-    Reflect.defineMetadata(SSR_LOADED_KEY, loadFromSSR, this.state)
+    if (hmrEnabled) {
+      const hmrCache = hmrInstanceCache.get(this.moduleName)
+      if (hmrCache) {
+        preloadState = hmrCache.store.getState()
+      }
+    }
+    this.store = this.setupStore(preloadState ?? this.defaultState, middleware, loadFromSSR)
+    Reflect.defineMetadata(SSR_LOADED_KEY, loadFromSSR, this.store)
     if (process.env.NODE_ENV !== 'production') {
-      Object.defineProperty(this.state, 'name', {
+      Object.defineProperty(this.store, 'name', {
         value: this.moduleName,
         configurable: false,
         enumerable: false,
         writable: false,
       })
-      logStateAction({
+      logStoreAction({
         type: INIT_ACTION_TYPE,
-        state: this.state,
+        store: this.store,
         payload: null,
       })
     }
-    return this.state
+    return this.store
   }
 
   getActions<M extends EffectModule<S>>(
     this: M,
   ): M extends EffectModule<infer State> ? InstanceActionOfEffectModule<M, State> : never {
-    return this._actions
+    return this.actions
   }
 
   getAction$<M extends EffectModule<S>>(
     this: M,
   ): M extends EffectModule<infer State> ? ActionStreamOfEffectModule<M, State> : ActionStreamOfEffectModule<M, S> {
-    return this._actionStreams
+    return this.actionStreams
   }
 
   protected createNoopAction(): Action<null> {
     return {
       type: NOOP_ACTION_TYPE,
       payload: null,
-      state: this.state!,
+      store: this.store!,
     }
   }
 
@@ -200,11 +207,11 @@ export abstract class EffectModule<S> {
   }
 
   private combineDefineActions() {
-    this._defineActionKeys = (Reflect.getMetadata(DEFINE_ACTION_DECORATOR_SYMBOL, this.constructor) as string[]) || []
+    this.defineActionKeys = (Reflect.getMetadata(DEFINE_ACTION_DECORATOR_SYMBOL, this.constructor) as string[]) || []
 
-    this._actionKeys.push(...this._defineActionKeys)
+    this._actionKeys.push(...this.defineActionKeys)
 
-    for (const actionType of this._defineActionKeys) {
+    for (const actionType of this.defineActionKeys) {
       ;(this as any)[actionType] = this.action$.pipe(
         filter(({ type }) => type === actionType),
         map(({ payload }) => payload),

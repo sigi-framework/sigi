@@ -1,5 +1,4 @@
-import { EffectModule, Module, Reducer } from '@sigi/core'
-import { SSREffect } from '@sigi/ssr'
+import { EffectModule, Module, Reducer, Effect } from '@sigi/core'
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
@@ -8,7 +7,7 @@ interface AState {}
 
 @Module('A')
 export class ModuleA extends EffectModule<AState> {
-  @SSREffect()
+  @Effect()
   whatever(payload$: Observable<string>) {
     return payload$.pipe(
       map(() => this.createNoopAction())

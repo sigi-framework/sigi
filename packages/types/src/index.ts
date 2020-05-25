@@ -1,6 +1,6 @@
 import { Subject, Observable } from 'rxjs'
 
-export type State<S> = {
+export type Store<S> = {
   getState: () => S
   dispatch: <T>(action: Action<T>) => void
   // @internal
@@ -20,13 +20,13 @@ export type Maybe<T> = T | null
 
 export type Epic<T> = (action$: Observable<Action<T>>, loadFromSSR: boolean) => Observable<Action<unknown>>
 
-export type StateCreator<S> = {
+export type StoreCreator<S> = {
   (
     defaultState: S,
     middleware?: (effect$: Observable<Action<unknown>>) => Observable<Action<unknown>>,
     loadFromSSR?: boolean,
   ): // @internal
-  State<S>
+  Store<S>
 }
 
 export interface ConstructorOf<T> {

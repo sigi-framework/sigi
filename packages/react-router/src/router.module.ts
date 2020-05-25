@@ -27,7 +27,7 @@ export class RouterModule extends EffectModule<RouterState> {
     historyListenerTeardown: noop,
   }
 
-  private router$ = new Subject<RouterChanged>()
+  private readonly router$ = new Subject<RouterChanged>()
 
   createRouterObservable() {
     return this.router$.asObservable()

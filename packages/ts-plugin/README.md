@@ -4,7 +4,7 @@
 
 ```ts
 // webpack.config.js
-const { SigiTransformer } = require('@sigi/ts-plugin');
+const { SigiTransformer } = require('@sigi/ts-plugin')
 
 module.exports = {
   // ...
@@ -16,15 +16,15 @@ module.exports = {
         options: {
           transpileOnly: true,
           getCustomTransformers: () => ({
-            before: [ SigiTransformer ]
+            before: [SigiTransformer],
           }),
           compilerOptions: {
-            module: 'esnext'
-          }
+            module: 'esnext',
+          },
         },
-        exclude: /node_modules/
-      }
-    ]
+        exclude: /node_modules/,
+      },
+    ],
   },
   // ...
 }

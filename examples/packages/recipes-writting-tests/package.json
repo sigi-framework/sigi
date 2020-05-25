@@ -1,11 +1,8 @@
 {
   "name": "@sigi-example/recipes-writting-tests",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Writting tests recipe for sigi framework",
-  "keywords": [
-    "Sigi",
-    "framework"
-  ],
+  "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework/sigi",
   "license": "MIT",
@@ -14,9 +11,7 @@
     "lib": "lib",
     "test": "__tests__"
   },
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -28,7 +23,6 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "devDependencies": {
-    "@sigi/testing": "../packages/testing",
     "@types/jest": "^25.1.1",
     "jest": "^25.1.0",
     "ts-jest": "^25.1.0"

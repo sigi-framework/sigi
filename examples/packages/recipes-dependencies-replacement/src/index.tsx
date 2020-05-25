@@ -1,15 +1,15 @@
 import 'reflect-metadata'
+import { ClassProvider } from '@sigi/di'
+import { useModule, InjectionProvidersContext } from '@sigi/react'
 import React from 'react'
 import { render } from 'react-dom'
-import { ClassProvider } from '@sigi/di'
-import { useEffectModule, InjectionProvidersContext } from '@sigi/react'
-import { HttpErrorClient } from './http-with-error.service'
-import { HttpBetterClient } from './http-better.service'
 
 import { AppModule } from './app.module'
+import { HttpBetterClient } from './http-better.service'
+import { HttpErrorClient } from './http-with-error.service'
 
 const AppContainer = React.memo(({ appTitle }: { appTitle: string }) => {
-  const [{ list }, dispatcher] = useEffectModule(AppModule)
+  const [{ list }, dispatcher] = useModule(AppModule)
 
   const loading = !list ? <div>loading</div> : null
 

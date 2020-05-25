@@ -5,13 +5,6 @@
     "outDir": "./esm",
     "composite": true
   },
-  "references": [
-    { "path": "../di" },
-    { "path": "../types" },
-    { "path": "../core" },
-    { "path": "../ssr" }
-  ],
-  "include": [
-    "./src"
-  ]
+  "references": [{ "path": "../di" }, { "path": "../types" }, { "path": "../core" }, { "path": "../ssr" }],
+  "include": ["./src"]
 }

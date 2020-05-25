@@ -1,6 +1,7 @@
-import * as ts from 'typescript'
 import * as fs from 'fs'
 import { resolve } from 'path'
+
+import * as ts from 'typescript'
 
 import { SigiTransformer } from '../index'
 
@@ -14,15 +15,17 @@ interface TransformBaseline {
 
 expect.addSnapshotSerializer({
   test: (obj: any) => obj && obj.type === 'transform-baseline',
-  print: (obj: TransformBaseline, _print: (object: any) => string, indent: (str: string) => string) =>
-    `
+  print: (val, _print, indent) => {
+    const obj = val as TransformBaseline
+    return `
 File: ${obj.filename}
 TypeScript before transform:
 ${indent(obj.content)}
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
 ${indent(obj.transformed).replace(/ {4}/g, '  ')}
-`,
+`
+  },
 })
 
 describe('ts-plugin specs', () => {
@@ -52,25 +55,24 @@ describe('ts-plugin specs', () => {
     })
   })
 
-  it('should throw if SSREffect option is dynamic', () => {
+  it('should throw if Effect option is dynamic', () => {
     const code = `
-    import { EffectModule, Module } from '@sigi/core'
-    import { SSREffect } from '@sigi/ssr'
+    import { EffectModule, Module, Effect } from '@sigi/core'
     import { Request } from 'express'
     import { Observable } from 'rxjs'
     import { map } from 'rxjs/operators'
     
     interface AState {}
     
-    const ssrEffectOption = {
+    const effectOption = {
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
       }
     }
 
-    @Module('A')
+    @EffectModule('A')
     export class ModuleA extends EffectModule<AState> {
-      @SSREffect(ssrEffectOption)
+      @Effect(effectOption)
       whatever(payload$: Observable<string>) {
         return payload$.pipe(
           map(() => this.createNoopAction())
@@ -81,6 +83,37 @@ describe('ts-plugin specs', () => {
 
     const source = ts.createSourceFile('dynamic-option', code, ts.ScriptTarget.ESNext, true)
     const transpile = () => ts.transform(source, [SigiTransformer])
-    expect(transpile).toThrow('Only support object literal parameter in SSREffect')
+    expect(transpile).toThrow('Only support object literal parameter in Effect decorator')
+  })
+
+  it('should output hmr codes', () => {
+    const { NODE_ENV } = process.env
+    process.env.NODE_ENV = 'development'
+    const code = `
+    import { Module, Effect } from '@sigi/core'
+    import { Request } from 'express'
+    import { Observable } from 'rxjs'
+    import { map } from 'rxjs/operators'
+    
+    interface AState {}
+
+    @Module('MA')
+    export class ModuleA extends EffectModule<AState> {
+      @Effect()
+      whatever(payload$: Observable<string>) {
+        return payload$.pipe(
+          map(() => this.createNoopAction())
+        )
+      }
+    }
+    `
+    const printer = ts.createPrinter()
+    const source = ts.createSourceFile('hmr', code, ts.ScriptTarget.ESNext, true)
+    const output = ts.transform(source, [SigiTransformer])
+
+    const [outputCode] = output.transformed
+    const resultCode = printer.printFile(outputCode)
+    expect(resultCode).toMatchSnapshot()
+    process.env.NODE_ENV = NODE_ENV
   })
 })

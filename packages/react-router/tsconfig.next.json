@@ -9,7 +9,5 @@
     { "path": "../react/tsconfig.next.json" },
     { "path": "../testing/tsconfig.next.json" }
   ],
-  "include": [
-    "./src"
-  ]
+  "include": ["./src"]
 }

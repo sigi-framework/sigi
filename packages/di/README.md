@@ -12,11 +12,11 @@
 import { Injectable, InjectableFactory } from '@sigi/di'
 
 @Injectable()
-class Engine { }
+class Engine {}
 
 @Injectable()
 class Car {
-  constructor(public engine: Engine) { }
+  constructor(public engine: Engine) {}
 }
 
 const car = InjectableFactory.getInstance(Car)
@@ -41,7 +41,7 @@ const provider: ValueProvider = {
   providers: [provider],
 })
 class HttpClient {
-  constructor(@Inject(token) public axios: Axios) { }
+  constructor(@Inject(token) public axios: Axios) {}
 }
 
 const client = InjectableFactory.getInstance(HttpClient)
@@ -70,7 +70,7 @@ const provider: FactoryProvider = {
   providers: [provider],
 })
 class HttpClient {
-  constructor(@Inject(token) public axios: Axios) { }
+  constructor(@Inject(token) public axios: Axios) {}
 }
 
 const client = InjectableFactory.getInstance(HttpClient)
@@ -137,10 +137,7 @@ class Service {
   constructor(@Inject(token) public dep: typeof whatever) {}
 }
 
-const testModule = Test.createTestingModule()
-  .overrideProvider(token)
-  .useValue(replacement)
-  .compile()
+const testModule = Test.createTestingModule().overrideProvider(token).useValue(replacement).compile()
 const service = testModule.getInstance(Service)
 t.true(service instanceof Service)
 t.is(service.dep, replacement)

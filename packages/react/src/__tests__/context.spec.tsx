@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 
+import { Injectable } from '@sigi/di'
 import React from 'react'
 import { create } from 'react-test-renderer'
-import { Injectable } from '@sigi/di'
 
 import { InjectionProvidersContext, InjectableContext, useInstance } from '../injectable-context'
 

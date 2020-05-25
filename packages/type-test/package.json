@@ -1,0 +1,21 @@
+{
+  "name": "@sigi/type-test",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Type tests for Sigi framework bindings",
+  "keywords": ["Sigi", "Vue", "VueJS"],
+  "author": "LongYinan <lynweklm@gmail.com>",
+  "homepage": "https://sigi.how",
+  "license": "MIT",
+  "main": "lib/type-test.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigi-framework/sigi.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "bugs": {
+    "url": "https://github.com/sigi-framework/sigi/issues"
+  }
+}

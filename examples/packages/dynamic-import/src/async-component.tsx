@@ -1,10 +1,10 @@
+import { useModule } from '@sigi/react'
 import React from 'react'
-import { useEffectModule } from '@sigi/react'
 
 import { AsyncModule } from './async.module'
 
 export function AsyncComponent() {
-  const [{ list }, dispatcher] = useEffectModule(AsyncModule)
+  const [{ list }, dispatcher] = useModule(AsyncModule)
   const loading = !list ? <div>loading</div> : null
 
   const title = list instanceof Error ? <h2>{list.message}</h2> : <h2>Async Component</h2>

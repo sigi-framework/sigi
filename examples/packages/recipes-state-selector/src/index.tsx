@@ -1,14 +1,14 @@
 import 'reflect-metadata'
+import { initDevtool } from '@sigi/devtool'
+import { useModule, useModuleState } from '@sigi/react'
 import React from 'react'
 import { render } from 'react-dom'
-import { useEffectModule, useEffectState } from '@sigi/react'
-import { initDevtool } from '@sigi/devtool'
 
 import { AppModule } from './app.module'
 
 function Loading() {
   console.info('Loading render')
-  const loading = useEffectState(AppModule, {
+  const loading = useModuleState(AppModule, {
     selector: (state) => state.loading,
   })
   if (loading) {
@@ -19,7 +19,7 @@ function Loading() {
 
 function List() {
   console.info('List render')
-  const [list, dispatcher] = useEffectModule(AppModule, {
+  const [list, dispatcher] = useModule(AppModule, {
     selector: (state) => state.list,
   })
 
@@ -47,3 +47,6 @@ const rootElement = document.getElementById('app')
 render(<App />, rootElement)
 
 initDevtool()
+if (module.hot) {
+  module.hot.accept()
+}

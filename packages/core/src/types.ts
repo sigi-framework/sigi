@@ -1,12 +1,13 @@
-import { Observable } from 'rxjs'
+/* eslint-disable @typescript-eslint/no-invalid-void-type */
+import { Store, Action } from '@sigi/types'
 import { Draft } from 'immer'
-import { State, Action } from '@sigi/types'
+import { Observable } from 'rxjs'
 
 import { EffectModule } from './module'
 
-export interface StateAction<T = unknown> extends Action<T> {
+export interface StoreAction<T = unknown> extends Action<T> {
   // @internal
-  readonly state: State<any>
+  readonly store?: Store<any>
 }
 
 type UnpackEffectPayload<Func> = Func extends (action$: Observable<infer Payload>) => Observable<Action>
@@ -57,3 +58,5 @@ export type ActionStreamOfEffectModule<M extends EffectModule<S>, S> = Omit<
   },
   keyof EffectModule<S>
 >
+
+export type StateInEffectModule<M extends EffectModule<any>> = M extends EffectModule<infer S> ? S : never

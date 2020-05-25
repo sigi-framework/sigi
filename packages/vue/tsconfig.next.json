@@ -5,10 +5,10 @@
     "outDir": "./next"
   },
   "references": [
+    { "path": "../core/tsconfig.next.json" },
     { "path": "../di/tsconfig.next.json" },
+    { "path": "../testing/tsconfig.next.json" },
     { "path": "../types/tsconfig.next.json" }
   ],
-  "include": [
-    "./src"
-  ]
+  "include": ["./src"]
 }

@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 
 import { Inject, Test, Injectable, InjectionToken, AbstractTestModule } from '../index'
-import { rootInjector } from '../root-injector'
 import { Injector } from '../injector'
+import { rootInjector } from '../root-injector'
 
 describe('testbed spec', () => {
   it('should resolve dep instance', () => {
@@ -69,10 +69,7 @@ describe('testbed spec', () => {
       constructor(@Inject(token) public dep: typeof whatever) {}
     }
 
-    const testModule = Test.createTestingModule()
-      .overrideProvider(token)
-      .useValue(replacement)
-      .compile()
+    const testModule = Test.createTestingModule().overrideProvider(token).useValue(replacement).compile()
     const service = testModule.getInstance(Service)
     expect(service instanceof Service).toBeTruthy()
     expect(service.dep).toBe(replacement)
@@ -91,10 +88,7 @@ describe('testbed spec', () => {
     @Injectable()
     class BetterDep {}
 
-    const testModule = Test.createTestingModule()
-      .overrideProvider(Dep)
-      .useClass(BetterDep)
-      .compile()
+    const testModule = Test.createTestingModule().overrideProvider(Dep).useClass(BetterDep).compile()
 
     const service = testModule.getInstance(Service)
     expect(service instanceof Service).toBeTruthy()
@@ -128,7 +122,7 @@ describe('testbed spec', () => {
 
   it('should override TestModule', () => {
     class BetterTestModule implements AbstractTestModule {
-      private injector!: Injector
+      private readonly injector!: Injector
 
       getInstance<T>(target: any): T {
         return this.injector.getInstance(target)

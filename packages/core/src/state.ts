@@ -1,36 +1,32 @@
-import { Observable, Subject, noop, ReplaySubject, Subscription, identity } from 'rxjs'
+import { Store, Epic, StoreCreator, Action } from '@sigi/types'
 import { Reducer } from 'react'
-import { State, Epic, StateCreator, Action } from '@sigi/types'
+import { Observable, Subject, noop, ReplaySubject, Subscription, identity } from 'rxjs'
 
 import { TERMINATE_ACTION } from './constants'
-import { logStateAction } from './logger'
-import { StateInterface } from './symbols'
-import { StateAction } from './types'
+import { logStoreAction } from './logger'
+import { StoreInterface } from './symbols'
+import { StoreAction } from './types'
 
-export function createState<S>(
+export function createStore<S>(
   reducer: Reducer<S, Action<unknown>>,
   effect: Epic<unknown>,
 ): {
-  stateCreator: StateCreator<S>
+  setup: StoreCreator<S>
   action$: Observable<Action<unknown>>
   state$: ReplaySubject<S>
 } {
   const action$ = new Subject<Action<unknown>>()
-  const _action$ = new Subject<Action<unknown>>()
+  const effect$ = new Subject<Action<unknown>>()
   const actionObservers = new Set<(action: Action<unknown>) => void>()
   const state$ = new ReplaySubject<S>(1)
 
-  function stateCreator(
-    defaultState: S,
-    middleware: (effect$: Observable<Action<unknown>>) => Observable<Action<unknown>> = identity,
-    loadFromSSR = false,
-  ): State<S> {
-    const state: State<S> = Object.create(null)
+  const setup: StoreCreator<S> = (defaultState, middleware = identity, loadFromSSR = false) => {
+    const store: Store<S> = Object.create(null)
     let appState = defaultState
 
-    function dispatch<T>(action: StateAction<T>) {
-      if (action.state !== state && action.type !== TERMINATE_ACTION.type) {
-        action.state.dispatch(action)
+    function dispatch<T>(action: StoreAction<T>) {
+      if (action.store && action.store !== store && action.type !== TERMINATE_ACTION.type) {
+        action.store.dispatch(action)
         return
       }
       const prevState: S = appState
@@ -38,20 +34,20 @@ export function createState<S>(
       if (newState !== prevState) {
         state$.next(newState)
       }
-      logStateAction(action)
+      logStoreAction(action)
       action$.next(action)
-      _action$.next(action)
+      effect$.next(action)
     }
 
-    const effect$: Observable<Action<unknown>> = effect(_action$, loadFromSSR)
+    const effectAction$: Observable<Action<unknown>> = effect(effect$, loadFromSSR)
 
     const subscription = new Subscription()
 
     subscription.add(
-      middleware(effect$).subscribe(
+      middleware(effectAction$).subscribe(
         (action) => {
           try {
-            dispatch(action as StateAction)
+            dispatch(action as StoreAction)
           } catch (e) {
             action$.error(e)
           }
@@ -70,10 +66,10 @@ export function createState<S>(
           }
         },
         (err: any) => {
-          _action$.error(err)
+          effect$.error(err)
         },
         () => {
-          _action$.complete()
+          effect$.complete()
         },
       ),
     )
@@ -86,8 +82,8 @@ export function createState<S>(
 
     state$.next(defaultState)
 
-    Object.assign(state, {
-      [StateInterface]: state,
+    Object.assign(store, {
+      [StoreInterface]: store,
       dispatch,
       state$,
       getState: () => appState,
@@ -99,11 +95,11 @@ export function createState<S>(
         action$.complete()
         state$.complete()
         subscription.unsubscribe()
-        state.dispatch = noop
+        store.dispatch = noop
         actionObservers.clear()
       },
     })
-    return state
+    return store
   }
-  return { stateCreator, action$, state$ }
+  return { setup, action$, state$ }
 }

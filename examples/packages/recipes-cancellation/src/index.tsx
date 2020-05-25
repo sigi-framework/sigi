@@ -1,17 +1,17 @@
 import 'reflect-metadata'
+import { initDevtool } from '@sigi/devtool'
+import { useModule } from '@sigi/react'
 import React from 'react'
 import { render } from 'react-dom'
-import { useEffectModule } from '@sigi/react'
-import { initDevtool } from '@sigi/devtool'
 
 import { AppModule } from './app.module'
 
 function App() {
-  const [state, dispatcher] = useEffectModule(AppModule)
+  const [state, dispatcher] = useModule(AppModule)
 
   const loading = state.loading ? <div>loading</div> : null
 
-  const list = (state.list || []).map((value) => <li key={value}>{value}</li>)
+  const list = (state.list ?? []).map((value) => <li key={value}>{value}</li>)
   return (
     <div>
       <h1>Hello CodeSandbox</h1>

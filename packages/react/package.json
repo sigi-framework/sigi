@@ -2,13 +2,7 @@
   "name": "@sigi/react",
   "version": "1.0.2",
   "description": "React bindings for sigi framnework",
-  "keywords": [
-    "Hooks",
-    "RxJS",
-    "TypeScript",
-    "React",
-    "Sigi"
-  ],
+  "keywords": ["Hooks", "RxJS", "TypeScript", "React", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -21,10 +15,7 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": [
-    "dist",
-    "esm"
-  ],
+  "files": ["dist", "esm"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"

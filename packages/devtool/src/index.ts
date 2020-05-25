@@ -1,12 +1,12 @@
-import { noop } from 'rxjs'
 import { TERMINATE_ACTION, replaceLogger } from '@sigi/core'
 import { Action } from '@sigi/types'
+import { noop } from 'rxjs'
 
 interface GlobalState {
   [modelName: string]: object
 }
 
-let devtool: { send: Function; init: Function } = {
+let devtool: { send: (...args: any[]) => void; init: (...args: any[]) => void } = {
   send: noop,
   init: noop,
 }
@@ -16,7 +16,7 @@ const FakeReduxDevTools = {
   connect: () => devtool,
 }
 
-export const INIT_ACTION_TYPE = 'INIT_AYANAMI_STATE'
+export const INIT_ACTION_TYPE = 'INIT_SIGI_STATE'
 
 const ReduxDevTools =
   (typeof window !== 'undefined' && (window as any).__REDUX_DEVTOOLS_EXTENSION__) ?? FakeReduxDevTools
@@ -27,13 +27,13 @@ const logStateAction = (action: Action<unknown>) => {
   if (action.type === TERMINATE_ACTION.type) {
     return
   }
-  const namespace = (action as any).state.name
+  const namespace = (action as any).store.name
   const _action = {
     type: `${namespace}/${String(action.type)}`,
     params: filterParams(action.payload),
   }
 
-  STATE[namespace] = (action as any).state.getState()
+  STATE[namespace] = (action as any).store.getState()
 
   if (!(action.type as string)?.endsWith?.(INIT_ACTION_TYPE)) {
     devtool.send(_action, STATE)
@@ -43,7 +43,7 @@ const logStateAction = (action: Action<unknown>) => {
 export const initDevtool = () => {
   if (process.env.NODE_ENV === 'development') {
     devtool = ReduxDevTools.connect({
-      name: `Ayanami`,
+      name: `Sigi`,
     })
     devtool.init(STATE)
     replaceLogger(logStateAction)

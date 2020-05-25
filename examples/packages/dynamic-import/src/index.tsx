@@ -1,14 +1,14 @@
 import 'reflect-metadata'
 import 'antd/dist/antd.css'
+import { initDevtool } from '@sigi/devtool'
+import { useModule } from '@sigi/react'
 import React, { useState, useCallback, useEffect } from 'react'
 import { render } from 'react-dom'
-import { useEffectModule } from '@sigi/react'
-import { initDevtool } from '@sigi/devtool'
 
 import { AppModule } from './app.module'
 
 function List() {
-  const [{ list }, dispatcher] = useEffectModule(AppModule)
+  const [{ list }, dispatcher] = useModule(AppModule)
   const loading = !list ? <div>loading</div> : null
 
   const title = list instanceof Error ? <h2>{list.message}</h2> : <h2>Hello CodeSandbox</h2>

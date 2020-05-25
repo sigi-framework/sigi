@@ -1,11 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ts-plugin specs should output hmr codes 1`] = `
+"import { Module, Effect } from '@sigi/core';
+import { Request } from 'express';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+interface AState {
+}
+@Module('MA')
+export class ModuleA extends EffectModule<AState> {
+    @Effect()
+    whatever(payload$: Observable<string>) {
+        return payload$.pipe(map(() => this.createNoopAction()));
+    }
+}
+if (process.env.NODE_ENV === \\"development\\" && module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => {
+        const { rootInjector } = require(\\"@sigi/di\\");
+        const instance = rootInjector
+            .
+                getInstance(ModuleA);
+        Module.removeModule(\\"MA\\", instance);
+    });
+}
+"
+`;
+
 exports[`ts-plugin specs should transform alias 1`] = `
 
 File: alias.tsx
 TypeScript before transform:
-  import { EffectModule, Module } from '@sigi/core'
-  import { SSREffect as _Effect } from '@sigi/ssr'
+  import { EffectModule, Module, Effect as _Effect } from '@sigi/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
@@ -28,8 +54,7 @@ TypeScript before transform:
   
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module } from '@sigi/core';
-  import { SSREffect as _Effect } from '@sigi/ssr';
+  import { EffectModule, Module, Effect as _Effect } from '@sigi/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -51,7 +76,7 @@ exports[`ts-plugin specs should transform do-nothing 1`] = `
 File: do-nothing.tsx
 TypeScript before transform:
   import { EffectModule, Module } from '@sigi/core'
-  import { SSREffect } from 'not-sigi'
+  import { Effect } from 'not-sigi'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
@@ -60,7 +85,7 @@ TypeScript before transform:
   
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect({
+    @Effect({
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
       }
@@ -79,7 +104,7 @@ TypeScript before transform:
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
   import { EffectModule, Module } from '@sigi/core';
-  import { SSREffect } from 'not-sigi';
+  import { Effect } from 'not-sigi';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -87,7 +112,7 @@ TypeScript after transform:
   }
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect({
+    @Effect({
       payloadGetter: (req: Request) => {
         return require('md5')('hello');
       }
@@ -106,8 +131,7 @@ exports[`ts-plugin specs should transform named-import 1`] = `
 
 File: named-import.tsx
 TypeScript before transform:
-  import { EffectModule, Module } from '@sigi/core'
-  import { SSREffect } from '@sigi/ssr'
+  import { EffectModule, Module, Effect } from '@sigi/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
@@ -116,7 +140,7 @@ TypeScript before transform:
   
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect({
+    @Effect({
       skipFirstClientDispatch: true,
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
@@ -131,8 +155,7 @@ TypeScript before transform:
   
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module } from '@sigi/core';
-  import { SSREffect } from '@sigi/ssr';
+  import { EffectModule, Module, Effect } from '@sigi/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -140,7 +163,7 @@ TypeScript after transform:
   }
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect({})
+    @Effect({})
     whatever(payload$: Observable<string>) {
       return payload$.pipe(map(() => this.createNoopAction()));
     }
@@ -153,17 +176,16 @@ exports[`ts-plugin specs should transform namespace-import 1`] = `
 
 File: namespace-import.tsx
 TypeScript before transform:
-  import { EffectModule, Module } from '@sigi/core'
-  import * as SSR from '@sigi/ssr'
+  import * as Sigi from '@sigi/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
   
   interface AState {}
   
-  @Module('A')
-  export class ModuleA extends EffectModule<AState> {
-    @SSR.SSREffect({
+  @Sigi.Module('A')
+  export class ModuleA extends Sigi.EffectModule<AState> {
+    @Sigi.Effect({
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
       }
@@ -177,16 +199,15 @@ TypeScript before transform:
   
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module } from '@sigi/core';
-  import * as SSR from '@sigi/ssr';
+  import * as Sigi from '@sigi/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
   interface AState {
   }
-  @Module('A')
-  export class ModuleA extends EffectModule<AState> {
-    @SSR.SSREffect({})
+  @Sigi.Module('A')
+  export class ModuleA extends Sigi.EffectModule<AState> {
+    @Sigi.Effect({})
     whatever(payload$: Observable<string>) {
       return payload$.pipe(map(() => this.createNoopAction()));
     }
@@ -199,8 +220,7 @@ exports[`ts-plugin specs should transform no-argument 1`] = `
 
 File: no-argument.tsx
 TypeScript before transform:
-  import { EffectModule, Module, Reducer } from '@sigi/core'
-  import { SSREffect } from '@sigi/ssr'
+  import { EffectModule, Module, Reducer, Effect } from '@sigi/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
@@ -209,7 +229,7 @@ TypeScript before transform:
   
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect()
+    @Effect()
     whatever(payload$: Observable<string>) {
       return payload$.pipe(
         map(() => this.createNoopAction())
@@ -224,8 +244,7 @@ TypeScript before transform:
   
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module, Reducer } from '@sigi/core';
-  import { SSREffect } from '@sigi/ssr';
+  import { EffectModule, Module, Reducer, Effect } from '@sigi/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -233,7 +252,7 @@ TypeScript after transform:
   }
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect()
+    @Effect()
     whatever(payload$: Observable<string>) {
       return payload$.pipe(map(() => this.createNoopAction()));
     }
@@ -251,7 +270,6 @@ exports[`ts-plugin specs should transform without-named-binding 1`] = `
 File: without-named-binding.tsx
 TypeScript before transform:
   import { EffectModule, Module } from '@sigi/core'
-  import '@sigi/ssr'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
@@ -260,7 +278,7 @@ TypeScript before transform:
   
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect({
+    @Effect({
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
       }
@@ -275,7 +293,6 @@ TypeScript before transform:
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
   import { EffectModule, Module } from '@sigi/core';
-  import '@sigi/ssr';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -283,7 +300,7 @@ TypeScript after transform:
   }
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
-    @SSREffect({
+    @Effect({
       payloadGetter: (req: Request) => {
         return require('md5')('hello');
       }
