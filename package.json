@@ -7,9 +7,25 @@
   "author": "lynweklm@gmail.com",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "run-s clean build:esm build:next build:bundle clean:js clean:next clean:tests",
+    "build:esm": "tsc -b ./configs/tsconfig.project.json",
+    "build:next": "tsc -b ./configs/tsconfig.next.json",
+    "build:bundle": "rollup --config ./configs/rollup.config.js",
+    "clean": "shx rm -rf ./packages/**/*.tsbuildinfo && shx rm -rf ./packages/**/{esm,dist}",
+    "clean:js": "shx rm -rf './packages/**/esm/**/*.{js,map}'",
+    "clean:next": "shx rm -rf ./packages/**/next",
+    "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
+    "lint": "eslint . -c ./.eslintrc.yml '{packages,examples,configs}/**/*.{js,ts,tsx}'",
+    "format": "run-p format:md format:json format:source format:yml",
+    "format:json": "prettier --parser json --write '**/*.json'",
+    "format:md": "prettier --parser markdown --write './*.md' './{examples,packages}/**/*.md'",
+    "format:source": "prettier --config ./package.json './{examples,packages}/**/*.{ts,tsx,js}' --write",
+    "format:yml": "prettier --parser yaml --write './*.{yml,yaml}'",
+    "test": "jest --config ./configs/jest.config.js --collectCoverage",
+    "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose"
+  },
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "@types/lodash": "^4.14.152",
@@ -49,38 +65,11 @@
     "typescript": "^3.9.3",
     "vue": "^2.6.11"
   },
-  "scripts": {
-    "build": "run-s clean build:esm build:next build:bundle clean:js clean:next clean:tests",
-    "build:esm": "tsc -b ./configs/tsconfig.project.json",
-    "build:next": "tsc -b ./configs/tsconfig.next.json",
-    "build:bundle": "rollup --config ./configs/rollup.config.js",
-    "clean": "shx rm -rf ./packages/**/*.tsbuildinfo && shx rm -rf ./packages/**/{esm,dist}",
-    "clean:js": "shx rm -rf './packages/**/esm/**/*.{js,map}'",
-    "clean:next": "shx rm -rf ./packages/**/next",
-    "clean:tests": "shx rm -rf './packages/**/esm/**/__tests__'",
-    "lint": "eslint . -c ./.eslintrc.yml '{packages,examples,configs}/**/*.{js,ts,tsx}'",
-    "format": "run-p format:md format:json format:source format:yml",
-    "format:json": "prettier --parser json --write '**/*.json'",
-    "format:md": "prettier --parser markdown --write './*.md' './{examples,packages}/**/*.md'",
-    "format:source": "prettier --config ./package.json './{examples,packages}/**/*.{ts,tsx,js}' --write",
-    "format:yml": "prettier --parser yaml --write './*.{yml,yaml}'",
-    "test": "jest --config ./configs/jest.config.js --collectCoverage",
-    "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose"
-  },
   "lint-staged": {
-    "*.@(js|ts|tsx)": [
-      "prettier --write",
-      "eslint -c .eslintrc.yml --fix"
-    ],
-    "*.@(yml|yaml)": [
-      "prettier --parser yaml --write"
-    ],
-    "*.md": [
-      "prettier --parser markdown --write"
-    ],
-    "*.json": [
-      "prettier --parser json --write"
-    ]
+    "*.@(js|ts|tsx)": ["prettier --write", "eslint -c .eslintrc.yml --fix"],
+    "*.@(yml|yaml)": ["prettier --parser yaml --write"],
+    "*.md": ["prettier --parser markdown --write"],
+    "*.json": ["prettier --parser json --write"]
   },
   "prettier": {
     "printWidth": 120,

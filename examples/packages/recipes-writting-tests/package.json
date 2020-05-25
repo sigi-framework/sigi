@@ -1,6 +1,6 @@
 {
   "name": "@sigi-example/recipes-writting-tests",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Writting tests recipe for sigi framework",
   "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",

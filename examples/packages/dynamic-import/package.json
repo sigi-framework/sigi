@@ -1,6 +1,6 @@
 {
   "name": "@sigi-example/dynamic-import",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Dynamic import example for Sigi framework",
   "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",

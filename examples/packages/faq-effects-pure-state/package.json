@@ -1,6 +1,6 @@
 {
   "name": "@sigi-example/faq-effects-pure-state",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Faq manage effect with pure state example for Sigi framework",
   "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",

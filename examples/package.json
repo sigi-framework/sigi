@@ -7,16 +7,12 @@
   "license": "MIT",
   "workspaces": ["../packages/*", "./packages/*"],
   "private": true,
+  "scripts": {
+    "start": "node ./cli.js",
+    "test": "jest --config ./packages/recipes-writting-tests/jest.config.js"
+  },
   "dependencies": {
     "@abraham/reflection": "^0.7.0",
-    "@sigi/core": "^1.0.2",
-    "@sigi/devtool": "^1.0.2",
-    "@sigi/di": "^1.0.0",
-    "@sigi/react": "^1.0.2",
-    "@sigi/react-router": "^1.0.2",
-    "@sigi/ssr": "^1.0.2",
-    "@sigi/testing": "^1.0.2",
-    "@sigi/vue": "^1.0.2",
     "antd": "^4.2.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -25,9 +21,5 @@
   "devDependencies": {
     "@types/parcel-env": "^0.0.0",
     "parcel": "^1.12.4"
-  },
-  "scripts": {
-    "start": "node ./cli.js",
-    "test": "jest --config ./packages/recipes-writting-tests/jest.config.js"
   }
 }

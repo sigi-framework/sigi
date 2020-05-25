@@ -1112,68 +1112,6 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
-"@sigi/core@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/core/-/core-1.0.2.tgz#84039b5efd3d5ff2d512db8d1287258c4a921fe5"
-  integrity sha512-sBFi/rdL99PLxA1km72h32JCk+iT0KYNGOkp45KTFtyZRGJm6F95dtnvVaXnGCKqCjL0c7PbMLyG7PGooqiKHw==
-  dependencies:
-    "@sigi/di" "^1.0.0"
-    "@sigi/types" "^1.0.0"
-    immer "^6.0.1"
-
-"@sigi/devtool@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/devtool/-/devtool-1.0.2.tgz#5036269549060f2695df49ce7b65d771492f25e3"
-  integrity sha512-8X14vqYUOApnKECX225AkREEco8pvhonPGzDNQMrBD9/FL3tLAQeOx0brThxklq/N//B8hBfpvxZouqKLZ6xHQ==
-  dependencies:
-    "@sigi/core" "^1.0.2"
-    "@sigi/types" "^1.0.0"
-
-"@sigi/react-router@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/react-router/-/react-router-1.0.2.tgz#1ffa579b863367aec64eac4036339377753f61ee"
-  integrity sha512-dd4HroSr3we6tAz8+gNfDhFr6ktuI/cRX6gzGquCuOrV5CGZL02cMyexR7yCvGexZuRgznw8Zj5bCIN0ERrXJQ==
-  dependencies:
-    "@sigi/core" "^1.0.2"
-    "@sigi/react" "^1.0.2"
-
-"@sigi/react@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/react/-/react-1.0.2.tgz#f62296d7277c8aa5bfc9f39d8164e52af74f7f22"
-  integrity sha512-dm/efXfva6JhkffKb+NPHzQzP3FJDQC+XTU2qWzcqVtkt1DYbzRGk1nc/l7YYspvPX5xTvPMz/EQtse/akHZkw==
-  dependencies:
-    "@sigi/core" "^1.0.2"
-    "@sigi/di" "^1.0.0"
-    "@sigi/ssr" "^1.0.2"
-    "@sigi/types" "^1.0.0"
-
-"@sigi/ssr@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/ssr/-/ssr-1.0.2.tgz#e0f38dab7b5ba78061e43ae606b359b6d66c69a8"
-  integrity sha512-2YLYRHmokr7EOQVWjJspIm/I2gPpw2nL4y8uVX2YzTNwZrqDOvbFAe3fWPaVqn0jJQc1HaZtaNUpxWseuu8DjQ==
-  dependencies:
-    "@sigi/core" "^1.0.2"
-    "@sigi/di" "^1.0.0"
-    "@sigi/types" "^1.0.0"
-    serialize-javascript "^3.0.0"
-
-"@sigi/testing@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/testing/-/testing-1.0.2.tgz#d4461dad652c3c8458a2c0d3a12c26a657363ba5"
-  integrity sha512-oChH/60DMcDkcJYp2XWcDJawZl4IN+B/ZIoV+OHz+iFKuFVE703BsC5XiRsPEYjGcctp+5Vk810/xr9TPUm+SQ==
-  dependencies:
-    "@sigi/core" "^1.0.2"
-    "@sigi/di" "^1.0.0"
-
-"@sigi/vue@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@sigi/vue/-/vue-1.0.2.tgz#f0064fc4bc8fe37400b160b1b14b2e89bf6bea9b"
-  integrity sha512-bqlIBBKZ/yjdIbeuBy1R25ZaSXBnBnchvg0tVvut/yJC5wNNQZPtBBCIYwUxprGakcdnM+wlxAhaB7jKnVfBBQ==
-  dependencies:
-    "@sigi/core" "^1.0.2"
-    "@sigi/di" "^1.0.0"
-    "@sigi/types" "^1.0.0"
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.0.tgz#c8d68821a854c555bba172f3b06959a0039b236d"
@@ -1259,10 +1197,15 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
-"@types/node@*", "@types/node@^14.0.4":
+"@types/node@*":
   version "14.0.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.4.tgz#43a63fc5edce226bed106b31b875165256271107"
   integrity sha512-k3NqigXWRzQZVBDS5D1U70A5E8Qk4Kh+Ha/x4M8Bt9pF0X05eggfnC9+63Usc9Q928hRUIpIhTQaXsZwZBl4Ew==
+
+"@types/node@^14.0.5":
+  version "14.0.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.5.tgz#3d03acd3b3414cf67faf999aed11682ed121f22b"
+  integrity sha512-90hiq6/VqtQgX8Sp0EzeIsv3r+ellbGj4URKj5j30tLlZvRUpnAe9YbYnjl3pJM93GyXU0tghHhvXHq+5rnCKA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -3559,10 +3502,10 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.13.tgz#ec168558e95aa181fd87d37f55c32bbcb6708b84"
   integrity sha512-4vf7I2LYV/HaWerSo3XmlMkp5eZ83i+/CDluXi/IGTs/O1sejBNhTtnxzmRZfvOUqj7lZjqHkeTvpgSFDlWZTg==
 
-immer@^6.0.1, immer@^6.0.5:
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.5.tgz#77187d13b71c6cee40dde3b8e87a50a7a636d630"
-  integrity sha512-Q2wd90qrgFieIpLzAO2q9NLEdmyp/sr76Ml4Vm5peUKgyTa2CQa3ey8zuzwSKOlKH7grCeGBGUcLLVCVW1aguA==
+immer@^6.0.6:
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.8.tgz#3758890d66ed7baed5703b9e0763785a16156478"
+  integrity sha512-wmVdrkqL6OzhX5z2k/c0t8g+YzGy+V8B/r1GRdCTO0UcTiFkB0XVAxpJQT045KaNV2u14HzbLCYKJmt7yVCakg==
 
 import-fresh@^2.0.0:
   version "2.0.0"

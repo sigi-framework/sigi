@@ -1,6 +1,6 @@
 {
   "name": "@sigi-example/recipes-state-selector",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "State selector recipes for sigi framework",
   "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",

@@ -1,6 +1,6 @@
 {
   "name": "@sigi-example/recipes-error-loading-handling",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Error and loading handling recipe for sigi framework",
   "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",

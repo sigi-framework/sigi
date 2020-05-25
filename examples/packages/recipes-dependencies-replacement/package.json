@@ -1,6 +1,6 @@
 {
   "name": "@sigi-example/recipes-dependencies-replacement",
-  "version": "1.0.0-alpha.6",
+  "version": "0.0.0",
   "description": "Dependencies replacement recipe for Sigi framework",
   "keywords": ["Sigi", "framework"],
   "author": "LongYinan <lynweklm@gmail.com>",

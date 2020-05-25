@@ -1,7 +1,6 @@
 import { EffectModule, ActionOfEffectModule, SSR_LOADED_KEY } from '@sigi/core'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
 import { ConstructorOf, Store } from '@sigi/types'
-import { Draft } from 'immer'
 import React, { useContext, useMemo, useEffect } from 'react'
 import { Subject } from 'rxjs'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
@@ -75,7 +74,6 @@ export function useModuleState<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
   config: M extends EffectModule<infer State>
     ? {
-        mutateStateOnFirstRendering?: (s: Draft<State>) => void
         selector: StateSelector<State, U>
       }
     : never,
@@ -106,7 +104,6 @@ export function useModule<M extends EffectModule<any>, U>(
   config: M extends EffectModule<infer State>
     ? {
         selector: StateSelector<State, U>
-        mutateStateOnFirstRendering?: (s: Draft<State>) => void
       }
     : never,
 ): M extends EffectModule<infer State>
