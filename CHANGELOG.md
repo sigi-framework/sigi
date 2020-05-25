@@ -1,3 +1,9 @@
+# v2.0.1
+
+## @sigi/react
+
+- fix: `Reflect.deleteMetadata` is not implemented by [`@abraham/reflection`](https://github.com/abraham/reflection)
+
 # v2.0.0
 
 ## @sigi/core
