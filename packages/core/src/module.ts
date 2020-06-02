@@ -124,6 +124,8 @@ export abstract class EffectModule<S> {
    * Get a noop action.
    *
    * Noop action will be ignore internally and even no log.
+   *
+   * @deprecated use `this.noop()` instead
    */
   protected createNoopAction(): Action<null> {
     return this.noop()
