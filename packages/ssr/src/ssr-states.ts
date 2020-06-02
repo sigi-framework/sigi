@@ -1,8 +1,8 @@
 import { EffectModule } from '@sigi/core'
-import { ConstructorOf, Store } from '@sigi/types'
+import { ConstructorOf, IStore } from '@sigi/types'
 
 export class SSRStateCache {
-  private readonly SSRStates = new Map<ConstructorOf<EffectModule<any>>, Map<any, Store<any>>>()
+  private readonly SSRStates = new Map<ConstructorOf<EffectModule<any>>, Map<any, IStore<any>>>()
 
   private size = 1000
 
@@ -21,7 +21,7 @@ export class SSRStateCache {
     return this.SSRStates.get(ctx)?.get(constructor)
   }
 
-  set(ctx: any, constructor: ConstructorOf<EffectModule<any>>, state: Store<any>) {
+  set(ctx: any, constructor: ConstructorOf<EffectModule<any>>, state: IStore<any>) {
     if (this.SSRStates.size >= this.size) {
       this.SSRStates.clear()
     }
@@ -38,7 +38,7 @@ export class SSRStateCache {
     const states = this.SSRStates.get(ctx)
     if (states) {
       for (const [, state] of states) {
-        state.unsubscribe()
+        state.dispose()
       }
     }
     this.SSRStates.delete(ctx)

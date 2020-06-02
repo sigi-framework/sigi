@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 
 import { rootInjector } from '@sigi/di'
-import { Action, Store } from '@sigi/types'
+import { Action, IStore } from '@sigi/types'
 import { Draft } from 'immer'
 import { Observable, noop } from 'rxjs'
 import { delay, map, withLatestFrom, takeUntil, tap } from 'rxjs/operators'
@@ -77,16 +77,27 @@ class Counter extends EffectModule<CounterState> {
   effectWithPureSideEffect(payload$: Observable<void>) {
     return payload$.pipe(
       tap(noop),
-      map(() => this.createNoopAction()),
+      map(() => this.noop()),
     )
+  }
+
+  @Effect()
+  effectToResetState(payload$: Observable<void>) {
+    return payload$.pipe(map(() => this.reset()))
   }
 }
 
 describe('EffectModule Class', () => {
   let counter: Counter
+  let store: IStore<CounterState>
 
   beforeEach(() => {
     counter = rootInjector.resolveAndInstantiate(Counter)
+    store = counter.setupStore()
+  })
+
+  afterEach(() => {
+    store.dispose()
   })
 
   describe('basic shape specs', () => {
@@ -94,6 +105,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().setCount(1)).toStrictEqual({
         payload: 1,
         type: 'setCount',
+        store,
       })
     })
 
@@ -101,6 +113,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().asyncAddCount(1)).toStrictEqual({
         payload: 1,
         type: 'asyncAddCount',
+        store,
       })
     })
 
@@ -109,6 +122,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().setCountImmer(payload)).toStrictEqual({
         payload,
         type: 'setCountImmer',
+        store,
       })
     })
 
@@ -116,6 +130,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().addOne()).toStrictEqual({
         payload: undefined,
         type: 'addOne',
+        store,
       })
     })
 
@@ -123,6 +138,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().asyncAddCountOne()).toStrictEqual({
         payload: undefined,
         type: 'asyncAddCountOne',
+        store,
       })
     })
 
@@ -130,6 +146,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().addCountOneImmer()).toStrictEqual({
         payload: undefined,
         type: 'addCountOneImmer',
+        store,
       })
     })
 
@@ -137,6 +154,7 @@ describe('EffectModule Class', () => {
       expect(counter.getActions().dispose$()).toStrictEqual({
         payload: undefined,
         type: 'dispose$',
+        store,
       })
     })
   })
@@ -156,10 +174,10 @@ describe('EffectModule Class', () => {
       }
 
       const onlyReducer = new WithoutEpic()
-      const state = onlyReducer.createStore()
+      const store = onlyReducer.setupStore()
       const actionCreator = onlyReducer.getActions()
-      state.dispatch(actionCreator.set(1))
-      expect(state.getState().count).toBe(1)
+      store.dispatch(actionCreator.set(1))
+      expect(store.state.count).toBe(1)
     })
 
     it('should be able to create module without reducer', () => {
@@ -173,16 +191,16 @@ describe('EffectModule Class', () => {
         set(payload$: Observable<number>) {
           return payload$.pipe(
             tap(noop),
-            map(() => this.createNoopAction()),
+            map(() => this.noop()),
           )
         }
       }
 
       const withoutReducer = new WithoutReducer()
-      const store = withoutReducer.createStore()
+      const store = withoutReducer.setupStore()
       const actions = withoutReducer.getActions()
       store.dispatch(actions.set(1))
-      expect(store.getState().count).toBe(withoutReducer.defaultState.count)
+      expect(withoutReducer.state.count).toBe(withoutReducer.defaultState.count)
     })
 
     it('should throw if module name conflict#1', () => {
@@ -236,13 +254,11 @@ describe('EffectModule Class', () => {
   })
 
   describe('dispatcher', () => {
-    let store: Store<CounterState>
     let actionsDispatcher: InstanceActionOfEffectModule<Counter, CounterState>
     let spy: Sinon.SinonSpy
     let timer: Sinon.SinonFakeTimers
     beforeEach(() => {
       const actions = counter.getActions()
-      store = counter.createStore()
       actionsDispatcher = Object.keys(actions).reduce((acc, key) => {
         acc[key] = (p: any) => {
           const action = (actions as any)[key](p)
@@ -252,22 +268,22 @@ describe('EffectModule Class', () => {
         return acc
       }, {} as any)
       spy = Sinon.spy()
-      store.subscribeAction(spy)
+      store.addEpic((action$) => {
+        return action$.pipe(tap(spy))
+      }, true)
       timer = Sinon.useFakeTimers()
     })
 
     afterEach(() => {
       spy.resetHistory()
       timer.restore()
-      store.unsubscribe()
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #void', () => {
       const action = actionsDispatcher.addOne()
-      const [[arg]] = spy.args
-      expect(arg).toStrictEqual(action)
+      expect(spy.alwaysCalledWith(action)).toBe(true)
       expect(spy.callCount).toBe(1)
-      expect(store.getState().count).toBe(counter.defaultState.count + 1)
+      expect(store.state.count).toBe(counter.defaultState.count + 1)
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #param', () => {
@@ -276,7 +292,7 @@ describe('EffectModule Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(store.getState().count).toBe(newCount)
+      expect(store.state.count).toBe(newCount)
     })
 
     it('should be able to dispatch immer reducer action by actions dispatcher #void', () => {
@@ -284,7 +300,7 @@ describe('EffectModule Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(store.getState().count).toBe(counter.defaultState.count + 1)
+      expect(store.state.count).toBe(counter.defaultState.count + 1)
     })
 
     it('should be able to dispatch immer reducer action by actions dispatcher #param', () => {
@@ -293,7 +309,7 @@ describe('EffectModule Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(store.getState().count).toBe(newCount.valueOf())
+      expect(store.state.count).toBe(newCount.valueOf())
     })
 
     it('should be able to dispatch epic action by actions dispatcher #void', () => {
@@ -301,7 +317,7 @@ describe('EffectModule Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(store.getState().count).toBe(counter.defaultState.count)
+      expect(store.state.count).toBe(counter.defaultState.count)
       timer.tick(TIME_TO_DELAY)
       const [, [arg1]] = spy.args
       expect(arg1).toStrictEqual(counter.getActions().setCount(counter.defaultState.count + 1))
@@ -314,7 +330,7 @@ describe('EffectModule Class', () => {
       const [[arg]] = spy.args
       expect(arg).toStrictEqual(action)
       expect(spy.callCount).toBe(1)
-      expect(store.getState().count).toBe(counter.defaultState.count)
+      expect(store.state.count).toBe(counter.defaultState.count)
       timer.tick(TIME_TO_DELAY)
       const [, [arg1]] = spy.args
       expect(arg1).toStrictEqual(counter.getActions().asyncAddCountString(`${newCount}`))
@@ -328,16 +344,23 @@ describe('EffectModule Class', () => {
       actionsDispatcher.dispose$()
       timer.tick(TIME_TO_DELAY)
       expect(spy.callCount).toBe(2)
-      expect(store.getState()).toStrictEqual(counter.defaultState)
+      expect(store.state).toStrictEqual(counter.defaultState)
     })
 
     it('should be able to dispatch noop action', () => {
       const action = actionsDispatcher.effectWithPureSideEffect()
-      const [[arg1], [arg2]] = spy.args
+      expect(spy.callCount).toBe(1)
+      const [[arg1]] = spy.args
       expect(arg1).toStrictEqual(action)
-      expect(typeof arg2.type).toBe('symbol')
-      expect(spy.callCount).toBe(2)
-      expect(store.getState()).toStrictEqual(counter.defaultState)
+      expect(store.state).toStrictEqual(counter.defaultState)
+    })
+
+    it('should be able to dispatch reset action', () => {
+      actionsDispatcher.addOne()
+      expect(store.state.count).toBe(counter.defaultState.count + 1)
+      actionsDispatcher.effectToResetState()
+      expect(spy.callCount).toBe(3)
+      expect(store.state.count).toBe(counter.defaultState.count)
     })
   })
 })

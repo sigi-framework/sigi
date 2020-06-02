@@ -1,8 +1,9 @@
-export const isDevelopment = process.env.NODE_ENV === 'development'
-// @ts-expect-error
-export const hmrEnabled = isDevelopment && module.hot
+import { IStore } from '@sigi/types'
 
-export let hmrInstanceCache: Map<string, any>
+// @ts-expect-error
+export const hmrEnabled = process.env.NODE_ENV === 'development' && module.hot
+
+export let hmrInstanceCache: Map<string, IStore<any>>
 
 if (hmrEnabled) {
   hmrInstanceCache = new Map()

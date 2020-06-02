@@ -1,8 +1,8 @@
-import { EffectModule, TERMINATE_ACTION, SSR_ACTION_META } from '@sigi/core'
+import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
-import { ConstructorOf, Action, Store } from '@sigi/types'
-import { from, race, timer, throwError, Subject, noop, Observable, Observer } from 'rxjs'
-import { flatMap, bufferCount, take, filter, tap } from 'rxjs/operators'
+import { ConstructorOf, Action, IStore } from '@sigi/types'
+import { from, race, timer, throwError, noop, Observable, Observer, NEVER } from 'rxjs'
+import { flatMap, tap, catchError } from 'rxjs/operators'
 
 import { oneShotCache } from './ssr-oneshot-cache'
 import { SSRStateCacheInstance } from './ssr-states'
@@ -13,14 +13,14 @@ export type ModuleMeta = ConstructorOf<EffectModule<any>>
 const skipSymbol = Symbol('skip-symbol')
 
 /**
- * Run all @SSREffect decorated effects of given modules and extract latest states.
+ * Run all `@Effect({ ssr: true })` decorated effects of given modules and extract latest states.
  * `cleanup` function returned must be called before end of responding
  *
  * @param ctx request context, which will be passed to payloadGetter in SSREffect decorator param
  * @param modules used EffectModules
  * @param uuid the same uuid would reuse the same state which was created before
  * @param timeout seconds to wait before all effects stream out TERMINATE_ACTION
- * @returns EffectModule state
+ * @returns EffectModule states
  */
 export const runSSREffects = <Context, Returned = any>(
   ctx: Context,
@@ -36,17 +36,18 @@ export const runSSREffects = <Context, Returned = any>(
           flatMap((constructor) => {
             return new Observable((observer: Observer<StateToPersist<Returned>>) => {
               let cleanup = noop
-              const ssrActionsMeta = Reflect.getMetadata(SSR_ACTION_META, constructor.prototype) || []
-              let store: Store<any>
+              const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
+              let store: IStore<any>
               let moduleName: string
-              const middleware = (effect$: Observable<Action<unknown>>) =>
-                effect$.pipe(
-                  tap({
-                    error: (e) => {
-                      observer.error(e)
-                    },
+
+              const errorCatcher = (action$: Observable<Action<unknown>>) =>
+                action$.pipe(
+                  catchError((e) => {
+                    observer.error(e)
+                    return NEVER
                   }),
                 )
+
               if (sharedCtx) {
                 if (SSRStateCacheInstance.has(sharedCtx, constructor)) {
                   store = SSRStateCacheInstance.get(sharedCtx, constructor)!
@@ -54,13 +55,15 @@ export const runSSREffects = <Context, Returned = any>(
                 } else {
                   const effectModuleInstance: EffectModule<unknown> = rootInjector.resolveAndInstantiate(constructor)
                   moduleName = effectModuleInstance.moduleName
-                  store = effectModuleInstance.createStore(middleware)
+                  store = effectModuleInstance.setupStore()
+                  store.addEpic(errorCatcher)
                   SSRStateCacheInstance.set(sharedCtx, constructor, store)
                 }
               } else {
                 const effectModuleInstance: EffectModule<unknown> = rootInjector.resolveAndInstantiate(constructor)
                 moduleName = effectModuleInstance.moduleName
-                store = effectModuleInstance.createStore(middleware)
+                store = effectModuleInstance.setupStore()
+                store.addEpic(errorCatcher)
                 oneShotCache.store(ctx, constructor, store)
               }
               let effectsCount = ssrActionsMeta.length
@@ -68,7 +71,7 @@ export const runSSREffects = <Context, Returned = any>(
               cleanup = sharedCtx
                 ? () => disposeFn()
                 : () => {
-                    store.unsubscribe()
+                    store.dispose()
                   }
               async function runEffects() {
                 await Promise.all(
@@ -79,7 +82,7 @@ export const runSSREffects = <Context, Returned = any>(
                         store.dispatch({
                           type: ssrActionMeta.action,
                           payload,
-                          state: store,
+                          store,
                         })
                       } else {
                         effectsCount -= 1
@@ -88,27 +91,30 @@ export const runSSREffects = <Context, Returned = any>(
                       store.dispatch({
                         type: ssrActionMeta.action,
                         payload: undefined,
-                        state: store,
+                        store,
                       })
                     }
                   }),
                 )
 
                 if (effectsCount > 0) {
-                  const action$ = new Subject<Action<unknown>>()
-                  disposeFn = store.subscribeAction((action) => {
-                    action$.next(action)
+                  await new Promise((resolve) => {
+                    let terminatedCount = 0
+                    disposeFn = store.addEpic((action$) => {
+                      return action$.pipe(
+                        tap(({ type }) => {
+                          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+                            terminatedCount++
+                            if (terminatedCount === effectsCount) {
+                              resolve()
+                            }
+                          }
+                        }),
+                      )
+                    }, true)
                   })
-                  await action$
-                    .pipe(
-                      filter((act) => act.type === TERMINATE_ACTION.type),
-                      bufferCount(effectsCount),
-                      take(1),
-                    )
-                    .toPromise()
 
-                  const state = store.getState()
-                  stateToSerialize[moduleName] = state
+                  stateToSerialize[moduleName] = store.state
                 }
               }
               runEffects()

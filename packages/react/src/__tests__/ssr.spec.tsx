@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 
-import { TERMINATE_ACTION, GLOBAL_KEY, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
+import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
 import { emitSSREffects, SSRStateCacheInstance } from '@sigi/ssr'
 import { Action } from '@sigi/types'
@@ -45,7 +45,7 @@ class CountModel extends EffectModule<CountState> {
       flatMap(() =>
         timer(20).pipe(
           map(() => this.getActions().setCount(1)),
-          endWith(TERMINATE_ACTION),
+          endWith(this.terminate()),
         ),
       ),
     )
@@ -60,7 +60,7 @@ class CountModel extends EffectModule<CountState> {
       switchMap((name) =>
         timer(20).pipe(
           map(() => this.getActions().setName(name)),
-          endWith(TERMINATE_ACTION),
+          endWith(this.terminate()),
         ),
       ),
     )
@@ -82,7 +82,7 @@ class TipModel extends EffectModule<TipState> {
       mergeMap(() =>
         timer(1).pipe(
           map(() => this.getActions().setTip('tip')),
-          endWith(TERMINATE_ACTION),
+          endWith(this.terminate()),
         ),
       ),
     )
@@ -132,7 +132,8 @@ describe('SSR specs:', () => {
 
   it('should throw if module name not given', () => {
     function generateException() {
-      @((Module as any)())
+      // @ts-expect-error
+      @Module()
       class ErrorModel extends EffectModule<any> {
         defaultState = {}
       }
@@ -173,7 +174,8 @@ describe('SSR specs:', () => {
     }
 
     function generateException3() {
-      @((Module as any)())
+      // @ts-expect-error
+      @Module()
       class ErrorModel extends EffectModule<any> {
         defaultState = {}
       }
@@ -218,7 +220,7 @@ describe('SSR specs:', () => {
   })
 
   it('should restore state from global', () => {
-    global[GLOBAL_KEY] = {
+    global[GLOBAL_KEY_SYMBOL] = {
       CountModel: {
         count: 1,
         name: '',
@@ -230,12 +232,12 @@ describe('SSR specs:', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
 
-    delete global[GLOBAL_KEY]
+    delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
 
   it('should restore state from global #with selector', () => {
-    global[GLOBAL_KEY] = {
+    global[GLOBAL_KEY_SYMBOL] = {
       CountModel: {
         count: 10,
         name: '',
@@ -243,12 +245,12 @@ describe('SSR specs:', () => {
     }
     const testRenderer = create(<ComponentWithSelector />)
     expect(testRenderer.root.findByType('span').children[0]).toBe('11')
-    delete global[GLOBAL_KEY]
+    delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
 
   it('should not restore state from global if state is null', () => {
-    global[GLOBAL_KEY] = {
+    global[GLOBAL_KEY_SYMBOL] = {
       OtherModule: {
         count: 10,
         name: '',
@@ -260,7 +262,7 @@ describe('SSR specs:', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
 
-    delete global[GLOBAL_KEY]
+    delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
 
@@ -278,7 +280,7 @@ describe('SSR specs:', () => {
       )
     }
 
-    global[GLOBAL_KEY] = {
+    global[GLOBAL_KEY_SYMBOL] = {
       CountModel: {
         count: 2,
         name: '',
@@ -292,7 +294,7 @@ describe('SSR specs:', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('2')
 
-    delete global[GLOBAL_KEY]
+    delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
 
@@ -464,7 +466,7 @@ describe('SSR specs:', () => {
       )
     }
     const cachedState = SSRStateCacheInstance.get(requestId, CountModel)!
-    expect(cachedState.getState().count).toBe(1)
+    expect(cachedState.state.count).toBe(1)
 
     const result1 = renderToString(
       <SSRSharedContext.Provider value={requestId}>
