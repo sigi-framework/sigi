@@ -1,6 +1,6 @@
 {
   "name": "@sigi/devtool",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Connect sigi to redux devtool",
   "keywords": ["Devtool", "Sigi"],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -24,7 +24,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.0.2",
-    "@sigi/types": "^2.0.0"
+    "@sigi/core": "^2.1.0",
+    "@sigi/types": "^2.1.0"
   }
 }
