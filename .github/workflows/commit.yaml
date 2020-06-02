@@ -1,0 +1,47 @@
+name: Test Commit
+
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+
+jobs:
+  lint-test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Cache NPM dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: npm-cache-tests-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            npm-cache-tests-
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+          cd examples
+          yarn install --frozen-lockfile
+          cd ..
+      - name: Lint
+        run: yarn lint
+      - name: Unit tests
+        run: yarn test
+        env:
+          CI: true
+      - name: Typings test
+        run: yarn test:type
+      - name: Build
+        run: yarn build
+        env:
+          NODE_ENV: production
+      - name: Codecov
+        run: npx codecov -f coverage/*.json
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
