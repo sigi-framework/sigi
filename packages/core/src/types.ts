@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
-import { Store, Action } from '@sigi/types'
+import { Action } from '@sigi/types'
 import { Draft } from 'immer'
 import { Observable } from 'rxjs'
 
 import { EffectModule } from './module'
-
-export interface StoreAction<T = unknown> extends Action<T> {
-  // @internal
-  readonly store?: Store<any>
-}
 
 type UnpackEffectPayload<Func> = Func extends (action$: Observable<infer Payload>) => Observable<Action>
   ? Payload

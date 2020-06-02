@@ -8,6 +8,8 @@
     "experimentalDecorators": true,
     "baseUrl": "../packages",
     "paths": {
+      "react": ["node_modules/@types/react"],
+      "vue": ["node_modules/vue"],
       "@sigi/*": ["./*/src/index.ts"]
     }
   },

@@ -11,7 +11,7 @@ describe('SSRStateCacheInstance specs:', () => {
   }
   const ctx = {}
   const state = Object.create({
-    unsubscribe: noop,
+    dispose: noop,
   })
   beforeEach(() => {
     SSRStateCacheInstance = new SSRStateCache()
@@ -44,7 +44,7 @@ describe('SSRStateCacheInstance specs:', () => {
   it('should delete all states after cleanupStateByContext', () => {
     const spy = Sinon.spy()
     const newState = Object.create({
-      unsubscribe: spy,
+      dispose: spy,
     })
     class B extends EffectModule<object> {
       defaultState = {}

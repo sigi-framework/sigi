@@ -1,8 +1,7 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
-import { ConstructorOf, Store } from '@sigi/types'
+import { ConstructorOf, IStore } from '@sigi/types'
 import React, { useContext, useMemo, useEffect } from 'react'
-import { Subject } from 'rxjs'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -18,7 +17,7 @@ export type StateSelectorConfig<S, U> = {
 
 function _useDispatchers<M extends EffectModule<S>, S = any>(effectModule: M) {
   return useMemo(() => {
-    const store: Store<S> = (effectModule as any).store!
+    const store: IStore<S> = (effectModule as any).store!
     const actionsCreator = effectModule.getActions()
     return Object.keys(actionsCreator).reduce((acc, cur) => {
       acc[cur] = (payload: any) => {
@@ -35,17 +34,18 @@ export function useDispatchers<M extends EffectModule<S>, S = any>(A: Constructo
   return _useDispatchers(effectModule)
 }
 
-function _useModuleState<S, U = S>(store: Store<S>, selector?: StateSelector<S, U>): S | U {
+function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S, U>): S | U {
   const [appState, setState] = React.useState(() => {
-    const initialState = store.getState()
+    const initialState = store.state
     return selector ? selector(initialState) : initialState
   })
 
   // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
   // do not put subscribe in useEffect
   const subscription = useMemo(() => {
-    return ((store as any).state$ as Subject<S>)
+    return store.state$
       .pipe(
+        // skip initial state emission
         skip(1),
         map((s) => (selector ? selector(s) : s)),
         distinctUntilChanged(),
@@ -116,7 +116,7 @@ export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, 
   return [appState, appDispatcher]
 }
 
-function _useModule<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { effectModule: M; store: Store<S> } {
+function _useModule<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { effectModule: M; store: IStore<S> } {
   const ssrSharedContext = useContext(SSRSharedContext)
   const ssrContext = useContext(SSRContext)
   const effectModule = useInstance(A)
@@ -124,10 +124,10 @@ function _useModule<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { 
     return SSRStateCacheInstance.has(ssrSharedContext, A)
       ? SSRStateCacheInstance.get(ssrSharedContext, A)!
       : ssrContext
-      ? oneShotCache.consume(ssrContext, A) ?? effectModule.createStore()
-      : effectModule.createStore()
+      ? oneShotCache.consume(ssrContext, A) ?? effectModule.setupStore()
+      : effectModule.setupStore()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ssrContext, ssrSharedContext, A])
+  }, [ssrContext, ssrSharedContext, A, effectModule, oneShotCache])
 
   return { effectModule, store }
 }

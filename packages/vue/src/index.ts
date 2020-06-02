@@ -1,16 +1,11 @@
 import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
-import { ConstructorOf, Store as PublicStore } from '@sigi/types'
-import { Subject } from 'rxjs'
+import { ConstructorOf } from '@sigi/types'
 import Vue, { ComponentOptions } from 'vue'
 import { RecordPropsDefinition, DataDef } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 
 import { cloneDeepPoj } from './utils'
-
-interface Store<S = any> extends PublicStore<S> {
-  state$: Subject<S>
-}
 
 type ReactiveComponentOptions<M extends EffectModule<any>, V extends Vue, Data, Methods, Computed, Prop> = {
   syncToSigi?: Array<keyof StateInEffectModule<M>>
@@ -56,8 +51,8 @@ export const reactive = <
   Props
 > => {
   const effectModule = rootInjector.getInstance(EffectModuleConstructor)
-  const store = effectModule.createStore() as Store
-  const initialState: StateInEffectModule<M> = store.getState()
+  const store = effectModule.setupStore()
+  const initialState: StateInEffectModule<M> = store.state
   const statePassToVue = { ...initialState }
   const subscription = store.state$.subscribe((state) => {
     Object.assign(statePassToVue, state)
@@ -94,7 +89,7 @@ export const reactive = <
   const { beforeUpdate: originalBeforeUpdate } = componentOptions
 
   componentOptions.beforeUpdate = function beforeUpdate() {
-    let latestState = store.getState()
+    let latestState = store.state
     let changed = false
     for (const prop of syncToSigi) {
       if (!(prop in statePassToVue) && process.env.NODE_ENV === 'development') {
