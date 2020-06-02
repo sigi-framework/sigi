@@ -81,7 +81,7 @@ export class RouterModule extends EffectModule<RouterState> {
       tap(([, state]) => {
         state.historyListenerTeardown()
       }),
-      map(() => this.createNoopAction()),
+      map(() => this.noop()),
     )
   }
 
@@ -94,7 +94,7 @@ export class RouterModule extends EffectModule<RouterState> {
         const history: any = state.history
         history[method].apply(state.history, payloads)
       }),
-      map(() => this.createNoopAction()),
+      map(() => this.noop()),
     )
   }
 }

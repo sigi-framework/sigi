@@ -1,34 +1,31 @@
 import 'reflect-metadata'
 import { rootInjector } from '@sigi/di'
-import { empty, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 import { delay, map } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { Reducer, Effect } from '../decorators'
 import { EffectModule } from '../module'
 import { Module } from '../module.decorator'
-import { createStore } from '../state'
+import { Store } from '../store'
 
 describe('Smoking tests', () => {
   it('Module should be able to work without effects', () => {
-    const { setup } = createStore(
-      (state: { name: string }, action) => {
-        if (action.type === 'foo') {
-          return { ...state, name: action.payload as string }
-        }
-        return state
-      },
-      () => empty(),
-    )
+    const store = new Store('store', (state: { name: string }, action) => {
+      if (action.type === 'foo') {
+        return { ...state, name: action.payload as string }
+      }
+      return state
+    })
+    store.setup({ name: 'bar' })
 
-    const state = setup({ name: 'bar' })
     const action = {
       type: 'foo',
       payload: 'foo',
-      state,
+      store,
     }
-    state.dispatch(action)
-    expect(state.getState().name).toBe(action.payload)
+    store.dispatch(action)
+    expect(store.state.name).toBe(action.payload)
   })
 
   it('should be able to dispatch actions from the other module', () => {
@@ -63,17 +60,20 @@ describe('Smoking tests', () => {
       }
     }
 
-    const fooModuleState = rootInjector.getInstance(FooModule)
-    const barModuleState = rootInjector.getInstance(BarModule)
-    const fooState = fooModuleState.createStore()
-    const barState = barModuleState.createStore()
+    const fooModule = rootInjector.getInstance(FooModule)
+    const fooStore = fooModule.setupStore()
+    const barModule = rootInjector.getInstance(BarModule)
+    const barStore = barModule.setupStore()
 
     const payload = 'whatever'
-    const action = barModuleState.getActions().asyncSetFoo(payload)
+    const action = barModule.getActions().asyncSetFoo(payload)
     expect(action.payload).toBe(payload)
-    barState.dispatch(action)
+    fooStore.dispatch(action)
     timer.tick(asyncTimeToDelay)
-    expect(fooState.getState().foo).toBe(payload)
+    expect(fooModule.state.foo).toBe(payload)
+
+    fooStore.dispose()
+    barStore.dispose()
     timer.restore()
     rootInjector.reset()
   })

@@ -1,4 +1,4 @@
-import { TERMINATE_ACTION, replaceLogger } from '@sigi/core'
+import { replaceLogger } from '@sigi/core'
 import { Action } from '@sigi/types'
 import { noop } from 'rxjs'
 
@@ -23,17 +23,14 @@ const ReduxDevTools =
 
 const STATE: GlobalState = {}
 
-const logStateAction = (action: Action<unknown>) => {
-  if (action.type === TERMINATE_ACTION.type) {
-    return
-  }
-  const namespace = (action as any).store.name
+const logStateAction = (action: Action<any>) => {
+  const namespace = action.store.name
   const _action = {
     type: `${namespace}/${String(action.type)}`,
     params: filterParams(action.payload),
   }
 
-  STATE[namespace] = (action as any).store.getState()
+  STATE[namespace] = action.store.state
 
   if (!(action.type as string)?.endsWith?.(INIT_ACTION_TYPE)) {
     devtool.send(_action, STATE)

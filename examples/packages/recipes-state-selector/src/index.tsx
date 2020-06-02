@@ -6,6 +6,8 @@ import { render } from 'react-dom'
 
 import { AppModule } from './app.module'
 
+initDevtool()
+
 function Loading() {
   console.info('Loading render')
   const loading = useModuleState(AppModule, {
@@ -46,7 +48,6 @@ function App() {
 const rootElement = document.getElementById('app')
 render(<App />, rootElement)
 
-initDevtool()
 if (module.hot) {
   module.hot.accept()
 }

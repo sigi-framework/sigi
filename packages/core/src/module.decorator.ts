@@ -1,7 +1,7 @@
 import { Injectable } from '@sigi/di'
+import { IStore } from '@sigi/types'
 
 import { hmrEnabled, hmrInstanceCache } from './hmr'
-import { EffectModule } from './module'
 
 const configSets = new Set<string>()
 
@@ -28,7 +28,7 @@ export const Module = (name: string) => {
 }
 
 if (hmrEnabled) {
-  Module.removeModule = (name: string, instance: EffectModule<unknown>) => {
+  Module.removeModule = (name: string, instance: IStore<unknown>) => {
     configSets.delete(name)
     hmrInstanceCache.set(name, instance)
   }

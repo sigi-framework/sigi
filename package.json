@@ -27,6 +27,9 @@
     "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/config-lerna-scopes": "^8.3.4",
     "@types/jest": "^25.2.3",
     "@types/lodash": "^4.14.154",
     "@types/node": "^14.0.9",
@@ -81,6 +84,7 @@
   },
   "husky": {
     "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged"
     }
   }
