@@ -16,8 +16,6 @@ const FakeReduxDevTools = {
   connect: () => devtool,
 }
 
-export const INIT_ACTION_TYPE = 'INIT_SIGI_STATE'
-
 const ReduxDevTools =
   (typeof window !== 'undefined' && (window as any).__REDUX_DEVTOOLS_EXTENSION__) ?? FakeReduxDevTools
 
@@ -31,10 +29,7 @@ const logStateAction = (action: Action<any>) => {
   }
 
   STATE[namespace] = action.store.state
-
-  if (!(action.type as string)?.endsWith?.(INIT_ACTION_TYPE)) {
-    devtool.send(_action, STATE)
-  }
+  devtool.send(_action, STATE)
 }
 
 export const initDevtool = () => {
