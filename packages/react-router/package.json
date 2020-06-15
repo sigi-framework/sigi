@@ -29,6 +29,6 @@
   },
   "devDependencies": {
     "@types/history": "^4.7.6",
-    "history": "^4.10.1"
+    "history": "^5.0.0"
   }
 }
