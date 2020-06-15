@@ -1,5 +1,5 @@
-import { EffectModule, Module, Reducer, Effect, Action } from '@sigi/core'
-import { History, LocationState, LocationDescriptorObject, Location, Action as HistoryAction } from 'history'
+import { EffectModule, Module, Reducer, Effect } from '@sigi/core'
+import { History, To, Location, Action as HistoryAction } from 'history'
 import { Observable, Subject, noop } from 'rxjs'
 import { tap, map, withLatestFrom } from 'rxjs/operators'
 
@@ -8,10 +8,10 @@ export interface RouterState {
   historyListenerTeardown: () => void
 }
 
-export type HistoryMethods = 'go' | 'goBack' | 'goForward' | 'push' | 'replace'
+export type HistoryMethods = 'go' | 'back' | 'forward' | 'push' | 'replace'
 
-export interface RouterChanged<S = History.PoorMansUnknown> {
-  location: Location<S>
+export interface RouterChanged {
+  location: Location
   action: HistoryAction
 }
 
@@ -41,17 +41,13 @@ export class RouterModule extends EffectModule<RouterState> {
         'History in RouterModule has already defined, have you wrapped your application with SigiRouterProvider muti times?',
       )
     }
-    const historyListenerTeardown = history.listen((location, action) => {
-      this.router$.next({ location, action })
+    const historyListenerTeardown = history.listen((update) => {
+      this.router$.next(update)
     })
     return { history, historyListenerTeardown }
   }
 
-  push(location: LocationDescriptorObject<LocationState>): Action<CallHistoryPayload>
-
-  push(path: string, state?: LocationState): Action<CallHistoryPayload>
-
-  push(path: LocationDescriptorObject<LocationState> | string, state?: LocationState): Action<CallHistoryPayload> {
+  push(path: To, state?: any) {
     return this.getActions()._callHistory({ method: 'push', payloads: [path, state] })
   }
 
@@ -59,17 +55,14 @@ export class RouterModule extends EffectModule<RouterState> {
     return this.getActions()._callHistory({ method: 'go', payloads: [n] })
   }
 
-  goBack(): Action<CallHistoryPayload> {
-    return this.getActions()._callHistory({ method: 'goBack', payloads: [] })
+  goBack() {
+    return this.getActions()._callHistory({ method: 'back', payloads: [] })
   }
-  goForward(): Action<CallHistoryPayload> {
-    return this.getActions()._callHistory({ method: 'goForward', payloads: [] })
+  goForward() {
+    return this.getActions()._callHistory({ method: 'forward', payloads: [] })
   }
 
-  replace(path: string, state?: LocationState): Action<CallHistoryPayload>
-  replace(location: LocationDescriptorObject<LocationState>): Action<CallHistoryPayload>
-
-  replace(path: string | LocationDescriptorObject<LocationState>, state?: LocationState): Action<CallHistoryPayload> {
+  replace(path: To, state?: any) {
     return this.getActions()._callHistory({ method: 'replace', payloads: [path, state] })
   }
 
