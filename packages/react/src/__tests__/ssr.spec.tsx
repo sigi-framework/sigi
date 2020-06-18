@@ -107,6 +107,7 @@ const ComponentWithSelector = () => {
     selector: (s) => ({
       count: s.count + 1,
     }),
+    dependencies: [],
   })
   useEffect(() => {
     actions.setName('new name')
