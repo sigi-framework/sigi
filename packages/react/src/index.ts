@@ -12,7 +12,8 @@ export type StateSelector<S, U> = {
 }
 
 export type StateSelectorConfig<S, U> = {
-  selector?: StateSelector<S, U>
+  selector: StateSelector<S, U>
+  dependencies: any[]
 }
 
 function _useDispatchers<M extends EffectModule<S>, S = any>(effectModule: M) {
@@ -34,11 +35,15 @@ export function useDispatchers<M extends EffectModule<S>, S = any>(A: Constructo
   return _useDispatchers(effectModule)
 }
 
-function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S, U>): S | U {
+function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S, U>, dependencies?: any[]): S | U {
   const [appState, setState] = React.useState(() => {
     const initialState = store.state
     return selector ? selector(initialState) : initialState
   })
+
+  if (process.env.NODE_ENV === 'development' && selector && !dependencies) {
+    console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
+  }
 
   // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
   // do not put subscribe in useEffect
@@ -51,7 +56,8 @@ function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S,
         distinctUntilChanged(),
       )
       .subscribe(setState)
-  }, [store, selector])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store, ...(dependencies ?? [])])
 
   useEffect(() => () => subscription.unsubscribe(), [store, subscription])
 
@@ -67,6 +73,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
   config: M extends EffectModule<infer State>
     ? {
         selector: StateSelector<State, U>
+        dependencies: any[]
       }
     : never,
 ): M extends EffectModule<infer State>
@@ -84,7 +91,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
   config?: M extends EffectModule<infer S> ? StateSelectorConfig<S, U> : never,
 ) {
   const { store } = _useModule(A)
-  return _useModuleState(store, config?.selector)
+  return _useModuleState(store, config?.selector, config?.dependencies)
 }
 
 export function useModule<M extends EffectModule<any>>(
@@ -96,6 +103,7 @@ export function useModule<M extends EffectModule<any>, U>(
   config: M extends EffectModule<infer State>
     ? {
         selector: StateSelector<State, U>
+        dependencies: any[]
       }
     : never,
 ): M extends EffectModule<infer State>
@@ -110,7 +118,7 @@ export function useModule<M extends EffectModule<any>, U>(
 
 export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, config?: StateSelectorConfig<S, U>) {
   const { effectModule, store } = _useModule(A)
-  const appState = _useModuleState(store, config?.selector)
+  const appState = _useModuleState(store, config?.selector, config?.dependencies)
   const appDispatcher = _useDispatchers(effectModule)
 
   return [appState, appDispatcher]
