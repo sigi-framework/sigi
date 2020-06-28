@@ -176,8 +176,18 @@ describe('EffectModule Class', () => {
       const onlyReducer = new WithoutEpic()
       const store = onlyReducer.setupStore()
       const actionCreator = onlyReducer.getActions()
+      const beforeSpy = Sinon.spy()
+      const afterSpy = Sinon.spy()
+      store.addEpic((action$) => {
+        return action$.pipe(tap(beforeSpy))
+      }, true)
+      store.addEpic((action$) => {
+        return action$.pipe(tap(afterSpy))
+      })
       store.dispatch(actionCreator.set(1))
       expect(store.state.count).toBe(1)
+      expect(beforeSpy.callCount).toBe(1)
+      expect(afterSpy.callCount).toBe(0)
     })
 
     it('should be able to create module without reducer', () => {
