@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/sigi-framework/sigi/compare/v2.1.0...v2.2.0) (2020-06-28)
+
+### Bug Fixes
+
+- **core:** dispatching action on non-effects module causes dead loop ([1ad1100](https://github.com/sigi-framework/sigi/commit/1ad1100158bd131d7366fef165d4acca30e6739b))
+- **react-router:** api broken after bump history to 5.0 ([224d283](https://github.com/sigi-framework/sigi/commit/224d283976c616897390bbe2eeab77581414d9d3))
+
+### Performance Improvements
+
+- add dependencies to selector ([#283](https://github.com/sigi-framework/sigi/issues/283)) ([4fc71ac](https://github.com/sigi-framework/sigi/commit/4fc71acc5ffb1116d9536c6eb1189071a1eeb154))
+
 # [2.1.0](https://github.com/sigi-framework/sigi/compare/v2.0.2...v2.1.0) (2020-06-02)
 
 ### Features
