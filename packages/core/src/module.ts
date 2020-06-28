@@ -1,7 +1,7 @@
 import { Action, Epic } from '@sigi/types'
 import produce, { Draft } from 'immer'
-import { Observable, merge, identity } from 'rxjs'
-import { map, filter, skip, publish } from 'rxjs/operators'
+import { Observable, merge } from 'rxjs'
+import { map, filter, skip, publish, ignoreElements } from 'rxjs/operators'
 
 import { hmrEnabled, hmrInstanceCache } from './hmr'
 import { getDecoratedActions, getActionsToSkip } from './metadata'
@@ -177,7 +177,7 @@ export abstract class EffectModule<S> {
   private combineEffects(): Epic {
     const effectKeys = getDecoratedActions(this.constructor.prototype, 'Effect')
     if (!effectKeys || effectKeys.length === 0) {
-      return identity
+      return (action$) => action$.pipe(ignoreElements())
     }
 
     this.actionNames = [...this.actionNames, ...effectKeys]
