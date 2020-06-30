@@ -304,4 +304,26 @@ describe('injectable specs', () => {
     const service = newInjector.getInstance(Service)
     expect(service.dep).toBe(1)
   })
+
+  it('should be able to inject provider via InjectableConfigs', () => {
+    @Injectable()
+    class Dep {}
+
+    const token = new InjectionToken<Dep>('whatever')
+
+    @Injectable({
+      providers: [
+        {
+          useClass: Dep,
+          provide: token,
+        },
+      ],
+    })
+    class Service {
+      constructor(@Inject(token) public dep: Dep) {}
+    }
+
+    expect(rootInjector.getInstance(Service).dep instanceof Dep).toBeTruthy()
+    expect(rootInjector.getInstance(Service).dep).toBe(rootInjector.getInstance(Dep))
+  })
 })
