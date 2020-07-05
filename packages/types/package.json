@@ -1,6 +1,6 @@
 {
   "name": "@sigi/types",
-  "version": "2.1.0",
+  "version": "2.3.0",
   "description": "Types defination for sigi framenwork",
   "keywords": ["Sigi", "TypeScript"],
   "author": "LongYinan <lynweklm@gmail.com>",

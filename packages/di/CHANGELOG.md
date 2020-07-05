@@ -5,8 +5,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.3.0](https://github.com/sigi-framework/sigi/compare/v2.2.0...v2.3.0) (2020-07-05)
 
-**Note:** Version bump only for package @sigi/ts-plugin
+### Features
 
-# [2.1.0](https://github.com/sigi-framework/sigi/compare/v2.0.2...v2.1.0) (2020-06-02)
-
-**Note:** Version bump only for package @sigi/ts-plugin
+- **di:** injectable now accept InjectableOptions ([f1da08f](https://github.com/sigi-framework/sigi/commit/f1da08fee2485d3f7df5d24eb029eaa4e3960f73))

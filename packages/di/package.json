@@ -1,6 +1,6 @@
 {
   "name": "@sigi/di",
-  "version": "2.0.0",
+  "version": "2.3.0",
   "description": "Dependencies injection library for sigi framework",
   "keywords": ["DI", "Sigi"],
   "author": "LongYinan <lynweklm@gmail.com>",
