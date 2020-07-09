@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/sigi-framework/sigi/compare/v2.3.0...v2.3.1) (2020-07-09)
+
+### Bug Fixes
+
+- **react:** do not skip emit state after dependencies changed ([8656051](https://github.com/sigi-framework/sigi/commit/86560514d32252ee9385508b2b04c3e891116f49))
+
 # [2.3.0](https://github.com/sigi-framework/sigi/compare/v2.2.0...v2.3.0) (2020-07-05)
 
 **Note:** Version bump only for package @sigi/react
