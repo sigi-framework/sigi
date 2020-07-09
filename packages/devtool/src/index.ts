@@ -3,7 +3,7 @@ import { Action } from '@sigi/types'
 import { noop } from 'rxjs'
 
 interface GlobalState {
-  [modelName: string]: object
+  [modelName: string]: Record<string, unknown>
 }
 
 let devtool: { send: (...args: any[]) => void; init: (...args: any[]) => void } = {

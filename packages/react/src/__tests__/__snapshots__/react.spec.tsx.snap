@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`React components test should render three times while change local state which in dependencies list 1`] = `
+<div
+  onClick={[Function]}
+>
+  1
+</div>
+`;

@@ -6,7 +6,7 @@ import { SSRStateCache } from '../ssr-states'
 
 describe('SSRStateCacheInstance specs:', () => {
   let SSRStateCacheInstance: SSRStateCache
-  class A extends EffectModule<object> {
+  class A extends EffectModule<Record<string, unknown>> {
     defaultState = {}
   }
   const ctx = {}
@@ -46,7 +46,7 @@ describe('SSRStateCacheInstance specs:', () => {
     const newState = Object.create({
       dispose: spy,
     })
-    class B extends EffectModule<object> {
+    class B extends EffectModule<Record<string, unknown>> {
       defaultState = {}
     }
     SSRStateCacheInstance.set(ctx, B, newState)

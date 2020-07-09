@@ -44,7 +44,7 @@ describe('Smoking tests', () => {
     }
 
     @Module('Bar')
-    class BarModule extends EffectModule<object> {
+    class BarModule extends EffectModule<Record<string, unknown>> {
       defaultState = {}
 
       constructor(private readonly fooModule: FooModule) {

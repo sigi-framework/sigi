@@ -9,7 +9,7 @@ export class InjectionToken<T> {
   }
 }
 
-export interface Type<T = object> extends Function {
+export interface Type<T = Record<string, unknown>> extends Function {
   new (...args: any[]): T
 }
 
