@@ -1,7 +1,7 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
 import { ConstructorOf, IStore } from '@sigi/types'
-import React, { useContext, useMemo, useEffect } from 'react'
+import React, { useContext, useMemo, useEffect, useRef } from 'react'
 import { map, distinctUntilChanged, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -41,6 +41,8 @@ function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S,
     return selector ? selector(initialState) : initialState
   })
 
+  const isFirstRendering = useRef(true)
+
   if (process.env.NODE_ENV === 'development' && selector && !dependencies) {
     console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
   }
@@ -51,7 +53,7 @@ function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S,
     return store.state$
       .pipe(
         // skip initial state emission
-        skip(1),
+        skip(isFirstRendering.current ? 1 : 0),
         map((s) => (selector ? selector(s) : s)),
         distinctUntilChanged(),
       )
@@ -59,7 +61,12 @@ function _useModuleState<S, U = S>(store: IStore<S>, selector?: StateSelector<S,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store, ...(dependencies ?? [])])
 
-  useEffect(() => () => subscription.unsubscribe(), [store, subscription])
+  useEffect(() => {
+    isFirstRendering.current = false
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [store, subscription])
 
   return appState
 }

@@ -216,12 +216,12 @@ describe('EffectModule Class', () => {
     it('should throw if module name conflict#1', () => {
       const fn = () => {
         @Module('Module')
-        class Module1 extends EffectModule<object> {
+        class Module1 extends EffectModule<Record<string, unknown>> {
           defaultState = {}
         }
 
         @Module('Module')
-        class Module2 extends EffectModule<object> {
+        class Module2 extends EffectModule<Record<string, unknown>> {
           defaultState = {}
         }
 
@@ -234,12 +234,12 @@ describe('EffectModule Class', () => {
     it('should throw if module name conflict#2', () => {
       const fn = () => {
         @Module('Module1')
-        class Module1 extends EffectModule<object> {
+        class Module1 extends EffectModule<Record<string, unknown>> {
           defaultState = {}
         }
 
         @Module('Module1')
-        class Module2 extends EffectModule<object> {
+        class Module2 extends EffectModule<Record<string, unknown>> {
           defaultState = {}
         }
 
@@ -252,7 +252,7 @@ describe('EffectModule Class', () => {
     it('should throw if config in module invalid', () => {
       const fn = () => {
         @Module({} as any)
-        class Module1 extends EffectModule<object> {
+        class Module1 extends EffectModule<Record<string, unknown>> {
           defaultState = {}
         }
 

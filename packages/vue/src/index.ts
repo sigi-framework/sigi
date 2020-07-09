@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf } from '@sigi/types'
@@ -78,7 +80,6 @@ export const reactive = <
   const { data: originalData } = componentOptions
   componentOptions.data = function data(this: Vue) {
     if (typeof originalData === 'function') {
-      // eslint-disable-next-line @typescript-eslint/ban-types
       return Object.assign(statePassToVue, (originalData as Function).call(this))
     }
 
