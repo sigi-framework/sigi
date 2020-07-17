@@ -29,7 +29,7 @@ describe('testbed spec', () => {
       return false
     }
 
-    const token = new InjectionToken<typeof whatever>('replacable')
+    const token = new InjectionToken<typeof whatever>('replaceable')
 
     rootInjector.addProvider({
       useValue: replacement,
@@ -57,7 +57,7 @@ describe('testbed spec', () => {
       return false
     }
 
-    const token = new InjectionToken<typeof whatever>('replacabel')
+    const token = new InjectionToken<typeof whatever>('replaceable')
 
     rootInjector.addProvider({
       useValue: replacement,
@@ -95,7 +95,7 @@ describe('testbed spec', () => {
     expect(service.dep instanceof BetterDep).toBeTruthy()
   })
 
-  it('should ovrride factory', () => {
+  it('should override factory', () => {
     const token = new InjectionToken<string>('whatever')
 
     rootInjector.addProvider({

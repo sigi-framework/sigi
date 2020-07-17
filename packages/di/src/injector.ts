@@ -60,7 +60,7 @@ export class Injector {
       }
       if (injector.resolvedProviders.has(reflectiveProvider)) {
         if (deps) {
-          if (useCache && (injector === this || this.checkDepenciesClean(injector, deps))) {
+          if (useCache && (injector === this || this.checkDependenciesClean(injector, deps))) {
             instance = injector.resolvedProviders.get(reflectiveProvider) as T
           } else {
             instance = this.resolveByReflectiveProvider(reflectiveProvider, false, this)
@@ -148,14 +148,14 @@ export class Injector {
       : null
   }
 
-  private checkDepenciesClean(leaf: Injector, deps: Token<unknown>[]): boolean {
+  private checkDependenciesClean(leaf: Injector, deps: Token<unknown>[]): boolean {
     return deps.every((dep) => {
       const depInLeaf = leaf.findExisting(dep)
       const depInRoot = this.findExisting(dep)
       const isEqual = depInLeaf === depInRoot
       const deps = this.findDeps(depInLeaf)
       if (deps) {
-        return this.checkDepenciesClean(leaf, deps) && isEqual
+        return this.checkDependenciesClean(leaf, deps) && isEqual
       }
       return isEqual
     })

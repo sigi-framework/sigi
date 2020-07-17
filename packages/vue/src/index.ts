@@ -68,11 +68,11 @@ export const reactive = <
     return acc
   }, Object.create(null))
 
-  const { beforeDestroy: originalBeforeDestory } = componentOptions
+  const { beforeDestroy: originalBeforeDestroy } = componentOptions
 
   componentOptions.beforeDestroy = function beforeDestroy() {
     subscription.unsubscribe()
-    typeof originalBeforeDestory === 'function' ? originalBeforeDestory.call(this) : void 0
+    typeof originalBeforeDestroy === 'function' ? originalBeforeDestroy.call(this) : void 0
   }
 
   componentOptions.methods = Object.assign(dispatchProps, componentOptions.methods ?? {})

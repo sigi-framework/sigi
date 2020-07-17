@@ -13,7 +13,7 @@ yarn install @sigi/{vue,core,di}
 ### `reactive` API
 
 ```ts
-reactive(EffectModule, VueComponetOptions)
+reactive(EffectModule, VueComponentOptions)
 ```
 
-All the **states** and **distpach props** in the `EffectModule` will be mixed into `VueComponentOptions`. And you can use them in `methods`, `Lifecycles` and `watch` handlers.
+All the **states** and **dispatch props** in the `EffectModule` will be mixed into `VueComponentOptions`. And you can use them in `methods`, `LifeCycles` and `watch` handlers.

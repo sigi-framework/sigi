@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "start": "node ./cli.js",
-    "test": "jest --config ./packages/recipes-writting-tests/jest.config.js"
+    "test": "jest --config ./packages/recipes-writing-tests/jest.config.js"
   },
   "dependencies": {
     "@abraham/reflection": "^0.7.0",

@@ -17,18 +17,18 @@ describe('cloneDeepPoj specs', () => {
     expect(cloneDeepPoj(fixture)).toEqual(clone(fixture))
   })
 
-  it('should be able to clone object which implment CloneTrait', () => {
-    class Cloneable {
+  it('should be able to clone object which implement CloneTrait', () => {
+    class Clone {
       constructor(public foo: string, public bar: number, public arr: string[]) {}
 
       [CloneTrait]() {
-        return new Cloneable(this.foo, this.bar, [...this.arr])
+        return new Clone(this.foo, this.bar, [...this.arr])
       }
     }
 
-    const fixture = new Cloneable('foo', 2, ['one', 'two'])
+    const fixture = new Clone('foo', 2, ['one', 'two'])
 
-    expect(cloneDeepPoj(fixture)).toEqual(new Cloneable('foo', 2, ['one', 'two']))
+    expect(cloneDeepPoj(fixture)).toEqual(new Clone('foo', 2, ['one', 'two']))
   })
 
   it('should throw if object contains something could not clone', () => {
