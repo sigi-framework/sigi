@@ -1,4 +1,4 @@
-# [Sigi framenwork](https://sigi.how)
+# [Sigi framework](https://sigi.how)
 
 <p align="center"><a href="https://sigi.how" target="_blank" rel="noopener noreferrer"><img width="100" src="https://raw.githubusercontent.com/sigi-framework/documents/master/assets/android-chrome-512x512.png" alt="Sigi logo"></a></p>
 
