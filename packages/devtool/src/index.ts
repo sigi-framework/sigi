@@ -24,7 +24,7 @@ const STATE: GlobalState = {}
 const logStateAction = (action: Action<any>) => {
   const namespace = action.store.name
   const _action = {
-    type: `${namespace}/${String(action.type)}`,
+    type: `${namespace}/${action.type}`,
     params: filterParams(action.payload),
   }
 
