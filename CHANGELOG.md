@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/sigi-framework/sigi/compare/v2.3.1...v2.4.0) (2020-07-28)
+
+### Features
+
+- **core:** get rid of symbols ([6d7a848](https://github.com/sigi-framework/sigi/commit/6d7a84801e4ce2a7be731ad13e26e56cd0970135))
+- **react:** expose common actions to dispatcher hooks ([20dd063](https://github.com/sigi-framework/sigi/commit/20dd0631d2501e4b912210fef1f2b69addadb612))
+
 ## [2.3.1](https://github.com/sigi-framework/sigi/compare/v2.3.0...v2.3.1) (2020-07-09)
 
 ### Bug Fixes
