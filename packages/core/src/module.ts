@@ -74,6 +74,11 @@ export abstract class EffectModule<S> {
         map(({ payload }) => payload),
       )
     })
+
+    // port common actions to dispatcher
+    this.actions['reset'] = this.reset.bind(this)
+    this.actions['terminate'] = this.terminate.bind(this)
+    this.actions['noop'] = this.noop.bind(this)
   }
 
   /**

@@ -38,7 +38,11 @@ export type ActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
     [key in keyof M]: UnpackPayload<M[key], S> extends void ? () => void : (payload: UnpackPayload<M[key], S>) => void
   },
   keyof EffectModule<S>
->
+> & {
+  terminate: () => void
+  reset: () => void
+  noop: () => void
+}
 
 export type InstanceActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
   {
