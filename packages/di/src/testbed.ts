@@ -16,8 +16,8 @@ export class Test<M extends AbstractTestModule> {
   readonly providersMap = new Map<Token<unknown>, Provider>()
 
   private constructor(providers: Provider[], private readonly TestModule: Type<M>) {
-    for (const provier of providers) {
-      this.providersMap.set((provier as ValueProvider<unknown>).provide ?? provier, provier)
+    for (const provider of providers) {
+      this.providersMap.set((provider as ValueProvider<unknown>).provide ?? provider, provider)
     }
   }
 

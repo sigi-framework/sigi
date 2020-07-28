@@ -4,7 +4,7 @@ import { Type } from '@sigi/di'
 export class SSROneShotCache {
   private readonly cache = new Map<any, Map<Type<any>, any>>()
 
-  private readonly activedCtx = new Set<any>()
+  private readonly activatedCtx = new Set<any>()
 
   store(ctx: any, ctor: any, instance: any) {
     if (this.cache.has(ctx)) {
@@ -18,8 +18,8 @@ export class SSROneShotCache {
 
   consume(ctx: any, ctor: any): any {
     const instance = this.cache.get(ctx)?.get(ctor)
-    if (!this.activedCtx.has(ctx) && instance) {
-      this.activedCtx.add(ctx)
+    if (!this.activatedCtx.has(ctx) && instance) {
+      this.activatedCtx.add(ctx)
       process.nextTick(() => {
         this.destroy(ctx)
       })
@@ -28,8 +28,8 @@ export class SSROneShotCache {
   }
 
   private destroy<T = any>(ctx: T) {
-    if (this.activedCtx.has(ctx)) {
-      this.activedCtx.delete(ctx)
+    if (this.activatedCtx.has(ctx)) {
+      this.activatedCtx.delete(ctx)
       if (this.cache.has(ctx)) {
         for (const instance of this.cache.get(ctx)!.values()) {
           if (instance?.[StoreInterface]) {

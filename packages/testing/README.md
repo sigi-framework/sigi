@@ -2,6 +2,6 @@
 
 ## Usage
 
-[writting test](https://sigi.how/en/recipes/writting-tests)
+[writing test](https://sigi.how/en/recipes/writing-tests)
 
-[编写单元测试](https://sigi.how/zh/recipes/writting-tests)
+[编写单元测试](https://sigi.how/zh/recipes/writing-tests)

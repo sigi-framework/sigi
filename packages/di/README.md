@@ -91,7 +91,7 @@ function replacement() {
   return false
 }
 
-const token = new InjectionToken<typeof whatever>('replacable')
+const token = new InjectionToken<typeof whatever>('replaceable')
 
 const provider: ValueProvider = {
   useValue: replacement,
@@ -123,7 +123,7 @@ function replacement() {
   return false
 }
 
-const token = new InjectionToken<typeof whatever>('replacabel')
+const token = new InjectionToken<typeof whatever>('replaceable')
 
 const provider: ValueProvider = {
   useValue: replacement,

@@ -38,7 +38,7 @@ export class RouterModule extends EffectModule<RouterState> {
   setHistory(state: RouterState, history: History) {
     if (state.history && process.env.NODE_ENV === 'development') {
       console.warn(
-        'History in RouterModule has already defined, have you wrapped your application with SigiRouterProvider muti times?',
+        'History in RouterModule has already defined, have you wrapped your application with SigiRouterProvider multi times?',
       )
     }
     const historyListenerTeardown = history.listen((update) => {

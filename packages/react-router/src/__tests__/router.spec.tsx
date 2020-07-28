@@ -67,7 +67,7 @@ class TestModule extends EffectModule<TestState> {
   }
 
   @Effect()
-  listenWithStopSingal(payload$: Observable<void>): Observable<Action> {
+  listenWithStopSignal(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
       exhaustMap(() =>
         this.routerModule.createRouterObservable().pipe(
@@ -132,12 +132,12 @@ describe('Router module spec', () => {
     goSpy.restore()
   })
 
-  it('should invoke goFoward', () => {
-    const goFowardSpy = Sinon.spy(history, 'forward')
+  it('should invoke goForward', () => {
+    const goForwardSpy = Sinon.spy(history, 'forward')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goForward()
-    expect(goFowardSpy.callCount).toBe(1)
-    goFowardSpy.restore()
+    expect(goForwardSpy.callCount).toBe(1)
+    goForwardSpy.restore()
   })
 
   it('should listen router changed', () => {
@@ -147,7 +147,7 @@ describe('Router module spec', () => {
   })
 
   it('stop one router$ should not effect others', () => {
-    testStub.dispatcher.listenWithStopSingal()
+    testStub.dispatcher.listenWithStopSignal()
     testStub.dispatcher.listen()
     testStub.dispatcher.goHome()
     testStub.dispatcher.stopListen$()

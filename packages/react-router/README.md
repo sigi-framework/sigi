@@ -1,6 +1,6 @@
 # `@sigi/react-router`
 
-> React router intergration for sigi framework
+> React router integration for sigi framework
 
 ## Usage
 

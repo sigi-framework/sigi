@@ -53,7 +53,7 @@ describe('Context specs', () => {
     )
   })
 
-  it('Muti providers context', () => {
+  it('Multi providers context', () => {
     const { Module, Service } = inject()
     const mockService1 = {
       provide: Service,

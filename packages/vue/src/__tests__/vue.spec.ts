@@ -40,7 +40,7 @@ class VueTestingModule extends EffectModule<VueTestingState> {
   }
 }
 
-describe('VueJS reative binding', () => {
+describe('VueJS reactive binding', () => {
   const options = reactive(VueTestingModule, {})
   let vm = new Vue(options)
   let testingStub: SigiTestStub<VueTestingModule, VueTestingState>
@@ -184,7 +184,7 @@ describe('VueJS reative binding', () => {
     expect(vm['foo']).toBeUndefined()
   })
 
-  it('should call original beforeDestory', async () => {
+  it('should call original beforeDestroy', async () => {
     const spy = Sinon.spy()
     const reactiveOptions = reactive(VueTestingModule, {
       beforeDestroy: spy,

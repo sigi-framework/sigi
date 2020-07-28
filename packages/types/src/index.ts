@@ -1,7 +1,7 @@
 import { Subject, Observable, ReplaySubject } from 'rxjs'
 
 export interface Action<Payload = unknown> {
-  readonly type: string | symbol
+  readonly type: string
   readonly payload: Payload
   readonly store: IStore<any>
 }

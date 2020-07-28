@@ -74,6 +74,11 @@ export abstract class EffectModule<S> {
         map(({ payload }) => payload),
       )
     })
+
+    // port common actions to dispatcher
+    this.actions['reset'] = this.reset.bind(this)
+    this.actions['terminate'] = this.terminate.bind(this)
+    this.actions['noop'] = this.noop.bind(this)
   }
 
   /**
@@ -156,7 +161,7 @@ export abstract class EffectModule<S> {
   }
 
   private tryReadSSRState(): S | undefined {
-    const ssrCache = (_globalThis as any)[Symbol.for(Symbol.keyFor(GLOBAL_KEY_SYMBOL)!)]
+    const ssrCache = (_globalThis as any)[GLOBAL_KEY_SYMBOL]
     if (ssrCache?.[this.moduleName]) {
       this.restoredFromSSR = true
       return ssrCache[this.moduleName]
@@ -221,14 +226,14 @@ export abstract class EffectModule<S> {
 
     return (prevState, action) => {
       const { type } = action
-      if (typeof type === 'string') {
+      if (type === RESET_ACTION_TYPE_SYMBOL) {
+        return this.defaultState
+      } else {
         if (reducers[type]) {
           return reducers[type](prevState, action.payload)
         } else if (immerReducers[type]) {
           return produce(prevState, (draft: Draft<S>) => immerReducers[type](draft, action.payload))
         }
-      } else if (type === RESET_ACTION_TYPE_SYMBOL) {
-        return this.defaultState
       }
       return prevState
     }

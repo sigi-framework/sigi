@@ -1,4 +1,4 @@
-# [Sigi framenwork](https://sigi.how)
+# [Sigi framework](https://sigi.how)
 
 <p align="center"><a href="https://sigi.how" target="_blank" rel="noopener noreferrer"><img width="100" src="https://raw.githubusercontent.com/sigi-framework/documents/master/assets/android-chrome-512x512.png" alt="Sigi logo"></a></p>
 
@@ -10,11 +10,11 @@
   <a href="https://github.com/sigi-framework/sigi/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@sigi/core.svg?sanitize=true" alt="License"></img></a>
 </p>
 
-Sigi is a effect management framenwork for complex frontend app.
+Sigi is a effect management framework for complex frontend app.
 
 - **Type safe**: Sigi provides **Type Safe** APIs which connect the gap between your `Component` and `Side Effect` codes in compile time.
-- **Dependencies Injection**: Sigi contains a tiny denpendencies injection implmentation. Which allow you easier to compose your `Modules` and `Services`. And it is also provide huge benifit when you want to write some tests.
-- **Muti platfroms support**: Sigi now support `React/React Native` and `Vue@2.x`, we will also provide support for `Flutter` with very similiar APIs in very soon.
+- **Dependencies Injection**: Sigi contains a tiny dependency injection implementation. Which allow you easier to compose your `Modules` and `Services`. And it is also provide huge benefit when you want to write some tests.
+- **Multi platforms support**: Sigi now support `React/React Native` and `Vue@2.x`, we will also provide support for `Flutter` with very similar APIs in very soon.
 
 ## Documentation
 
