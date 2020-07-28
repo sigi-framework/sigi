@@ -23,7 +23,7 @@ export interface EffectOptions {
   /**
    * Function used to get effect payload.
    *
-   * if SKIP_SYMBOL , effect won't get dispatched when SSR
+   * if SKIP_SYMBOL(passed from the second parameter) returned, effect won't get dispatched when SSR
    *
    * @param ctx context
    * @param skipSymbol the skip symbol
