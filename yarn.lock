@@ -1554,38 +1554,38 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@swc-node/core-darwin@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@swc-node/core-darwin/-/core-darwin-0.2.4.tgz#6d6e8f69ef5aeabbc5526d075447906423ac24d3"
-  integrity sha512-sp9naNfrurIRqqsbRJkf7w9IRHXnlgGjSYKjUDuBCfnl1VIUO78C3QxTugG4CzDSFHb6eRsBpxtIUUYkAUIhCQ==
+"@swc-node/core-darwin@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-darwin/-/core-darwin-0.2.5.tgz#c85bdf724fc1cdaaeb8172482400158d6da50a52"
+  integrity sha512-6SPaHX76QUf82hbDgAhOZjDIMuN2wA+hBwuLxjtX7fVTW8TVQtJGkKDy6IXLYTlFUOIMP2qM+Wf7GjUpBrCt8w==
 
-"@swc-node/core-linux@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@swc-node/core-linux/-/core-linux-0.2.4.tgz#8f8a9dd49a0912ed48553c7e9c759d7add99668b"
-  integrity sha512-1x5kqCveBk4f2p/dLayUQShfYBiZm9ClI81fo9CTFtQhPYucs6QUkpkJux40F94n7sqo1vZnlqMOKte8oPSJBA==
+"@swc-node/core-linux@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-linux/-/core-linux-0.2.5.tgz#1e56932e0e5c098e7eb8f70dfbced15718ed0d19"
+  integrity sha512-RTCo+Rp5bzFLs6pemL0N8AoHQ8Bs1bp7iVBWsdPA8JPEpRoI8B3iEGOPZcdxNRQdtE/VHCQTwIM6GnrOJk3ZmQ==
 
-"@swc-node/core-win32@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@swc-node/core-win32/-/core-win32-0.2.4.tgz#b7e4f0c7237a8fcc9cf1dfa06b924cf173326636"
-  integrity sha512-hMdWSTc+fYt5rjKIJy2W2etafgKeFODSvgusRnV3hNwzvccL1Xrtw6x5zrATI2d4NEuwh0z02HZyznCgLhkrQg==
+"@swc-node/core-win32@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-win32/-/core-win32-0.2.5.tgz#b7ed1faff7055e2792beb8c42a951853d756dc9d"
+  integrity sha512-eWQgqqHuh67BoNOE6MJPBCti7ghFmPsj3FoDI6NAZZ4hWUSH5tykXcS34UsW1Bx80KoefYsbBp5A8e8RvMgsaQ==
 
-"@swc-node/core@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@swc-node/core/-/core-0.2.4.tgz#750131429ea19cedbeaf149a7601d9f1df6d67bd"
-  integrity sha512-ibDRA/g+OBNEpwQkcIp5ytDUEjenDvDEH/k7F6ekO8bGFl3eW60U6agdn9z5wmf9j4CMaGVOPaV3vbtCc4lYZA==
+"@swc-node/core@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-0.2.5.tgz#f850d46bfef3801a70a0112571e34de38ed3ea8a"
+  integrity sha512-NbafLN9qwTCllM0yFJFDIHiN5PCIrf48Q5qn/CIHfe23E9dCpJCq4Ap9qPmRxs7+rKU9Y7Mat1F5riy/b25UVQ==
   dependencies:
     "@node-rs/helper" "^0.2.1"
   optionalDependencies:
-    "@swc-node/core-darwin" "^0.2.4"
-    "@swc-node/core-linux" "^0.2.4"
-    "@swc-node/core-win32" "^0.2.4"
+    "@swc-node/core-darwin" "^0.2.5"
+    "@swc-node/core-linux" "^0.2.5"
+    "@swc-node/core-win32" "^0.2.5"
 
-"@swc-node/jest@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.npmjs.org/@swc-node/jest/-/jest-0.1.18.tgz#9faed984a0ee81eec874ad2c7a75c393d9d7d5d2"
-  integrity sha512-7CMZ/fUMmqg9qWNu9YWEiaFcIbEhIAuidDjrIp43tYI0hHB8wvIYJt7Jx8zgGYKiN+klsFiO+5Q9bbSrlhMAtg==
+"@swc-node/jest@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-0.1.19.tgz#da46a2daae0f03c7af4c295f878dde0e9c77729d"
+  integrity sha512-m4O2nltUElonB6a3XPRlMypJz+R36j/Nko06uevSUWXL6l81WcMYStkzx3mNRaenlj0x5SmTTZRBeYKAs7wZYg==
   dependencies:
-    "@swc-node/core" "^0.2.4"
+    "@swc-node/core" "^0.2.5"
 
 "@tootallnate/once@1":
   version "1.1.2"
