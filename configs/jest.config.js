@@ -1,7 +1,15 @@
 const { join } = require('path')
 
 module.exports = {
-  preset: 'ts-jest',
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc-node/jest',
+      {
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+      },
+    ],
+  },
   rootDir: join(__dirname, '..'),
   testEnvironment: 'jsdom',
   moduleNameMapper: {
