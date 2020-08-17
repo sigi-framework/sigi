@@ -181,12 +181,12 @@ describe('injectable specs', () => {
 
   it('should be able to resolve deps from useFactory', () => {
     @Injectable()
+    class DepTwo {}
+
+    @Injectable()
     class Dep {
       constructor(public cacheSize: number, public depTwo: DepTwo) {}
     }
-
-    @Injectable()
-    class DepTwo {}
 
     const cacheSize = 5
 
