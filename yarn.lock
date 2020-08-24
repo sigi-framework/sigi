@@ -1387,10 +1387,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@node-rs/helper@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@node-rs/helper/-/helper-0.2.1.tgz#6bbd9023301a68a2717111e99c41ef38e3fa0726"
-  integrity sha512-DEPYwfkkhJlVLFu6hWVGZi96jUCBahi1WoHZAC7gSFoeoJtxwJ+FrJSDx/8c9aIwAf477NnKj8bRJzFm98Me3A==
+"@node-rs/helper@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@node-rs/helper/-/helper-0.3.0.tgz#6ab53f3842086f56df92f4990dda642afba84f10"
+  integrity sha512-1p67WcdFAtz5jVGpzpqJL2W+JKmoW4jmPD2cIJOAU4U+Fl5G9QsoFTa07ctiNosSsjYqnvgyE0KWV75YdpDqDg==
   dependencies:
     tslib "^2.0.0"
 
@@ -1553,38 +1553,38 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@swc-node/core-darwin@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core-darwin/-/core-darwin-0.3.0.tgz#178ca812c8730c9658f7f2bf047c695671cef00c"
-  integrity sha512-VKAiMMvWFo5M4jaalQA9n7MfcmYIMjOj44Gi0r8wHJ7aOLned/xcSboy/ucPczbfBLaxveYpgtlQcgg4XYvBFA==
+"@swc-node/core-darwin@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-darwin/-/core-darwin-0.4.2.tgz#d41fff560d20e1dc0bf1d077e3ad9eebe1f83862"
+  integrity sha512-PKQZs5Cd1zD0D8KUz2vKGfQET7b19TcIuJ3M5fffosCLo0PV39bi6jrRiILiyP8DPGhOHysOMYkpJh0suVV2uA==
 
-"@swc-node/core-linux@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core-linux/-/core-linux-0.3.0.tgz#ae8a5b649836668deee3551dac969f636584e690"
-  integrity sha512-qfB5DZT4xFDJDUtD51ZmAgk2GvU2mw001i+JsNuyNg7VoiSiAA+FMCJi/nHkQt9M0bQ/nndxr3SgfG13rH5sgw==
+"@swc-node/core-linux@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-linux/-/core-linux-0.4.2.tgz#e65750d1bcde9f153ec5e2b418e9b56365c94691"
+  integrity sha512-DOgOclLtbAOA0oJqxjOk6ziYLJ9JeTE/b9GJQm2GLB2jZgMcAPp+u1Dj/cBWEek77YErMeLyD0sYxE4E56KpvQ==
 
-"@swc-node/core-win32@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core-win32/-/core-win32-0.3.0.tgz#5ac5390e5504a7ba0a580da63dff5552cecef201"
-  integrity sha512-ScDYL4G1l3Jq0ZC4qqiGyTnaBrtL9esYSL7eug+HetTwSehWpd0ZRGiEF5VL6PK6NoatEie6ZYRxmsW15Q+svg==
+"@swc-node/core-win32@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-win32/-/core-win32-0.4.2.tgz#26b1a2a2c33da75d5e3b2876f61dfa81188fcfc8"
+  integrity sha512-GopRvIP/m2uJFaEEz3IuCEKBWjZxu/mW53fWjCrib5tU/Vs3bYu2oRs7u2n6XwCDMfPw8RNNutGtbYeWQWYklw==
 
-"@swc-node/core@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-0.3.0.tgz#c9c5a26526de49fcf6a5026122dc8c753174dd27"
-  integrity sha512-iWqjX7Pqv11pjHTZwOtvwRBUSg6ORXnh6uuKIJaqFeXky2O5E6JJYVdOpoK9+XRS7BKoA7KwAE+Cy9KgqVekXw==
+"@swc-node/core@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-0.4.2.tgz#4216cb176fc352d7df09b1cf2579274931dc5644"
+  integrity sha512-32YeSm2Q4YClpKIA2ZJzdZDLvLcv3nyg6pyoupy/cJjLpojGg+Laigo310wkQaCt8Y0NYOOheI/o58TV8xtgYg==
   dependencies:
-    "@node-rs/helper" "^0.2.1"
+    "@node-rs/helper" "^0.3.0"
   optionalDependencies:
-    "@swc-node/core-darwin" "^0.3.0"
-    "@swc-node/core-linux" "^0.3.0"
-    "@swc-node/core-win32" "^0.3.0"
+    "@swc-node/core-darwin" "^0.4.2"
+    "@swc-node/core-linux" "^0.4.2"
+    "@swc-node/core-win32" "^0.4.2"
 
-"@swc-node/jest@^0.1.24":
-  version "0.1.24"
-  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-0.1.24.tgz#e1d3a6ee4a75ac7233b043c0c20f469b46b8e6eb"
-  integrity sha512-D/iQaRf6TajT3dYIelmgcTuNLsnmfl6AghgWttFLK0fT+ZUVpWeVhANPqWBYLO1GiZfoE50AfofzMBvzlZ5OyQ==
+"@swc-node/jest@^0.1.27":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-0.1.27.tgz#2ff203fc8804a010d23b87be0f5b25737b52f099"
+  integrity sha512-T2FUEIvcWWfszDkl/gHNSlbvT4V7//eoEZEJFDhWCniYF48sJcDOqjobSIoub9bLRKYCsDR5qVCaQbmRsPeByg==
   dependencies:
-    "@swc-node/core" "^0.3.0"
+    "@swc-node/core" "^0.4.2"
 
 "@tootallnate/once@1":
   version "1.1.2"
