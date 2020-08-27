@@ -109,7 +109,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke goBack', () => {
-    const goBackSpy = Sinon.spy(history, 'back')
+    const goBackSpy = Sinon.spy(history, 'goBack')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goBack()
     expect(goBackSpy.callCount).toBe(1)
@@ -133,7 +133,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke goForward', () => {
-    const goForwardSpy = Sinon.spy(history, 'forward')
+    const goForwardSpy = Sinon.spy(history, 'goForward')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goForward()
     expect(goForwardSpy.callCount).toBe(1)
