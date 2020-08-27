@@ -1,5 +1,6 @@
 import { EffectModule, Module, Reducer, Effect } from '@sigi/core'
-import { History, To, Location, Action as HistoryAction } from 'history'
+import { Action } from '@sigi/types'
+import { History, Location, Action as HistoryAction, Path } from 'history'
 import { Observable, Subject, noop } from 'rxjs'
 import { tap, map, withLatestFrom } from 'rxjs/operators'
 
@@ -8,7 +9,7 @@ export interface RouterState {
   historyListenerTeardown: () => void
 }
 
-export type HistoryMethods = 'go' | 'back' | 'forward' | 'push' | 'replace'
+export type HistoryMethods = 'go' | 'goBack' | 'goForward' | 'push' | 'replace'
 
 export interface RouterChanged {
   location: Location
@@ -41,13 +42,13 @@ export class RouterModule extends EffectModule<RouterState> {
         'History in RouterModule has already defined, have you wrapped your application with SigiRouterProvider multi times?',
       )
     }
-    const historyListenerTeardown = history.listen((update) => {
-      this.router$.next(update)
+    const historyListenerTeardown = history.listen((location, action) => {
+      this.router$.next({ location, action })
     })
     return { history, historyListenerTeardown }
   }
 
-  push(path: To, state?: any) {
+  push(path: Path, state?: any): Action<CallHistoryPayload> {
     return this.getActions()._callHistory({ method: 'push', payloads: [path, state] })
   }
 
@@ -56,13 +57,13 @@ export class RouterModule extends EffectModule<RouterState> {
   }
 
   goBack() {
-    return this.getActions()._callHistory({ method: 'back', payloads: [] })
+    return this.getActions()._callHistory({ method: 'goBack', payloads: [] })
   }
   goForward() {
-    return this.getActions()._callHistory({ method: 'forward', payloads: [] })
+    return this.getActions()._callHistory({ method: 'goForward', payloads: [] })
   }
 
-  replace(path: To, state?: any) {
+  replace(path: Path, state?: any) {
     return this.getActions()._callHistory({ method: 'replace', payloads: [path, state] })
   }
 
