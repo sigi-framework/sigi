@@ -58,7 +58,7 @@
     "reflect-metadata": "^0.1.13",
     "rollup": "^2.26.8",
     "rollup-plugin-sourcemaps": "^0.6.2",
-    "rxjs": "^6.6.2",
+    "rxjs": "^6.6.3",
     "shx": "^0.3.2",
     "sinon": "^9.0.3",
     "ts-node": "^9.0.0",
