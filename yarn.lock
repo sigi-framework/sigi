@@ -1387,10 +1387,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@node-rs/helper@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@node-rs/helper/-/helper-0.3.1.tgz#605d3fafb344a4b7b664236c9219ac3e1d72361b"
-  integrity sha512-3X6SJOcyFRYv1mjrjtSHiziJuzAsqaz2pFD3uuLxu4qJo4TH6H0gaUb1Bdxl/VtiDy2yR+eMyBOQFCvr/G2oLA==
+"@node-rs/helper@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@node-rs/helper/-/helper-0.4.0.tgz#deec7d95aafa90535980a51cbd5336b8bbefe93a"
+  integrity sha512-fSyHEXmlt/FueKqAYiGFCnkohnQBMQwUr6VYPeZEeVBAzQzhioS1WaRe2fSpOuRKIimCQEvxhQ6fwsYxYakfGA==
   dependencies:
     tslib "^2.0.1"
 
@@ -1553,38 +1553,38 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@swc-node/core-darwin@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core-darwin/-/core-darwin-0.6.0.tgz#ad1265144916296f5786d5c08f2e251e429a6b1c"
-  integrity sha512-ADLDa1M/drIRv69waG04zLjiHCWqlTS5T4seyV3Iin5YxBzGdEM3UIp2KdaoulEYcJVHzedNYkzqz+uEL4DD3A==
+"@swc-node/core-darwin@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-darwin/-/core-darwin-0.7.2.tgz#7475605b8f7fd02dae8973c85ac25bc27caf1c0a"
+  integrity sha512-WyeviZGhP/glgEsH1QHjrwmLyaXTUl8Tzn+LiDdglKLwkVd2fWhhLA0PADHfwEaQmXnxEX+PlEl2Ybysn6ibSg==
 
-"@swc-node/core-linux@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core-linux/-/core-linux-0.6.0.tgz#33459961d604b10731fd80ab65dc80f1ce0926fa"
-  integrity sha512-Ck/eIIrj6RlkQBZp2gsAl3LxV75wi91XvxO9UUoQqiUE1YlcIRgp+9JU+9izNdYJ5jPVL9QQ6daonhlyK70+Hw==
+"@swc-node/core-linux@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-linux/-/core-linux-0.7.2.tgz#ac05546b4154269c4884595798dce78fdd839185"
+  integrity sha512-LbOO+D7iZSeEz7jcWOTH/7wHcvnqjhaF5Ma/3Mt68ZxFHZFFYhaq6gwsPVQ5YgI3o3lS+FrKsSP3oWjhWhCceA==
 
-"@swc-node/core-win32@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core-win32/-/core-win32-0.6.0.tgz#ef3cc5dbe016185b9cdf58af26b566cdfb29d075"
-  integrity sha512-Mtq0/09Iu/j9JLP2tIYmzes6vbhtHtQT9kCQ/rhvUWlZoFLNx6AKQVrhT/3DbFY93XLWm+y104l143q8xhyHtw==
+"@swc-node/core-win32@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core-win32/-/core-win32-0.7.2.tgz#4a3b1f6332888075edf2f43b75b4ad610ce18306"
+  integrity sha512-4ZSMJ5ndFw339wgFvTT/tUYaNiLBrjFxf2hXKAZ4mR1BQ8BCwHPP8wZLZTErA3MSk9Ezg+uekEfY+QEd+FPaDQ==
 
-"@swc-node/core@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-0.6.0.tgz#97774a7ac7b4b3d188147b00edbcf4fafa0fa9f3"
-  integrity sha512-lmxgqeTV1thmEgUU/OJfmfLbcPJLWrXTq3bZpD+igEjGtrMCrIN4i7DFIIx5YUu5v0qzVodR0oMFd2pdHPqdYw==
+"@swc-node/core@^0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-0.7.2.tgz#e7054cfa8c6181558d31b75a9738e6db6575d17e"
+  integrity sha512-g9kZl0kRmTTHHbH3K09nXjx6CaowOzcNfNKdEjLbxKUewNv196EAyJxZwXisOdB5Gx+y1g7sqcBKNG/OPu1hlw==
   dependencies:
-    "@node-rs/helper" "^0.3.1"
+    "@node-rs/helper" "^0.4.0"
   optionalDependencies:
-    "@swc-node/core-darwin" "^0.6.0"
-    "@swc-node/core-linux" "^0.6.0"
-    "@swc-node/core-win32" "^0.6.0"
+    "@swc-node/core-darwin" "^0.7.2"
+    "@swc-node/core-linux" "^0.7.2"
+    "@swc-node/core-win32" "^0.7.2"
 
-"@swc-node/jest@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-0.3.0.tgz#04dfa7222fd134571abba10245053dcf822a5403"
-  integrity sha512-xZcXl+DVZ0OUTlXRVt7NHJnc4ePhYcJ3IpYeMWXl+7WyXdk5M601yqmNXlqVNQlN5+Ezo3LXjyob5hpdH/Ve+A==
+"@swc-node/jest@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-0.3.4.tgz#d125a0794853e0f07e8c96f49a246716dc94f3fa"
+  integrity sha512-PUiAVzpiPfQ9f80MdaOF0dFn0VDysunV9QARLlYPEeBNFSyj/rkQe17NrmaxcTLkyEr7QcSHL+17gb8NvdPchw==
   dependencies:
-    "@swc-node/core" "^0.6.0"
+    "@swc-node/core" "^0.7.2"
 
 "@tootallnate/once@1":
   version "1.1.2"
