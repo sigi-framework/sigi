@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-conventional": "^9.1.2",
+    "@commitlint/config-conventional": "^11.0.0",
     "@commitlint/config-lerna-scopes": "^9.1.2",
     "@swc-node/jest": "^0.3.4",
     "@types/jest": "^26.0.13",
