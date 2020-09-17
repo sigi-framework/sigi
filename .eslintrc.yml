@@ -34,20 +34,23 @@ settings:
 
 rules:
   # 0 = off, 1 = warn, 2 = error
+  # use typescript version
   'space-before-function-paren': 0
   'no-useless-constructor': 0
+  'no-use-before-define': 0
+  'no-redeclare': 0
+  'no-unused-vars': 0
+  'no-case-declarations': 0
+
   'no-undef': 2
   'no-console': [2, { allow: ['error', 'warn', 'info', 'assert'] }]
   'comma-dangle': ['error', 'only-multiline']
-  'no-unused-vars': 0
   'no-var': 2
   'one-var-declaration-per-line': 2
   'prefer-const': 2
   'no-const-assign': 2
   'no-duplicate-imports': 2
-  'no-use-before-define': [2, { 'functions': false, 'classes': false }]
   'eqeqeq': [2, 'always', { 'null': 'ignore' }]
-  'no-case-declarations': 0
   'no-restricted-syntax':
     [
       2,
@@ -84,6 +87,10 @@ rules:
   'sonarjs/no-small-switch': 0
 
   'react/jsx-no-bind': 2
+
+  '@typescript-eslint/no-use-before-define': [2, { 'functions': false, 'classes': false }]
+
+  '@typescript-eslint/no-redeclare': 2
 
   '@typescript-eslint/adjacent-overload-signatures': 2
 

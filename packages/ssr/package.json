@@ -27,10 +27,10 @@
     "@sigi/core": "^2.4.1",
     "@sigi/di": "^2.4.1",
     "@sigi/types": "^2.4.0",
-    "serialize-javascript": "^4.0.0"
+    "serialize-javascript": "^5.0.1"
   },
   "devDependencies": {
-    "@types/node": "^14.6.0",
+    "@types/node": "^14.10.3",
     "@types/serialize-javascript": "^4.0.0"
   }
 }
