@@ -89,7 +89,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
     : never
   : never
 
-export function useModuleState<M extends EffectModule<any>, U>(
+export function useModuleState<M extends EffectModule<any>>(
   A: ConstructorOf<M>,
 ): M extends EffectModule<infer State> ? State : never
 
@@ -119,7 +119,7 @@ export function useModule<M extends EffectModule<any>, U>(
     : never
   : never
 
-export function useModule<M extends EffectModule<any>, U>(
+export function useModule<M extends EffectModule<any>>(
   A: ConstructorOf<M>,
 ): M extends EffectModule<infer State> ? [State, ActionOfEffectModule<M, State>] : never
 

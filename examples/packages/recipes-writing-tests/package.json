@@ -23,8 +23,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.10",
-    "jest": "^26.4.1",
-    "ts-jest": "^26.2.0"
+    "@types/jest": "^26.0.14",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.3.0"
   }
 }
