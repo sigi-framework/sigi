@@ -3,7 +3,7 @@
 <p align="center"><a href="https://sigi.how" target="_blank" rel="noopener noreferrer"><img width="100" src="https://raw.githubusercontent.com/sigi-framework/documents/master/assets/android-chrome-512x512.png" alt="Sigi logo"></a></p>
 
 <p align="center">
-  <a href="https://github.com/sigi-framework/sigi/actions?query=workflow%3A%22Node.js+CI%22"><img src="https://github.com/sigi-framework/sigi/workflows/Node.js%20CI/badge.svg" alt="Build Status"></a>
+  <a href="https://github.com/sigi-framework/sigi/actions"><img src="https://github.com/sigi-framework/sigi/workflows/Test%20Commit/badge.svg" alt="Build Status"></a>
   <a href="https://codecov.io/gh/sigi-framework/sigi"><img src="https://codecov.io/gh/sigi-framework/sigi/branch/master/graph/badge.svg" alt="Coverage Status"></a>
   <a href="https://npmcharts.com/compare/@sigi/core?minimal=true"><img src="https://img.shields.io/npm/dm/@sigi/core.svg?sanitize=true" alt="Downloads"></a>
   <a href="https://www.npmjs.com/package/@sigi/core"><img src="https://img.shields.io/npm/v/@sigi/core.svg?sanitize=true" alt="Version"></a>
