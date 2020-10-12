@@ -46,7 +46,7 @@
     "eslint-plugin-react-hooks": "^4.1.2",
     "eslint-plugin-sonarjs": "^0.5.0",
     "husky": "^4.3.0",
-    "jest": "^26.5.2",
+    "jest": "^26.5.3",
     "lerna": "^3.22.1",
     "lint-staged": "^10.4.0",
     "lodash": "^4.17.20",
