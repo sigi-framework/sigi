@@ -1582,19 +1582,19 @@
   resolved "https://registry.npmjs.org/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
-"@swc-node/core@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@swc-node/core/-/core-1.0.0.tgz#d719abe9d5aa49bb169153d1f3b8ef5364f6f30d"
-  integrity sha512-U0ebtvZVAVjvIjIw2NW07siJFszoOniE5DX1XB08RRvrV1hSI/yuTT81z1onoI66Fhc1l+AJbZLq4U19VEBCOA==
+"@swc-node/core@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@swc-node/core/-/core-1.1.0.tgz#4d99597e62aefe2b2a2dc0bd928282c00b519d52"
+  integrity sha512-K90gevVF5UIttPeEK7rfFrdnVLpE4UIc3M5qz2MLrMhWBrfDolSTAm6USM/GITVzbSzECr3Nm/JDkpchzlAEXg==
   dependencies:
-    "@swc/core" "^1.2.34"
+    "@swc/core" "^1.2.36"
 
-"@swc-node/jest@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@swc-node/jest/-/jest-1.0.0.tgz#dea7152cf5ae7ebc17a7e03c37e172fcfc8d7f55"
-  integrity sha512-XWUHK357B/sB509IgHSmE+rlHAFH6GMDdqAK+UTQm2TWOtt43xEhlKACX4XgVeC5mUmT6rMhGRWnUscrCJDO8A==
+"@swc-node/jest@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@swc-node/jest/-/jest-1.0.1.tgz#9d66515245e2581631191092163884b025b9244a"
+  integrity sha512-X9gAKKxdkkxUP4QHK86eyMGVJ+kwSAFYpGVHHOpbWyWIsnRtlHbZMLXuJ2sRJc3TuwTEYsuJSkCnD7OQOSr8fw==
   dependencies:
-    "@swc-node/core" "^1.0.0"
+    "@swc-node/core" "^1.1.0"
 
 "@swc/core-darwin@^1.2.36":
   version "1.2.36"
@@ -1611,9 +1611,9 @@
   resolved "https://registry.npmjs.org/@swc/core-win32/-/core-win32-1.2.36.tgz#13fb85ae579a3d0d73defe11239cb566110315c9"
   integrity sha512-O3HJ+Gd1RRsjdTPsvrjLw/ZTRo5N/V4u9+UFNgU9A5jUnhmAuyoUGSa+AHOOGQfSmLkrE6WF3+iz4apAYmnIOw==
 
-"@swc/core@^1.2.34":
+"@swc/core@^1.2.36":
   version "1.2.36"
-  resolved "https://registry.npmjs.org/@swc/core/-/core-1.2.36.tgz#ce32c6553438e1980113d66f7d7a7b52b2a810b6"
+  resolved "https://registry.yarnpkg.com/@swc/core/-/core-1.2.36.tgz#ce32c6553438e1980113d66f7d7a7b52b2a810b6"
   integrity sha512-hi/LRHkTS3ICjhm1sl2/AM3hv8OClqdp9jFZt/sKAxVgj61xS9kD9uYiDE0MKZiwMlcTNE5bH8kY1XhqCL25rg==
   dependencies:
     "@node-rs/helper" "^0.4.0"
