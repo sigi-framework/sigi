@@ -30,7 +30,7 @@
     "@commitlint/config-lerna-scopes": "^11.0.0",
     "@swc-node/jest": "^1.0.1",
     "@types/jest": "^26.0.15",
-    "@types/lodash": "^4.14.162",
+    "@types/lodash": "^4.14.163",
     "@types/node": "^14.14.6",
     "@types/react-dom": "^16.9.9",
     "@types/react-test-renderer": "^16.9.3",
