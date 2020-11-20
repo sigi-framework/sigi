@@ -30,7 +30,7 @@
     "serialize-javascript": "^5.0.1"
   },
   "devDependencies": {
-    "@types/node": "^14.14.8",
+    "@types/node": "^14.14.9",
     "@types/serialize-javascript": "^4.0.0"
   }
 }
