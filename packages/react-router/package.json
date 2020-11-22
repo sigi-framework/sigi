@@ -1,6 +1,6 @@
 {
   "name": "@sigi/react-router",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "React router integration for sigi framework",
   "keywords": ["Sigi", "Router", "React", "RxJS"],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -24,8 +24,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.4.2",
-    "@sigi/react": "^2.4.2"
+    "@sigi/core": "^2.4.3",
+    "@sigi/react": "^2.4.3"
   },
   "devDependencies": {
     "@types/history": "^4.7.8",
