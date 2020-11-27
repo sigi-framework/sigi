@@ -98,7 +98,7 @@ export const runSSREffects = <Context, Returned = any>(
                 )
 
                 if (effectsCount > 0) {
-                  await new Promise((resolve) => {
+                  await new Promise<void>((resolve) => {
                     let terminatedCount = 0
                     disposeFn = store.addEpic((action$) => {
                       return action$.pipe(
