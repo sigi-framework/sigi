@@ -63,8 +63,10 @@ export class Injector {
           if (useCache && (injector === this || this.checkDependenciesClean(injector, deps))) {
             instance = injector.resolvedProviders.get(reflectiveProvider) as T
           } else {
-            instance = this.resolveByReflectiveProvider(reflectiveProvider, false, this)
+            instance = this.resolveByReflectiveProvider(reflectiveProvider, useCache, this)
             if (useCache) {
+              this.provider.addProvider(provider)
+              this.providersCache.set(provider, reflectiveProvider)
               this.resolvedProviders.set(reflectiveProvider, instance)
             }
           }
@@ -78,7 +80,9 @@ export class Injector {
       instance = injector.resolveByReflectiveProvider(reflectiveProvider, useCache, this)
       if (instance) {
         if (useCache) {
-          injector.resolvedProviders.set(reflectiveProvider!, instance)
+          this.provider.addProvider(provider)
+          this.providersCache.set(provider, reflectiveProvider)
+          this.resolvedProviders.set(reflectiveProvider!, instance)
         }
         break
       }

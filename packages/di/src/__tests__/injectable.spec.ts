@@ -302,7 +302,9 @@ describe('injectable specs', () => {
 
     const newInjector = rootInjector.createChild([replacementProvider])
     const service = newInjector.getInstance(Service)
+    const service1 = newInjector.getInstance(Service)
     expect(service.dep).toBe(1)
+    expect(service).toBe(service1)
   })
 
   it('should be able to inject provider via InjectableConfigs', () => {
