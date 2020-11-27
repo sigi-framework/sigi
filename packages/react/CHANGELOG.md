@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.4](https://github.com/sigi-framework/sigi/compare/v2.4.3...v2.4.4) (2020-11-27)
+
+### Bug Fixes
+
+- **di:** always cache instance in nearest injector ([a999d5c](https://github.com/sigi-framework/sigi/commit/a999d5cbae4694344d9539df82f909c3e4c141c9))
+
 ## [2.4.3](https://github.com/sigi-framework/sigi/compare/v2.4.2...v2.4.3) (2020-11-22)
 
 **Note:** Version bump only for package @sigi/react
