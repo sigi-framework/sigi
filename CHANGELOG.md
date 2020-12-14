@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.5](https://github.com/sigi-framework/sigi/compare/v2.4.4...v2.4.5) (2020-12-14)
+
+### Bug Fixes
+
+- **core:** epic do not follow rxjs control ([e27ab82](https://github.com/sigi-framework/sigi/commit/e27ab824d9b99846654087b840c8b2cccea9af6c))
+
 ## [2.4.4](https://github.com/sigi-framework/sigi/compare/v2.4.3...v2.4.4) (2020-11-27)
 
 ### Bug Fixes

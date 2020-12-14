@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ssr",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "Server side rendering support for sigi framework",
   "keywords": ["Sigi", "SSR"],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -24,9 +24,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.4.4",
+    "@sigi/core": "^2.4.5",
     "@sigi/di": "^2.4.4",
-    "@sigi/types": "^2.4.0",
+    "@sigi/types": "^2.4.5",
     "serialize-javascript": "^5.0.1"
   },
   "devDependencies": {

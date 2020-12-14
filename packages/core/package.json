@@ -1,6 +1,6 @@
 {
   "name": "@sigi/core",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "Sigi core library",
   "keywords": ["RxJS", "TypeScript", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@sigi/di": "^2.4.4",
-    "@sigi/types": "^2.4.0",
+    "@sigi/types": "^2.4.5",
     "immer": "^8.0.0"
   }
 }
