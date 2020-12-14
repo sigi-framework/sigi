@@ -1,5 +1,6 @@
 import { IStore, Epic, Action } from '@sigi/types'
-import { Observable, Subject, ReplaySubject, Subscription, identity, MonoTypeOperatorFunction } from 'rxjs'
+import { BehaviorSubject, ReplaySubject, Subject, Subscription, identity } from 'rxjs'
+import { share, switchMap } from 'rxjs/operators'
 
 import { logStoreAction } from './logger'
 import { INIT_ACTION_TYPE_SYMBOL, TERMINATE_ACTION_TYPE_SYMBOL, NOOP_ACTION_TYPE_SYMBOL } from './symbols'
@@ -14,7 +15,7 @@ export class Store<S> implements IStore<S> {
   private isReady = false
   private internalState!: S
   private readonly reducer: Reducer<S, Action>
-  private epics: Epic[] = []
+  private readonly epic$: BehaviorSubject<Epic>
   private actionSub = new Subscription()
   private readonly stateSub = new Subscription()
   private readonly initAction: Action<null> = {
@@ -31,9 +32,10 @@ export class Store<S> implements IStore<S> {
     return this.isReady
   }
 
-  constructor(name: string, reducer: Reducer<S, Action> = identity) {
+  constructor(name: string, reducer: Reducer<S, Action> = identity, epic: Epic = identity) {
     this.name = name
     this.reducer = reducer
+    this.epic$ = new BehaviorSubject(epic)
   }
 
   /**
@@ -58,27 +60,25 @@ export class Store<S> implements IStore<S> {
   }
 
   /**
-   * Epics are array of epic that would be invoked the same order as their existence.
-   *
-   * Make sure new adding epics piped out a multicast steam otherwise the previous epic will be trigged multi times.
-   *
-   * Their is a default `effects epic` which will receive all actions dispatched but only `effects actions` steamed out,
-   * so if you want to spy on all actions, make sure put new epic before effects epic by passing second argument with `true`
-   *
-   * @param epic
-   * @param first `true` to unshift given epic to epics array and `false` to append
+   * @param combineEpic {(combineEpic: import('@sigi/types').Epic) => import('@sigi/types').Epic}
+   * accept `combineEpic` factory to produce new `Epic`
+   * The streams on old `Epic` will be switched.
    */
-  addEpic(epic: Epic, first = false) {
-    if (first) {
-      this.epics.unshift(epic)
-    } else {
-      this.epics.push(epic)
-    }
-    this.subscribeAction()
+  addEpic(combineEpic: (prevEpic: Epic) => Epic) {
+    const { epic$ } = this
+    const prevEpic = epic$.getValue()
+    epic$.next(
+      combineEpic((action$) => {
+        if (action$ instanceof Subject) {
+          return prevEpic(action$)
+        } else {
+          return prevEpic(action$.pipe(share()))
+        }
+      }),
+    )
 
     return () => {
-      this.epics = this.epics.filter((e) => e !== epic)
-      this.subscribeAction()
+      this.epic$.next(prevEpic)
     }
   }
 
@@ -116,8 +116,7 @@ export class Store<S> implements IStore<S> {
   }
 
   private subscribeAction() {
-    this.actionSub.unsubscribe()
-    this.actionSub = this.action$.pipe(this.walkThroughEpics()).subscribe({
+    this.actionSub = this.epic$.pipe(switchMap((epic) => epic(this.action$))).subscribe({
       next: (action) => {
         try {
           this.dispatch(action)
@@ -126,12 +125,5 @@ export class Store<S> implements IStore<S> {
         }
       },
     })
-  }
-
-  private walkThroughEpics(): MonoTypeOperatorFunction<Action> {
-    return (action$: Observable<Action>) => {
-      // @ts-expect-error
-      return action$.pipe(...this.epics)
-    }
   }
 }

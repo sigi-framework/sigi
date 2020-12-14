@@ -1,6 +1,6 @@
 import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
-import { ConstructorOf, Action, IStore } from '@sigi/types'
+import { ConstructorOf, Action, Epic, IStore } from '@sigi/types'
 import { from, race, timer, throwError, noop, Observable, Observer, NEVER } from 'rxjs'
 import { tap, catchError, mergeMap } from 'rxjs/operators'
 
@@ -40,8 +40,8 @@ export const runSSREffects = <Context, Returned = any>(
               let store: IStore<any>
               let moduleName: string
 
-              const errorCatcher = (action$: Observable<Action<unknown>>) =>
-                action$.pipe(
+              const errorCatcher = (prevEpic: Epic) => (action$: Observable<Action<unknown>>) =>
+                prevEpic(action$).pipe(
                   catchError((e) => {
                     observer.error(e)
                     return NEVER
@@ -78,18 +78,19 @@ export const runSSREffects = <Context, Returned = any>(
               if (effectsCount > 0) {
                 donePromise = new Promise<void>((resolve) => {
                   let terminatedCount = 0
-                  disposeFn = store.addEpic((action$) => {
-                    return action$.pipe(
-                      tap(({ type }) => {
-                        if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
-                          terminatedCount++
-                          if (terminatedCount === effectsCount) {
-                            resolve()
+                  disposeFn = store.addEpic((prevEpic) => {
+                    return (action$) =>
+                      prevEpic(action$).pipe(
+                        tap(({ type }) => {
+                          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+                            terminatedCount++
+                            if (terminatedCount === effectsCount) {
+                              resolve()
+                            }
                           }
-                        }
-                      }),
-                    )
-                  }, true)
+                        }),
+                      )
+                  })
                 })
               }
               async function runEffects() {

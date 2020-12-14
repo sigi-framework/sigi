@@ -1,7 +1,7 @@
 import { Action, Epic } from '@sigi/types'
 import produce, { Draft } from 'immer'
 import { Observable, merge } from 'rxjs'
-import { map, filter, skip, publish, ignoreElements } from 'rxjs/operators'
+import { map, filter, skip, ignoreElements } from 'rxjs/operators'
 
 import { hmrEnabled, hmrInstanceCache } from './hmr'
 import { getDecoratedActions, getActionsToSkip } from './metadata'
@@ -52,9 +52,8 @@ export abstract class EffectModule<S> {
   constructor() {
     const reducer = this.combineReducers()
     const definedActions = this.combineDefineActions()
-    this.store = new Store<S>(this.moduleName, reducer)
     const epic = this.combineEffects()
-    this.store.addEpic(epic)
+    this.store = new Store<S>(this.moduleName, reducer, epic)
 
     // properties decorated by @DefinedAction() need to be Observable
     definedActions.forEach((name) => {
@@ -190,21 +189,16 @@ export abstract class EffectModule<S> {
     return (action$: Observable<Action>) => {
       const actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) : undefined
 
-      // use multicast to avoid action steam get forked.
-      return action$.pipe(
-        publish((multicast$) =>
-          merge(
-            ...effectKeys.map((name) => {
-              const effect: Effect<unknown> = (this as any)[name]
-              const payload$ = multicast$.pipe(
-                filter(({ type }) => type === name),
-                skip(actionsToSkip?.includes(name) ? 1 : 0),
-                map(({ payload }) => payload),
-              )
-              return effect.call(this, payload$)
-            }),
-          ),
-        ),
+      return merge(
+        ...effectKeys.map((name) => {
+          const effect: Effect<unknown> = (this as any)[name]
+          const payload$ = action$.pipe(
+            filter(({ type }) => type === name),
+            skip(actionsToSkip?.includes(name) ? 1 : 0),
+            map(({ payload }) => payload),
+          )
+          return effect.call(this, payload$)
+        }),
       )
     }
   }

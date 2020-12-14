@@ -4,7 +4,7 @@ import { rootInjector } from '@sigi/di'
 import { Action, IStore } from '@sigi/types'
 import { Draft } from 'immer'
 import { of, Observable, noop } from 'rxjs'
-import { delay, map, withLatestFrom, takeUntil, tap, switchMap, exhaustMap, startWith } from 'rxjs/operators'
+import { delay, map, withLatestFrom, takeUntil, tap, switchMap, exhaustMap, startWith, share } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
@@ -196,11 +196,11 @@ describe('EffectModule Class', () => {
       const actionCreator = onlyReducer.getActions()
       const beforeSpy = Sinon.spy()
       const afterSpy = Sinon.spy()
-      store.addEpic((action$) => {
-        return action$.pipe(tap(beforeSpy))
-      }, true)
-      store.addEpic((action$) => {
-        return action$.pipe(tap(afterSpy))
+      store.addEpic((prev) => (action$) => {
+        return prev(action$.pipe(tap(beforeSpy)))
+      })
+      store.addEpic((prev) => (action$) => {
+        return prev(action$).pipe(tap(afterSpy))
       })
       store.dispatch(actionCreator.set(1))
       expect(store.state.count).toBe(1)
@@ -296,9 +296,7 @@ describe('EffectModule Class', () => {
         return acc
       }, {} as any)
       spy = Sinon.spy()
-      store.addEpic((action$) => {
-        return action$.pipe(tap(spy))
-      }, true)
+      store.addEpic((prev) => (action$) => prev(action$.pipe(tap(spy), share())))
       timer = Sinon.useFakeTimers()
     })
 
