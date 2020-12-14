@@ -42,7 +42,8 @@ describe('store specs', () => {
   }
 
   beforeEach(() => {
-    store = new Store('testStore', mockReducer, mockEpic)
+    store = new Store('testStore', mockReducer)
+    store.addEpic(mockEpic)
     store.setup(defaultState)
     timer = Sinon.useFakeTimers()
   })

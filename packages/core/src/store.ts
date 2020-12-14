@@ -1,15 +1,5 @@
 import { IStore, Epic, Action } from '@sigi/types'
-import {
-  Observable,
-  Subject,
-  ReplaySubject,
-  Subscription,
-  identity,
-  MonoTypeOperatorFunction,
-  of,
-  throwError,
-} from 'rxjs'
-import { mergeMap, catchError } from 'rxjs/operators'
+import { Observable, Subject, ReplaySubject, Subscription, identity, MonoTypeOperatorFunction } from 'rxjs'
 
 import { logStoreAction } from './logger'
 import { INIT_ACTION_TYPE_SYMBOL, TERMINATE_ACTION_TYPE_SYMBOL, NOOP_ACTION_TYPE_SYMBOL } from './symbols'
@@ -25,7 +15,8 @@ export class Store<S> implements IStore<S> {
   private internalState!: S
   private readonly reducer: Reducer<S, Action>
   private epics: Epic[] = []
-  private readonly subscription = new Subscription()
+  private actionSub = new Subscription()
+  private readonly stateSub = new Subscription()
   private readonly initAction: Action<null> = {
     type: INIT_ACTION_TYPE_SYMBOL,
     payload: null,
@@ -40,10 +31,9 @@ export class Store<S> implements IStore<S> {
     return this.isReady
   }
 
-  constructor(name: string, reducer: Reducer<S, Action> = identity, epic: Epic = identity) {
+  constructor(name: string, reducer: Reducer<S, Action> = identity) {
     this.name = name
     this.reducer = reducer
-    this.addEpic(epic)
   }
 
   /**
@@ -56,24 +46,12 @@ export class Store<S> implements IStore<S> {
   setup(defaultState: S) {
     this.internalState = defaultState
 
-    this.subscription.add(
-      this.action$.pipe(this.walkThroughEpics()).subscribe({
-        next: (action) => {
-          try {
-            this.dispatch(action)
-          } catch (e) {
-            this.action$.error(e)
-          }
-        },
-      }),
-    )
-
-    this.subscription.add(
+    this.subscribeAction()
+    this.stateSub.add(
       this.state$.subscribe((state) => {
         this.internalState = state
       }),
     )
-
     this.state$.next(this.state)
     this.log(this.initAction)
     this.isReady = true
@@ -96,9 +74,11 @@ export class Store<S> implements IStore<S> {
     } else {
       this.epics.push(epic)
     }
+    this.subscribeAction()
 
     return () => {
       this.epics = this.epics.filter((e) => e !== epic)
+      this.subscribeAction()
     }
   }
 
@@ -131,23 +111,27 @@ export class Store<S> implements IStore<S> {
   dispose() {
     this.action$.complete()
     this.state$.complete()
-    this.subscription.unsubscribe()
+    this.stateSub.unsubscribe()
+    this.actionSub.unsubscribe()
+  }
+
+  private subscribeAction() {
+    this.actionSub.unsubscribe()
+    this.actionSub = this.action$.pipe(this.walkThroughEpics()).subscribe({
+      next: (action) => {
+        try {
+          this.dispatch(action)
+        } catch (e) {
+          this.action$.error(e)
+        }
+      },
+    })
   }
 
   private walkThroughEpics(): MonoTypeOperatorFunction<Action> {
-    const applyEpics = (source$: Observable<Action>) => {
-      return this.epics.reduce((prev$, epic) => epic(prev$), source$)
-    }
-
     return (action$: Observable<Action>) => {
-      return action$.pipe(
-        mergeMap((action) => {
-          return applyEpics(of(action))
-        }),
-        catchError((e) => {
-          return applyEpics(throwError(e))
-        }),
-      )
+      // @ts-expect-error
+      return action$.pipe(...this.epics)
     }
   }
 }

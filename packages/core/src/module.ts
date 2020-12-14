@@ -50,11 +50,11 @@ export abstract class EffectModule<S> {
   }
 
   constructor() {
-    const epic = this.combineEffects()
     const reducer = this.combineReducers()
     const definedActions = this.combineDefineActions()
-
-    this.store = new Store<S>(this.moduleName, reducer, epic)
+    this.store = new Store<S>(this.moduleName, reducer)
+    const epic = this.combineEffects()
+    this.store.addEpic(epic)
 
     // properties decorated by @DefinedAction() need to be Observable
     definedActions.forEach((name) => {

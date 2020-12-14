@@ -1,6 +1,6 @@
 import { Module, EffectModule, Reducer, Effect, Action } from '@sigi/core'
 import { Observable } from 'rxjs'
-import { exhaustMap, takeUntil, map, tap, startWith, endWith } from 'rxjs/operators'
+import { takeUntil, map, tap, startWith, endWith, switchMap } from 'rxjs/operators'
 
 import { HttpClient } from './http.service'
 
@@ -38,7 +38,7 @@ export class AppModule extends EffectModule<AppState> {
   @Effect()
   fetchList(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
-      exhaustMap(() => {
+      switchMap(() => {
         return this.httpClient.get(`/resources`).pipe(
           tap(() => {
             console.info('Got response')

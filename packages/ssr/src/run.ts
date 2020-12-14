@@ -2,7 +2,7 @@ import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@s
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf, Action, IStore } from '@sigi/types'
 import { from, race, timer, throwError, noop, Observable, Observer, NEVER } from 'rxjs'
-import { flatMap, tap, catchError } from 'rxjs/operators'
+import { tap, catchError, mergeMap } from 'rxjs/operators'
 
 import { oneShotCache } from './ssr-oneshot-cache'
 import { SSRStateCacheInstance } from './ssr-states'
@@ -33,7 +33,7 @@ export const runSSREffects = <Context, Returned = any>(
     ? Promise.resolve(new StateToPersist(stateToSerialize))
     : race(
         from(modules).pipe(
-          flatMap((constructor) => {
+          mergeMap((constructor) => {
             return new Observable((observer: Observer<StateToPersist<Returned>>) => {
               let cleanup = noop
               const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
@@ -73,6 +73,25 @@ export const runSSREffects = <Context, Returned = any>(
                 : () => {
                     store.dispose()
                   }
+
+              let donePromise: Promise<void> | null
+              if (effectsCount > 0) {
+                donePromise = new Promise<void>((resolve) => {
+                  let terminatedCount = 0
+                  disposeFn = store.addEpic((action$) => {
+                    return action$.pipe(
+                      tap(({ type }) => {
+                        if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+                          terminatedCount++
+                          if (terminatedCount === effectsCount) {
+                            resolve()
+                          }
+                        }
+                      }),
+                    )
+                  }, true)
+                })
+              }
               async function runEffects() {
                 await Promise.all(
                   ssrActionsMeta.map(async (ssrActionMeta: any) => {
@@ -97,25 +116,11 @@ export const runSSREffects = <Context, Returned = any>(
                   }),
                 )
 
-                if (effectsCount > 0) {
-                  await new Promise<void>((resolve) => {
-                    let terminatedCount = 0
-                    disposeFn = store.addEpic((action$) => {
-                      return action$.pipe(
-                        tap(({ type }) => {
-                          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
-                            terminatedCount++
-                            if (terminatedCount === effectsCount) {
-                              resolve()
-                            }
-                          }
-                        }),
-                      )
-                    }, true)
-                  })
-
-                  stateToSerialize[moduleName] = store.state
-                }
+                return (
+                  donePromise?.then(() => {
+                    stateToSerialize[moduleName] = store.state
+                  }) ?? Promise.resolve()
+                )
               }
               runEffects()
                 .then(() => {
@@ -129,6 +134,6 @@ export const runSSREffects = <Context, Returned = any>(
             })
           }),
         ),
-        timer(timeout * 1000).pipe(flatMap(() => throwError(new Error('Terminate timeout')))),
+        timer(timeout * 1000).pipe(mergeMap(() => throwError(new Error('Terminate timeout')))),
       ).toPromise()
 }
