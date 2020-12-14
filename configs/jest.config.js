@@ -15,5 +15,5 @@ module.exports = {
   moduleNameMapper: {
     '@sigi/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2',
   },
-  testPathIgnorePatterns: ['/node_modules/', '/examples/'],
+  testPathIgnorePatterns: ['/node_modules/', '/examples/', '\\.js$', '\\.d\\.ts$'],
 }

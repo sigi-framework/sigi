@@ -3,8 +3,8 @@ import 'reflect-metadata'
 import { rootInjector } from '@sigi/di'
 import { Action, IStore } from '@sigi/types'
 import { Draft } from 'immer'
-import { Observable, noop } from 'rxjs'
-import { delay, map, withLatestFrom, takeUntil, tap } from 'rxjs/operators'
+import { of, Observable, noop } from 'rxjs'
+import { delay, map, withLatestFrom, takeUntil, tap, switchMap, exhaustMap, startWith, share } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
@@ -84,6 +84,24 @@ class Counter extends EffectModule<CounterState> {
   @Effect()
   effectToResetState(payload$: Observable<void>) {
     return payload$.pipe(map(() => this.reset()))
+  }
+
+  @Effect()
+  cancellableEffect(payload$: Observable<void>) {
+    return payload$.pipe(
+      switchMap(() =>
+        of(this.getActions().addOne()).pipe(delay(TIME_TO_DELAY), startWith(this.getActions().setCount(1))),
+      ),
+    )
+  }
+
+  @Effect()
+  exhaustEffect(payload$: Observable<void>) {
+    return payload$.pipe(
+      exhaustMap(() =>
+        of(this.getActions().addOne()).pipe(delay(TIME_TO_DELAY), startWith(this.getActions().setCount(1))),
+      ),
+    )
   }
 }
 
@@ -178,11 +196,11 @@ describe('EffectModule Class', () => {
       const actionCreator = onlyReducer.getActions()
       const beforeSpy = Sinon.spy()
       const afterSpy = Sinon.spy()
-      store.addEpic((action$) => {
-        return action$.pipe(tap(beforeSpy))
-      }, true)
-      store.addEpic((action$) => {
-        return action$.pipe(tap(afterSpy))
+      store.addEpic((prev) => (action$) => {
+        return prev(action$.pipe(tap(beforeSpy)))
+      })
+      store.addEpic((prev) => (action$) => {
+        return prev(action$).pipe(tap(afterSpy))
       })
       store.dispatch(actionCreator.set(1))
       expect(store.state.count).toBe(1)
@@ -278,9 +296,7 @@ describe('EffectModule Class', () => {
         return acc
       }, {} as any)
       spy = Sinon.spy()
-      store.addEpic((action$) => {
-        return action$.pipe(tap(spy))
-      }, true)
+      store.addEpic((prev) => (action$) => prev(action$.pipe(tap(spy), share())))
       timer = Sinon.useFakeTimers()
     })
 
@@ -371,6 +387,30 @@ describe('EffectModule Class', () => {
       actionsDispatcher.effectToResetState()
       expect(spy.callCount).toBe(3)
       expect(store.state.count).toBe(counter.defaultState.count)
+    })
+
+    it('should follow rxjs flow control #switchMap', () => {
+      actionsDispatcher.cancellableEffect()
+      actionsDispatcher.cancellableEffect()
+      timer.tick(TIME_TO_DELAY)
+
+      expect(spy.callCount).toBe(5)
+      expect(spy.args.map(([{ type }]) => type)).toEqual([
+        'cancellableEffect',
+        'setCount',
+        'cancellableEffect',
+        'setCount',
+        'addOne',
+      ])
+    })
+
+    it('should follow rxjs flow control #exhaustMap', () => {
+      actionsDispatcher.exhaustEffect()
+      actionsDispatcher.exhaustEffect()
+      timer.tick(TIME_TO_DELAY)
+
+      expect(spy.callCount).toBe(4)
+      expect(spy.args.map(([{ type }]) => type)).toEqual(['exhaustEffect', 'setCount', 'exhaustEffect', 'addOne'])
     })
   })
 })

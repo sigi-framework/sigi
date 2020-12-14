@@ -1,6 +1,6 @@
 import { Action, Epic } from '@sigi/types'
 import { Reducer } from 'react'
-import { filter, map, delay, tap } from 'rxjs/operators'
+import { delay, filter, map, tap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { Store } from '../store'
@@ -29,8 +29,9 @@ describe('store specs', () => {
 
   let store: Store<State>
 
-  const mockEpic: Epic = (action$) =>
+  const mockEpic: (prevEpic: Epic) => Epic = (prevEpic) => (action$) =>
     action$.pipe(
+      prevEpic,
       filter(({ type }) => type === ASYNC_UPDATE_FOO),
       delay(delayTime),
       map(({ payload }) => ({ type: UPDATE_FOO, payload, store })),
@@ -42,7 +43,8 @@ describe('store specs', () => {
   }
 
   beforeEach(() => {
-    store = new Store('testStore', mockReducer, mockEpic)
+    store = new Store('testStore', mockReducer)
+    store.addEpic(mockEpic)
     store.setup(defaultState)
     timer = Sinon.useFakeTimers()
   })
@@ -90,9 +92,7 @@ describe('store specs', () => {
 
     it('should be able to add epic after setup', () => {
       const spy = Sinon.spy()
-      store.addEpic((action$) => {
-        return action$.pipe(tap(spy))
-      }, true)
+      store.addEpic((prev) => (action$) => action$.pipe(tap(spy), prev))
       const action = { type: '__NOOP__', payload: null, store }
       store.dispatch(action)
       expect(spy.callCount).toBe(1)
@@ -102,9 +102,7 @@ describe('store specs', () => {
 
     it('should respect epics ordering', () => {
       const spy = Sinon.spy()
-      store.addEpic((action$) => {
-        return action$.pipe(tap(spy))
-      })
+      store.addEpic((prev) => (action$) => action$.pipe(prev, tap(spy)))
 
       store.dispatch({ type: UPDATE_FOO, payload: '2', store })
       expect(spy.callCount).toBe(0)

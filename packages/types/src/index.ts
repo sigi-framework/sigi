@@ -14,7 +14,7 @@ export interface IStore<State> {
   readonly ready: boolean
 
   setup: (defaultState: State) => void
-  addEpic: (epic: Epic, first?: boolean) => () => void
+  addEpic: (combineEpic: (epic: Epic) => Epic) => () => void
   dispatch: (action: Action) => void
   log: (action: Action) => void
   dispose: () => void
