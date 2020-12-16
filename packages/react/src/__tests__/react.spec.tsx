@@ -2,10 +2,10 @@ import 'reflect-metadata'
 
 import { Module, EffectModule, Effect, ImmerReducer, Action } from '@sigi/core'
 import { Draft } from 'immer'
-import React, { useState, useEffect } from 'react'
-import { create, act } from 'react-test-renderer'
+import React, { useEffect, useState } from 'react'
+import { create, act, ReactTestRenderer } from 'react-test-renderer'
 import { Observable, timer } from 'rxjs'
-import { flatMap, map, endWith, switchMap } from 'rxjs/operators'
+import { mergeMap, map, endWith, switchMap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { useModuleState, useModule } from '../index'
@@ -34,7 +34,7 @@ class CountModel extends EffectModule<CountState> {
   })
   getCount(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
-      flatMap(() =>
+      mergeMap(() =>
         timer(20).pipe(
           map(() => this.getActions().setCount(1)),
           endWith(this.terminate()),
@@ -93,16 +93,20 @@ describe('React components test', () => {
 })
 
 describe('Hooks', () => {
-  const stub = Sinon.stub()
+  const resetStub = Sinon.stub()
+  const setCountStub = Sinon.stub()
+  const spy = Sinon.spy()
   const TestComponent = () => {
     const [state, dispatcher] = useModule(CountModel, {
       selector: (state) => state.count,
       dependencies: [],
     })
-
+    spy()
     useEffect(() => {
-      dispatcher.setCount(10)
-      stub.callsFake(() => {
+      setCountStub.callsFake(() => {
+        dispatcher.setCount(10)
+      })
+      resetStub.callsFake(() => {
         dispatcher.reset()
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,19 +114,86 @@ describe('Hooks', () => {
 
     return <div>{state}</div>
   }
+  let testWrapper!: ReactTestRenderer
+
+  beforeEach(() => {
+    act(() => {
+      testWrapper = create(<TestComponent />)
+    })
+  })
+
+  afterEach(() => {
+    act(() => {
+      resetStub()
+      testWrapper.unmount()
+    })
+    spy.resetHistory()
+    setCountStub.reset()
+    resetStub.reset()
+  })
 
   it('could reset state from dispatcher', () => {
-    const wrapper = create(<TestComponent />)
-
-    expect(wrapper.root.findByType('div').children[0]).toBe('0')
-    act(() => {
-      wrapper.update(<TestComponent />)
-    })
-    expect(wrapper.root.findByType('div').children[0]).toBe('10')
+    expect(testWrapper.root.findByType('div').children[0]).toBe('0')
 
     act(() => {
-      stub()
+      setCountStub()
     })
-    expect(wrapper.root.findByType('div').children[0]).toBe('0')
+    expect(testWrapper.root.findByType('div').children[0]).toBe('10')
+
+    act(() => {
+      resetStub()
+    })
+    expect(testWrapper.root.findByType('div').children[0]).toBe('0')
+  })
+
+  it.only('should not re-render if return state shallow equaled', () => {
+    const fooSpy = Sinon.spy()
+    const FooComponent = () => {
+      const state = useModuleState(CountModel, {
+        selector: () => ({ name: 'John Doe' }),
+        dependencies: [],
+      })
+      fooSpy()
+      return <div>{state.name}</div>
+    }
+
+    let fooWrapper!: ReactTestRenderer
+    act(() => {
+      fooWrapper = create(<FooComponent />)
+    })
+
+    expect(fooWrapper.root.findByType('div').children[0]).toBe('John Doe')
+    act(() => {
+      setCountStub()
+    })
+    expect(fooSpy.callCount).toBe(1)
+    expect(spy.callCount).toBe(2)
+    fooSpy.resetHistory()
+  })
+
+  it('should re-render if return state not pass custom equality function', () => {
+    const fooSpy = Sinon.spy()
+    const FooComponent = () => {
+      const state = useModuleState(CountModel, {
+        selector: () => ({ name: 'John Doe' }),
+        dependencies: [],
+        equalFn: (a, b) => a === b,
+      })
+      fooSpy()
+      return <div>{state.name}</div>
+    }
+
+    let fooWrapper!: ReactTestRenderer
+    act(() => {
+      fooWrapper = create(<FooComponent />)
+    })
+
+    expect(fooWrapper.root.findByType('div').children[0]).toBe('John Doe')
+    act(() => {
+      setCountStub()
+    })
+    expect(fooSpy.callCount).toBe(2)
+    expect(spy.callCount).toBe(2)
+    fooSpy.resetHistory()
   })
 })
