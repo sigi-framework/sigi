@@ -4,7 +4,7 @@ import { EffectModule, Module, ImmerReducer, Effect } from '@sigi/core'
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { Draft } from 'immer'
 import { Observable, timer } from 'rxjs'
-import { flatMap, map, switchMap } from 'rxjs/operators'
+import { mergeMap, map, switchMap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 import Vue from 'vue'
 
@@ -31,7 +31,7 @@ class VueTestingModule extends EffectModule<VueTestingState> {
 
   @Effect()
   getCount(payload$: Observable<void>) {
-    return payload$.pipe(flatMap(() => timer(20).pipe(map(() => this.getActions().setCount(1)))))
+    return payload$.pipe(mergeMap(() => timer(20).pipe(map(() => this.getActions().setCount(1)))))
   }
 
   @Effect()

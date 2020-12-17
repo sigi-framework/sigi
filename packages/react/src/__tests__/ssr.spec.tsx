@@ -10,7 +10,7 @@ import React, { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
 import { Observable, timer } from 'rxjs'
-import { endWith, switchMap, map, mergeMap, flatMap, withLatestFrom } from 'rxjs/operators'
+import { endWith, switchMap, map, mergeMap, withLatestFrom } from 'rxjs/operators'
 
 import { SSRSharedContext, SSRContext, useModule, useModuleState } from '../index'
 
@@ -42,7 +42,7 @@ class CountModel extends EffectModule<CountState> {
   })
   getCount(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
-      flatMap(() =>
+      mergeMap(() =>
         timer(20).pipe(
           map(() => this.getActions().setCount(1)),
           endWith(this.terminate()),
