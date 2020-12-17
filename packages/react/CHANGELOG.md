@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/sigi-framework/sigi/compare/v2.4.5...v2.5.0) (2020-12-17)
+
+### Features
+
+- **react:** add equal fn option to state selector config ([a9a13ea](https://github.com/sigi-framework/sigi/commit/a9a13ea79924a3b30ce87cd5b6b3963604819ac8))
+
 ## [2.4.5](https://github.com/sigi-framework/sigi/compare/v2.4.4...v2.4.5) (2020-12-14)
 
 **Note:** Version bump only for package @sigi/react

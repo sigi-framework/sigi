@@ -1,6 +1,6 @@
 {
   "name": "@sigi/vue",
-  "version": "2.4.5",
+  "version": "2.5.0",
   "description": "Sigi framework binding for VueJS",
   "keywords": ["Vue", "RxJS", "TypeScript", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
