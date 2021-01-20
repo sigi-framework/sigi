@@ -26,6 +26,6 @@
   "dependencies": {
     "@sigi/di": "^2.4.4",
     "@sigi/types": "^2.4.5",
-    "immer": "^8.0.0"
+    "immer": "^8.0.1"
   }
 }
