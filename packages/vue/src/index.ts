@@ -53,7 +53,7 @@ export const reactive = <
   Props
 > => {
   const effectModule = rootInjector.getInstance(EffectModuleConstructor)
-  const store = effectModule.setupStore()
+  const store = effectModule.store
   const initialState: StateInEffectModule<M> = store.state
   const statePassToVue = { ...initialState }
   const subscription = store.state$.subscribe((state) => {

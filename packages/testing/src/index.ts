@@ -4,7 +4,7 @@ import { TestModule, Type } from '@sigi/di'
 export class SigiTestModule extends TestModule {
   getTestingStub<M extends EffectModule<S>, S = any>(EffectModuleConstructor: Type<M>): SigiTestStub<M, S> {
     const moduleInstance = this.getInstance(EffectModuleConstructor)
-    const store = moduleInstance.setupStore()
+    const store = moduleInstance.store
     const actionsCreator: any = moduleInstance.getActions()
     const dispatcher = Object.keys(actionsCreator).reduce((acc, key) => {
       acc[key] = (payload: unknown) => {

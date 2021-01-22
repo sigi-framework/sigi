@@ -28,8 +28,9 @@ export abstract class EffectModule<S> {
   abstract readonly defaultState: S
 
   readonly moduleName!: string
-  // @internal
   readonly store: Store<S>
+
+  private internalDefaultState!: S
 
   // give them `any` type and refer the right type in getters
   private readonly actions: any = {}
@@ -50,6 +51,17 @@ export abstract class EffectModule<S> {
   }
 
   constructor() {
+    Object.defineProperty(this, 'defaultState', {
+      set: (value: S) => {
+        this.internalDefaultState = value
+        if (!this.store.ready) {
+          this.store.setup(this.getDefaultState())
+        }
+      },
+      get: () => {
+        return this.getDefaultState()
+      },
+    })
     const reducer = this.combineReducers()
     const definedActions = this.combineDefineActions()
     const epic = this.combineEffects()
@@ -103,19 +115,6 @@ export abstract class EffectModule<S> {
   }
 
   /**
-   * Setup the background store and get ready to use.
-   *
-   * We can't do this in constructor because defaultState is a abstract property defined by inheritors.
-   * It's undefined in parent constructor
-   */
-  setupStore(): Store<S> {
-    if (!this.store.ready) {
-      this.store.setup(this.getDefaultState())
-    }
-    return this.store
-  }
-
-  /**
    * Get a noop action.
    *
    * Noop action will be ignore internally and even no log.
@@ -156,7 +155,7 @@ export abstract class EffectModule<S> {
   }
 
   private getDefaultState(): S {
-    return this.tryReadHmrState() ?? this.tryReadSSRState() ?? this.defaultState
+    return this.tryReadHmrState() ?? this.tryReadSSRState() ?? this.internalDefaultState
   }
 
   private tryReadSSRState(): S | undefined {

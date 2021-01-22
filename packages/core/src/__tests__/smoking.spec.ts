@@ -31,6 +31,7 @@ describe('Smoking tests', () => {
   it('should be able to dispatch actions from the other module', () => {
     const asyncTimeToDelay = 2000
     const timer = Sinon.useFakeTimers()
+    const spy = Sinon.spy()
     @Module('Foo')
     class FooModule extends EffectModule<{ foo: string }> {
       defaultState = {
@@ -39,6 +40,7 @@ describe('Smoking tests', () => {
 
       @Reducer()
       set(state: { foo: string }, payload: string) {
+        spy(state, payload)
         return { ...state, foo: payload }
       }
     }
@@ -61,9 +63,9 @@ describe('Smoking tests', () => {
     }
 
     const fooModule = rootInjector.getInstance(FooModule)
-    const fooStore = fooModule.setupStore()
+    const fooStore = fooModule.store
     const barModule = rootInjector.getInstance(BarModule)
-    const barStore = barModule.setupStore()
+    const barStore = barModule.store
 
     const payload = 'whatever'
     const action = barModule.getActions().asyncSetFoo(payload)
@@ -71,6 +73,10 @@ describe('Smoking tests', () => {
     fooStore.dispatch(action)
     timer.tick(asyncTimeToDelay)
     expect(fooModule.state.foo).toBe(payload)
+
+    const [[fooState, fooPayload]] = spy.args
+    expect(fooState).not.toBe(null)
+    expect(fooPayload).toBe(payload)
 
     fooStore.dispose()
     barStore.dispose()

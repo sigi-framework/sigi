@@ -55,14 +55,14 @@ export const runSSREffects = <Context, Returned = any>(
                 } else {
                   const effectModuleInstance: EffectModule<unknown> = rootInjector.resolveAndInstantiate(constructor)
                   moduleName = effectModuleInstance.moduleName
-                  store = effectModuleInstance.setupStore()
+                  store = effectModuleInstance.store
                   store.addEpic(errorCatcher)
                   SSRStateCacheInstance.set(sharedCtx, constructor, store)
                 }
               } else {
                 const effectModuleInstance: EffectModule<unknown> = rootInjector.resolveAndInstantiate(constructor)
                 moduleName = effectModuleInstance.moduleName
-                store = effectModuleInstance.setupStore()
+                store = effectModuleInstance.store
                 store.addEpic(errorCatcher)
                 oneShotCache.store(ctx, constructor, store)
               }
