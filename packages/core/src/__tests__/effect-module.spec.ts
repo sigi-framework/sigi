@@ -111,7 +111,7 @@ describe('EffectModule Class', () => {
 
   beforeEach(() => {
     counter = rootInjector.resolveAndInstantiate(Counter)
-    store = counter.setupStore()
+    store = counter.store
   })
 
   afterEach(() => {
@@ -192,7 +192,7 @@ describe('EffectModule Class', () => {
       }
 
       const onlyReducer = new WithoutEpic()
-      const store = onlyReducer.setupStore()
+      const store = onlyReducer.store
       const actionCreator = onlyReducer.getActions()
       const beforeSpy = Sinon.spy()
       const afterSpy = Sinon.spy()
@@ -225,7 +225,7 @@ describe('EffectModule Class', () => {
       }
 
       const withoutReducer = new WithoutReducer()
-      const store = withoutReducer.setupStore()
+      const store = withoutReducer.store
       const actions = withoutReducer.getActions()
       store.dispatch(actions.set(1))
       expect(withoutReducer.state.count).toBe(withoutReducer.defaultState.count)

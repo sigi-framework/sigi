@@ -128,8 +128,8 @@ function _useModule<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { 
     return SSRStateCacheInstance.has(ssrSharedContext, A)
       ? SSRStateCacheInstance.get(ssrSharedContext, A)!
       : ssrContext
-      ? oneShotCache.consume(ssrContext, A) ?? effectModule.setupStore()
-      : effectModule.setupStore()
+      ? oneShotCache.consume(ssrContext, A) ?? effectModule.store
+      : effectModule.store
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ssrContext, ssrSharedContext, A, effectModule, oneShotCache])
 
