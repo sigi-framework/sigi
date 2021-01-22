@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.1](https://github.com/sigi-framework/sigi/compare/v2.5.0...v2.5.1) (2021-01-22)
+
+### Bug Fixes
+
+- **core:** setup store immediately after set default state ([d5d2631](https://github.com/sigi-framework/sigi/commit/d5d2631898645a6eb938f7cb8ff5bacac8a9efe6))
+
 ## [2.4.5](https://github.com/sigi-framework/sigi/compare/v2.4.4...v2.4.5) (2020-12-14)
 
 **Note:** Version bump only for package @sigi/testing
