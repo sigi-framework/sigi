@@ -3,10 +3,6 @@ import React, { createContext, useContext, useMemo, memo } from 'react'
 
 const _InjectableContext = createContext<Injector>(rootInjector)
 
-export function InjectableContext({ children }: { children: React.ReactNode }) {
-  return <_InjectableContext.Provider value={rootInjector}>{children}</_InjectableContext.Provider>
-}
-
 export const InjectionProvidersContext = memo<{ providers?: Provider[]; children: React.ReactNode }>(
   ({ providers = [], children }) => {
     const parentInjector = useContext(_InjectableContext)
