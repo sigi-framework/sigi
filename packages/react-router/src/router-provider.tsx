@@ -1,17 +1,37 @@
-import { useDispatchers } from '@sigi/react'
-import { History } from 'history'
-import React, { memo, useEffect } from 'react'
+import { ValueProvider } from '@sigi/di'
+import { InjectionProvidersContext } from '@sigi/react'
+import { History, Location, Action } from 'history'
+import React, { memo, useEffect, useMemo } from 'react'
+import { Subject } from 'rxjs'
 
-import { RouterModule } from './router.module'
+import { HistoryProvide, Router$Provide, RouterChanged } from './router.module'
 
-export const SigiRouterProvider = memo<{ history: History; children: React.ReactChild }>((props) => {
-  const dispatcher = useDispatchers(RouterModule)
+export const SigiRouterProvider = memo<{ history: History; children: React.ReactChild }>(({ history, children }) => {
+  const historyProvide: ValueProvider<History> = useMemo(
+    () => ({
+      provide: HistoryProvide.provide,
+      useValue: history,
+    }),
+    [history],
+  )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const router$ = useMemo(() => new Subject<RouterChanged>(), [history])
+  const router$Provide: ValueProvider<Subject<RouterChanged>> = useMemo(
+    () => ({
+      provide: Router$Provide.provide,
+      useValue: router$,
+    }),
+    [router$],
+  )
+
   useEffect(() => {
-    dispatcher.setHistory(props.history)
+    const teardown = history.listen((location: Location, action: Action) => {
+      router$.next({ location, action })
+    })
     return () => {
-      dispatcher.stopListen()
+      teardown()
+      router$.unsubscribe()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.history])
-  return <>{props.children}</>
+  }, [history, router$])
+  return <InjectionProvidersContext providers={[historyProvide, router$Provide]}>{children}</InjectionProvidersContext>
 })
