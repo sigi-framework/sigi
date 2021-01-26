@@ -25,7 +25,9 @@
   },
   "dependencies": {
     "@sigi/core": "^2.5.1",
-    "@sigi/react": "^2.5.1"
+    "@sigi/di": "^2.4.4",
+    "@sigi/react": "^2.5.1",
+    "@sigi/types": "^2.4.5"
   },
   "devDependencies": {
     "@types/history": "^4.7.8",
