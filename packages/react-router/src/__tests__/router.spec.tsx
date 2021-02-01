@@ -1,15 +1,16 @@
 import 'reflect-metadata'
 import { EffectModule, Effect, Module, Reducer, Action, DefineAction } from '@sigi/core'
+import { useInstance } from '@sigi/react'
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { History, createMemoryHistory } from 'history'
 import React from 'react'
 import { create, act, ReactTestRenderer } from 'react-test-renderer'
-import { Observable, noop } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { SigiRouterProvider } from '../router-provider'
-import { RouterModule, RouterChanged } from '../router.module'
+import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../router.module'
 
 interface TestState {
   event: RouterChanged | null
@@ -57,7 +58,7 @@ class TestModule extends EffectModule<TestState> {
   listen(payload$: Observable<void>) {
     return payload$.pipe(
       switchMap(() =>
-        this.routerModule.createRouterObservable().pipe(
+        this.routerModule.router$.pipe(
           map((routerEvent) => {
             return this.getActions().setRouterEvent(routerEvent)
           }),
@@ -70,7 +71,7 @@ class TestModule extends EffectModule<TestState> {
   listenWithStopSignal(payload$: Observable<void>): Observable<Action> {
     return payload$.pipe(
       exhaustMap(() =>
-        this.routerModule.createRouterObservable().pipe(
+        this.routerModule.router$.pipe(
           map((routerEvent) => {
             return this.getActions().setRouterEvent(routerEvent)
           }),
@@ -89,16 +90,34 @@ class TestModule extends EffectModule<TestState> {
 describe('Router module spec', () => {
   const history: History = createMemoryHistory()
   let testStub: SigiTestStub<TestModule, TestState>
-  let renderer: ReactTestRenderer
-  act(() => {
-    renderer = create(<SigiRouterProvider history={history}>1</SigiRouterProvider>)
-  })
+  let router$: Subject<RouterChanged>
+  let teardown: () => void
   beforeEach(() => {
+    router$ = new Subject()
     const testingModule = Test.createTestingModule({
       TestModule: SigiTestModule,
+      providers: [
+        {
+          provide: HistoryProvide.provide,
+          useValue: history,
+        },
+        {
+          provide: Router$Provide.provide,
+          useValue: router$,
+        },
+      ],
     }).compile()
 
+    teardown = history.listen((location, action) => {
+      router$.next({ location, action })
+    })
+
     testStub = testingModule.getTestingStub(TestModule)
+  })
+
+  afterEach(() => {
+    teardown()
+    router$.unsubscribe()
   })
 
   it('should invoke push', () => {
@@ -154,21 +173,51 @@ describe('Router module spec', () => {
     testStub.dispatcher.replace('app')
     expect(testStub.getState().event?.action).toBe('REPLACE')
   })
+})
 
-  it('should warning if in development mode replace the history object', () => {
-    const newHistory = Object.create({
-      listen: noop,
-    })
-    const warnStub = Sinon.stub(console, 'warn')
-    const { NODE_ENV } = process.env
-    process.env.NODE_ENV = 'development'
+describe('SigiRouterProvider', () => {
+  const history: History = createMemoryHistory()
+  let routerModule: RouterModule
+  let renderer: ReactTestRenderer
+
+  function Component() {
+    routerModule = useInstance(RouterModule)
+    return <div />
+  }
+
+  beforeEach(() => {
+    renderer = create(
+      <SigiRouterProvider history={history}>
+        <Component />
+      </SigiRouterProvider>,
+    )
+  })
+
+  it('should be able to work with Provider', () => {
+    expect(routerModule.router$).toBeInstanceOf(Subject)
+    expect(routerModule['history']).toBe(history)
+  })
+
+  it('router$ should be replaced after history changed', () => {
+    const { router$ } = routerModule
+    const newHistory = createMemoryHistory()
     act(() => {
-      renderer.update(<SigiRouterProvider history={newHistory}>2</SigiRouterProvider>)
+      renderer.update(
+        <SigiRouterProvider history={newHistory}>
+          <Component />
+        </SigiRouterProvider>,
+      )
     })
+    expect(router$).not.toBe(routerModule.router$)
+  })
 
-    expect(warnStub.callCount).toBe(1)
-
-    warnStub.restore()
-    process.env.NODE_ENV = NODE_ENV
+  it('router$ should be unsubscribed after unmounted', () => {
+    const { router$ } = routerModule
+    // @ts-expect-error
+    const spy = Sinon.spy(router$, 'unsubscribe')
+    act(() => {
+      renderer.unmount()
+    })
+    expect(spy.callCount).toBe(1)
   })
 })

@@ -4,10 +4,10 @@ import { Injectable } from '@sigi/di'
 import React from 'react'
 import { create } from 'react-test-renderer'
 
-import { InjectionProvidersContext, InjectableContext, useInstance } from '../injectable-context'
+import { InjectionProvidersContext, useInstance } from '../injectable-context'
 
 function render(component: React.ReactElement) {
-  return create(<InjectableContext>{component}</InjectableContext>)
+  return create(<InjectionProvidersContext>{component}</InjectionProvidersContext>)
 }
 
 function inject() {

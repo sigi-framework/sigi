@@ -48,10 +48,10 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
                 throw new TypeError('Only support object literal parameter in Effect decorator')
               }
               hasModifiedDecorator = true
-              return ts.updateDecorator(
+              return ts.factory.updateDecorator(
                 decorator,
-                ts.updateCall(expression, expression.expression, expression.typeArguments, [
-                  ts.updateObjectLiteral(
+                ts.factory.updateCallExpression(expression, expression.expression, expression.typeArguments, [
+                  ts.factory.updateObjectLiteralExpression(
                     argument,
                     argument.properties.filter(
                       (property) =>
@@ -64,7 +64,7 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
             return decorator
           })
           if (hasModifiedDecorator) {
-            return ts.updateMethod(
+            return ts.factory.updateMethodDeclaration(
               node,
               modifiedDecorators,
               node.modifiers,

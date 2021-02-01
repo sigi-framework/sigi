@@ -2,7 +2,9 @@ import { EffectModule, ActionOfEffectModule, IStore } from '@sigi/core'
 import { TestModule, Type } from '@sigi/di'
 
 export class SigiTestModule extends TestModule {
-  getTestingStub<M extends EffectModule<S>, S = any>(EffectModuleConstructor: Type<M>): SigiTestStub<M, S> {
+  getTestingStub<M extends EffectModule<S>, S = M extends EffectModule<infer State> ? State : never>(
+    EffectModuleConstructor: Type<M>,
+  ): SigiTestStub<M, S> {
     const moduleInstance = this.getInstance(EffectModuleConstructor)
     const store = moduleInstance.store
     const actionsCreator: any = moduleInstance.getActions()
@@ -17,7 +19,7 @@ export class SigiTestModule extends TestModule {
   }
 }
 
-export class SigiTestStub<M extends EffectModule<S>, S = any> {
+export class SigiTestStub<M extends EffectModule<S>, S = M extends EffectModule<infer State> ? State : never> {
   constructor(public readonly dispatcher: ActionOfEffectModule<M, S>, private readonly store: IStore<S>) {}
 
   getState() {
