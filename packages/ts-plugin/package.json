@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ts-plugin",
-  "version": "2.4.5",
+  "version": "2.6.0",
   "description": "TypeScript plugin for Sigi framework",
   "keywords": ["TypeScript", "Sigi", "Transformer"],
   "author": "LongYinan <lynweklm@gmail.com>",

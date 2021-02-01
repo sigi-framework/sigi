@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/sigi-framework/sigi/compare/v2.5.1...v2.6.0) (2021-02-01)
+
+### Bug Fixes
+
+- **react-router:** missing @sigi/{di,types} dependencies ([6f50a97](https://github.com/sigi-framework/sigi/commit/6f50a9792a2acf3b604c1a736861ea2d1009b206))
+
+### Features
+
+- **testing:** typings enhancement ([c2ca55d](https://github.com/sigi-framework/sigi/commit/c2ca55d3187d4c366af9e9dcc01284d9fdbf5c9c))
+
 ## [2.5.1](https://github.com/sigi-framework/sigi/compare/v2.5.0...v2.5.1) (2021-01-22)
 
 ### Bug Fixes

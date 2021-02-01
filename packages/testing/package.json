@@ -1,6 +1,6 @@
 {
   "name": "@sigi/testing",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "Testing library for sigi framework",
   "keywords": ["Testing", "Sigi"],
   "author": "LongYinan <lynweklm@gmail.com>",
