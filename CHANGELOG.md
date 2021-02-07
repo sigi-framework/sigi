@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/sigi-framework/sigi/compare/v2.6.0...v2.7.0) (2021-02-07)
+
+### Features
+
+- **react-router:** export createHistoryProviders to register history in SSR ([1369acf](https://github.com/sigi-framework/sigi/commit/1369acfcb0b30b7cfb93f2181bbd0a508e4abfd2))
+- **ssr:** pass config which contains providers in emitSSREffects function ([b32ef30](https://github.com/sigi-framework/sigi/commit/b32ef302f58b4902dfbdc85a639a22ce074691a4))
+
 # [2.6.0](https://github.com/sigi-framework/sigi/compare/v2.5.1...v2.6.0) (2021-02-01)
 
 ### Bug Fixes
