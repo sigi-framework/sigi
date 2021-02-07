@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 
 import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
-import { rootInjector } from '@sigi/di'
+import { rootInjector, Injectable } from '@sigi/di'
 import { emitSSREffects, SSRStateCacheInstance } from '@sigi/ssr'
 import { Action } from '@sigi/types'
 import { Draft } from 'immer'
@@ -9,7 +9,7 @@ import uniqueId from 'lodash/uniqueId'
 import React, { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
-import { Observable, timer } from 'rxjs'
+import { Observable, of, timer } from 'rxjs'
 import { endWith, switchMap, map, mergeMap, withLatestFrom } from 'rxjs/operators'
 
 import { SSRSharedContext, SSRContext, useModule, useModuleState } from '../index'
@@ -21,6 +21,41 @@ interface CountState {
 
 interface TipState {
   tip: string
+}
+
+@Injectable()
+class Service {
+  getName() {
+    return of('client service')
+  }
+}
+
+@Module('ServiceModule')
+class ServiceModule extends EffectModule<CountState> {
+  readonly defaultState = { count: 0, name: '' }
+
+  constructor(public readonly service: Service) {
+    super()
+  }
+
+  @ImmerReducer()
+  setName(state: Draft<CountState>, name: string) {
+    state.name = name
+  }
+
+  @Effect({
+    ssr: true,
+  })
+  setNameEffect(payload$: Observable<void>): Observable<Action> {
+    return payload$.pipe(
+      switchMap(() =>
+        this.service.getName().pipe(
+          map((name) => this.getActions().setName(name)),
+          endWith(this.terminate()),
+        ),
+      ),
+    )
+  }
 }
 
 @Module('CountModel')
@@ -123,7 +158,7 @@ const ComponentWithSelector = () => {
 describe('SSR specs:', () => {
   beforeEach(() => {
     SSRStateCacheInstance.setPoolSize(100)
-    rootInjector.addProviders([CountModel, TipModel])
+    rootInjector.addProviders([CountModel, TipModel, ServiceModule, Service])
   })
 
   afterEach(() => {
@@ -301,8 +336,8 @@ describe('SSR specs:', () => {
 
   it('should support concurrency', async () => {
     return Promise.all([
-      emitSSREffects({ url: 'name1' }, [CountModel, TipModel], 'concurrency1'),
-      emitSSREffects({ url: 'name2' }, [CountModel, TipModel], 'concurrency2'),
+      emitSSREffects({ url: 'name1' }, [CountModel, TipModel], { uuid: 'concurrency1' }),
+      emitSSREffects({ url: 'name2' }, [CountModel, TipModel], { uuid: 'concurrency2' }),
     ]).then(([result1, result2]) => {
       expect(result1['dataToPersist']['CountModel'].name).toBe('name1')
       expect(result2['dataToPersist']['CountModel'].name).toBe('name2')
@@ -316,7 +351,7 @@ describe('SSR specs:', () => {
   it('should timeout', async () => {
     const req = {}
     const reqContext = uniqueId()
-    return emitSSREffects(req, [CountModel], reqContext, 0).catch((e: Error) => {
+    return emitSSREffects(req, [CountModel], { uuid: reqContext, timeout: 0 }).catch((e: Error) => {
       expect(e.message).toBe('Terminate timeout')
     })
   })
@@ -443,12 +478,12 @@ describe('SSR specs:', () => {
     }
   })
 
-  it('should reuse state if provider context', async () => {
+  it('should reuse state if context provided', async () => {
     const requestId = uniqueId()
     const req1 = {}
     const req2 = {}
-    await emitSSREffects(req1, [CountModel], requestId)
-    await emitSSREffects(req2, [CountModel], requestId)
+    await emitSSREffects(req1, [CountModel], { uuid: requestId })
+    await emitSSREffects(req2, [CountModel], { uuid: requestId })
     const SharedComponent1 = () => {
       const state = useModuleState(CountModel)
       return (
@@ -481,5 +516,15 @@ describe('SSR specs:', () => {
     )
 
     expect(result1).toBe(result2)
+  })
+
+  it('should replace injector if providers provided', async () => {
+    const req = {}
+    const state = await emitSSREffects(req, [ServiceModule])
+    expect(state['dataToPersist'].ServiceModule.name).toBe('client service')
+    const state2 = await emitSSREffects(req, [ServiceModule], {
+      providers: [{ provide: Service, useValue: { getName: () => of('server service') } }],
+    })
+    expect(state2['dataToPersist'].ServiceModule.name).toBe('server service')
   })
 })
