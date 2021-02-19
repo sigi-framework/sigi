@@ -24,7 +24,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "peerDependencies": {
-    "typescript": ">= 4.0.0"
+    "typescript": ">=4.0.0"
   },
   "dependencies": {
     "@sigi/types": "^2.4.5"
