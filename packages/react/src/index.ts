@@ -1,12 +1,10 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
-import { SSRStateCacheInstance, oneShotCache } from '@sigi/ssr'
 import { ConstructorOf, IStore } from '@sigi/types'
-import React, { useContext, useMemo, useEffect, useRef } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
 import { shallowEqual } from './shallow-equal'
-import { SSRSharedContext, SSRContext } from './ssr-context'
 
 export type StateSelector<S, U> = {
   (state: S): U
@@ -33,7 +31,7 @@ function _useDispatchers<M extends EffectModule<S>, S = any>(effectModule: M) {
 }
 
 export function useDispatchers<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): ActionOfEffectModule<M, S> {
-  const { effectModule } = _useModule(A)
+  const effectModule = useInstance(A)
   return _useDispatchers(effectModule)
 }
 
@@ -95,7 +93,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
   config?: M extends EffectModule<infer S> ? StateSelectorConfig<S, U> : never,
 ) {
-  const { store } = _useModule(A)
+  const { store } = useInstance(A)
   return _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
 }
 
@@ -113,27 +111,12 @@ export function useModule<M extends EffectModule<any>, U>(
   : never
 
 export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, config?: StateSelectorConfig<S, U>) {
-  const { effectModule, store } = _useModule(A)
+  const effectModule = useInstance(A)
+  const { store } = effectModule
   const appState = _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
   const appDispatcher = _useDispatchers(effectModule)
 
   return [appState, appDispatcher]
-}
-
-function _useModule<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): { effectModule: M; store: IStore<S> } {
-  const ssrSharedContext = useContext(SSRSharedContext)
-  const ssrContext = useContext(SSRContext)
-  const effectModule = useInstance(A)
-  const store = useMemo(() => {
-    return SSRStateCacheInstance.has(ssrSharedContext, A)
-      ? SSRStateCacheInstance.get(ssrSharedContext, A)!
-      : ssrContext
-      ? oneShotCache.consume(ssrContext, A) ?? effectModule.store
-      : effectModule.store
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ssrContext, ssrSharedContext, A, effectModule, oneShotCache])
-
-  return { effectModule, store }
 }
 
 export { SSRContext, SSRSharedContext } from './ssr-context'

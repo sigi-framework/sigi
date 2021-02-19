@@ -1,7 +1,8 @@
 import { rootInjector, Provider, Injector } from '@sigi/di'
 import React, { createContext, useContext, useMemo, memo } from 'react'
 
-const _InjectableContext = createContext<Injector>(rootInjector)
+// @internal
+export const _InjectableContext = createContext<Injector>(rootInjector)
 
 export const InjectionProvidersContext = memo<{ providers?: Provider[]; children: React.ReactNode }>(
   ({ providers = [], children }) => {

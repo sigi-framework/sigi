@@ -19,26 +19,3 @@ Object {
   },
 }
 `;
-
-exports[`SSR specs: should support concurrency 1`] = `
-Object {
-  "firstRequest": Object {
-    "CountModel": Object {
-      "count": 1,
-      "name": "name1",
-    },
-    "TipModel": Object {
-      "tip": "tip",
-    },
-  },
-  "secondRequest": Object {
-    "CountModel": Object {
-      "count": 1,
-      "name": "name2",
-    },
-    "TipModel": Object {
-      "tip": "tip",
-    },
-  },
-}
-`;

@@ -1,18 +1,17 @@
 import 'reflect-metadata'
 
 import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
-import { rootInjector, Injectable } from '@sigi/di'
-import { emitSSREffects, SSRStateCacheInstance } from '@sigi/ssr'
+import { Injectable, Injector } from '@sigi/di'
+import { emitSSREffects } from '@sigi/ssr'
 import { Action } from '@sigi/types'
 import { Draft } from 'immer'
-import uniqueId from 'lodash/uniqueId'
 import React, { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
 import { Observable, of, timer } from 'rxjs'
 import { endWith, switchMap, map, mergeMap, withLatestFrom } from 'rxjs/operators'
 
-import { SSRSharedContext, SSRContext, useModule, useModuleState } from '../index'
+import { SSRContext, useModule } from '../index'
 
 interface CountState {
   count: number
@@ -155,17 +154,9 @@ const ComponentWithSelector = () => {
   )
 }
 
+const MODULES = [CountModel, TipModel, ServiceModule, Service]
+
 describe('SSR specs:', () => {
-  beforeEach(() => {
-    SSRStateCacheInstance.setPoolSize(100)
-    rootInjector.addProviders([CountModel, TipModel, ServiceModule, Service])
-  })
-
-  afterEach(() => {
-    SSRStateCacheInstance.setPoolSize(0)
-    rootInjector.reset()
-  })
-
   it('should throw if module name not given', () => {
     function generateException() {
       // @ts-expect-error
@@ -227,7 +218,9 @@ describe('SSR specs:', () => {
   })
 
   it('should run ssr effects', async () => {
-    const state = await emitSSREffects({ url: 'name' } as any, [CountModel])
+    const state = await emitSSREffects({ url: 'name' } as any, [CountModel], {
+      providers: MODULES,
+    }).pendingState
     const moduleState = state['dataToPersist']['CountModel']
     expect(moduleState).not.toBe(undefined)
     expect(moduleState.count).toBe(1)
@@ -236,7 +229,9 @@ describe('SSR specs:', () => {
   })
 
   it('should skip effect if it returns SKIP_SYMBOL', async () => {
-    const state = await emitSSREffects({} as any, [CountModel])
+    const state = await emitSSREffects({}, [CountModel], {
+      providers: MODULES,
+    }).pendingState
     const moduleState = state['dataToPersist']['CountModel']
 
     expect(moduleState.name).toBe('')
@@ -245,11 +240,14 @@ describe('SSR specs:', () => {
 
   it('should return right state in hooks', async () => {
     const req = {}
-    await emitSSREffects(req, [CountModel])
+    const { pendingState, injector } = emitSSREffects(req, [CountModel], {
+      providers: MODULES,
+    })
+    await pendingState
     const html = renderToString(
-      <SSRContext.Provider value={req}>
+      <SSRContext value={injector}>
         <Component />
-      </SSRContext.Provider>,
+      </SSRContext>,
     )
     expect(html).toContain('<span>1</span>')
     expect(html).toMatchSnapshot()
@@ -258,7 +256,7 @@ describe('SSR specs:', () => {
   it('should restore state from global', () => {
     global[GLOBAL_KEY_SYMBOL] = {
       CountModel: {
-        count: 1,
+        count: 101,
         name: '',
       },
     }
@@ -266,7 +264,7 @@ describe('SSR specs:', () => {
     act(() => {
       testRenderer.update(<Component />)
     })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('1')
+    expect(testRenderer.root.findByType('span').children[0]).toBe('101')
 
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
@@ -279,7 +277,11 @@ describe('SSR specs:', () => {
         name: '',
       },
     }
-    const testRenderer = create(<ComponentWithSelector />)
+    const testRenderer = create(
+      <SSRContext value={new Injector().addProviders(MODULES)}>
+        <ComponentWithSelector />
+      </SSRContext>,
+    )
     expect(testRenderer.root.findByType('span').children[0]).toBe('11')
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
@@ -292,9 +294,18 @@ describe('SSR specs:', () => {
         name: '',
       },
     }
-    const testRenderer = create(<ComponentWithSelector />)
+    const injector = new Injector().addProviders(MODULES)
+    const testRenderer = create(
+      <SSRContext value={injector}>
+        <ComponentWithSelector />
+      </SSRContext>,
+    )
     act(() => {
-      testRenderer.update(<ComponentWithSelector />)
+      testRenderer.update(
+        <SSRContext value={injector}>
+          <ComponentWithSelector />
+        </SSRContext>,
+      )
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
 
@@ -323,10 +334,20 @@ describe('SSR specs:', () => {
       },
     }
 
-    const testRenderer = create(<Component />)
+    const injector = new Injector().addProviders(MODULES)
+
+    const testRenderer = create(
+      <SSRContext value={injector}>
+        <Component />
+      </SSRContext>,
+    )
 
     act(() => {
-      testRenderer.update(<Component />)
+      testRenderer.update(
+        <SSRContext value={injector}>
+          <Component />
+        </SSRContext>,
+      )
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('2')
 
@@ -334,31 +355,16 @@ describe('SSR specs:', () => {
     testRenderer.unmount()
   })
 
-  it('should support concurrency', async () => {
-    return Promise.all([
-      emitSSREffects({ url: 'name1' }, [CountModel, TipModel], { uuid: 'concurrency1' }),
-      emitSSREffects({ url: 'name2' }, [CountModel, TipModel], { uuid: 'concurrency2' }),
-    ]).then(([result1, result2]) => {
-      expect(result1['dataToPersist']['CountModel'].name).toBe('name1')
-      expect(result2['dataToPersist']['CountModel'].name).toBe('name2')
-      expect({
-        firstRequest: result1['dataToPersist'],
-        secondRequest: result2['dataToPersist'],
-      }).toMatchSnapshot()
-    })
-  })
-
   it('should timeout', async () => {
     const req = {}
-    const reqContext = uniqueId()
-    return emitSSREffects(req, [CountModel], { uuid: reqContext, timeout: 0 }).catch((e: Error) => {
+    return emitSSREffects(req, [CountModel], { providers: MODULES, timeout: 0 }).pendingState.catch((e: Error) => {
       expect(e.message).toBe('Terminate timeout')
     })
   })
 
   it('should resolve empty object if no modules provided', async () => {
     const req = {}
-    const state = await emitSSREffects(req, [])
+    const state = await emitSSREffects(req, [], { providers: MODULES }).pendingState
     expect(state['dataToPersist']).toStrictEqual({})
   })
 
@@ -383,7 +389,7 @@ describe('SSR specs:', () => {
         )
       }
     }
-    const state = await emitSSREffects(req, [WithoutSSRModule])
+    const state = await emitSSREffects(req, [WithoutSSRModule], { providers: MODULES }).pendingState
     expect(state['dataToPersist']).toStrictEqual({})
   })
 
@@ -407,7 +413,7 @@ describe('SSR specs:', () => {
       }
     }
     try {
-      await emitSSREffects(req, [SSRErrorModule])
+      await emitSSREffects(req, [SSRErrorModule], { providers: MODULES }).pendingState
       throw new TypeError('Unreachable code path')
     } catch (e) {
       expect(e).toBe(error)
@@ -437,7 +443,7 @@ describe('SSR specs:', () => {
       }
     }
     try {
-      await emitSSREffects(req, [SSRErrorModule])
+      await emitSSREffects(req, [SSRErrorModule], { providers: MODULES }).pendingState
       throw new TypeError('Unreachable code path')
     } catch (e) {
       expect(e).toBe(error)
@@ -471,60 +477,20 @@ describe('SSR specs:', () => {
       }
     }
     try {
-      await emitSSREffects(req, [SSRErrorModule])
+      await emitSSREffects(req, [SSRErrorModule], { providers: MODULES }).pendingState
       throw new TypeError('Unreachable code path')
     } catch (e) {
       expect(e).toBe(error)
     }
   })
 
-  it('should reuse state if context provided', async () => {
-    const requestId = uniqueId()
-    const req1 = {}
-    const req2 = {}
-    await emitSSREffects(req1, [CountModel], { uuid: requestId })
-    await emitSSREffects(req2, [CountModel], { uuid: requestId })
-    const SharedComponent1 = () => {
-      const state = useModuleState(CountModel)
-      return (
-        <>
-          <span>{state.count}</span>
-        </>
-      )
-    }
-
-    const SharedComponent2 = () => {
-      const state = useModuleState(CountModel)
-      return (
-        <>
-          <span>{state.count}</span>
-        </>
-      )
-    }
-    const cachedState = SSRStateCacheInstance.get(requestId, CountModel)!
-    expect(cachedState.state.count).toBe(1)
-
-    const result1 = renderToString(
-      <SSRSharedContext.Provider value={requestId}>
-        <SharedComponent1 />
-      </SSRSharedContext.Provider>,
-    )
-    const result2 = renderToString(
-      <SSRSharedContext.Provider value={requestId}>
-        <SharedComponent2 />
-      </SSRSharedContext.Provider>,
-    )
-
-    expect(result1).toBe(result2)
-  })
-
   it('should replace injector if providers provided', async () => {
     const req = {}
-    const state = await emitSSREffects(req, [ServiceModule])
+    const state = await emitSSREffects(req, [ServiceModule], { providers: MODULES }).pendingState
     expect(state['dataToPersist'].ServiceModule.name).toBe('client service')
     const state2 = await emitSSREffects(req, [ServiceModule], {
-      providers: [{ provide: Service, useValue: { getName: () => of('server service') } }],
-    })
+      providers: [...MODULES, { provide: Service, useValue: { getName: () => of('server service') } }],
+    }).pendingState
     expect(state2['dataToPersist'].ServiceModule.name).toBe('server service')
   })
 })
