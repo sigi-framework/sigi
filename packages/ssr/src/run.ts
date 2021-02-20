@@ -1,7 +1,7 @@
 import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@sigi/core'
 import { rootInjector, Injector, Provider } from '@sigi/di'
 import { ConstructorOf, Action, Epic } from '@sigi/types'
-import { from, race, timer, throwError, Observable, Observer, NEVER } from 'rxjs'
+import { from, race, timer, throwError, Observable, Observer, NEVER, noop } from 'rxjs'
 import { tap, catchError, mergeMap } from 'rxjs/operators'
 
 import { StateToPersist } from './state-to-persist'
@@ -54,30 +54,30 @@ export const runSSREffects = <Context, Returned = any>(
                 const { store, moduleName } = effectModuleInstance
                 store.addEpic(errorCatcher)
                 let effectsCount = ssrActionsMeta.length
-
-                let cleanup = () => {
-                  store.dispose()
-                }
-
                 let terminatedCount = 0
 
-                const donePromise = new Promise<void>((resolve) => {
-                  cleanup = store.addEpic((prevEpic) => {
-                    return (action$) =>
-                      prevEpic(action$).pipe(
-                        tap(({ type }) => {
-                          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
-                            terminatedCount++
-                          }
-                          if (terminatedCount === effectsCount) {
-                            store.dispose()
-                            resolve()
-                          }
-                        }),
-                      )
-                  })
-                }).then(() => {
-                  stateToSerialize[moduleName] = store.state
+                const defer: { resolve: () => void; promise: Promise<void> } = {
+                  resolve: noop,
+                  promise: Promise.resolve(),
+                }
+
+                defer.promise = new Promise<void>((resolve) => {
+                  defer.resolve = resolve
+                })
+
+                const cleanup: (() => void) | null = store.addEpic((prevEpic) => {
+                  return (action$) =>
+                    prevEpic(action$).pipe(
+                      tap(({ type }) => {
+                        if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+                          terminatedCount++
+                        }
+                        if (terminatedCount === effectsCount) {
+                          defer.resolve()
+                          stateToSerialize[moduleName] = store.state
+                        }
+                      }),
+                    )
                 })
 
                 Promise.all(
@@ -102,7 +102,7 @@ export const runSSREffects = <Context, Returned = any>(
                     }
                   }),
                 )
-                  .then(() => (effectsCount === 0 ? null : donePromise))
+                  .then(() => (effectsCount === 0 ? null : defer.promise))
                   .then(() => {
                     observer.next()
                     observer.complete()
@@ -110,7 +110,10 @@ export const runSSREffects = <Context, Returned = any>(
                   .catch((e) => {
                     observer.error(e)
                   })
-                return cleanup
+                return () => {
+                  store.dispose()
+                  cleanup?.()
+                }
               })
             }),
           ),
