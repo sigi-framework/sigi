@@ -27,7 +27,7 @@ const external = [
 ]
 
 export default pkgs.map((dir) => ({
-  input: `./packages/${dir}/esm/index.js`,
+  input: `./packages/${dir}/next/index.js`,
   external,
   plugins: [sourcemaps()],
   output: [

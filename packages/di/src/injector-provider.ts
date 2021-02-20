@@ -1,4 +1,4 @@
-import { Provider, Token } from './type'
+import { InjectionToken, Provider, Token } from './type'
 
 export class ReflectiveProvider<T> {
   name: string
@@ -10,7 +10,7 @@ export class ReflectiveProvider<T> {
       this.name = provider.name
       this.token = provider
     } else {
-      this.name = provider.provide.toString()
+      this.name = provider.provide instanceof InjectionToken ? provider.provide.toString() : provider.provide.name
       this.token = provider.provide
     }
   }

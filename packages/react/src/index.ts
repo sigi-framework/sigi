@@ -119,5 +119,5 @@ export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, 
   return [appState, appDispatcher]
 }
 
-export { SSRContext, SSRSharedContext } from './ssr-context'
+export { SSRContext } from './ssr-context'
 export * from './injectable-context'

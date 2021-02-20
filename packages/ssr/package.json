@@ -16,6 +16,9 @@
   },
   "sideEffects": false,
   "files": ["dist", "esm", "next"],
+  "engines": {
+    "node": ">= 10.17"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
