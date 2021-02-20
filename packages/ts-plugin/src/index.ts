@@ -55,7 +55,8 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
                     argument,
                     argument.properties.filter(
                       (property) =>
-                        !ts.isPropertyAssignment(property) && property.name?.getText() !== PayloadGetterName,
+                        !(ts.isPropertyAssignment(property) || ts.isMethodDeclaration(property)) &&
+                        property.name?.getText() !== PayloadGetterName,
                     ),
                   ),
                 ]),
@@ -89,7 +90,7 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
           decorators.forEach((decorator) => {
             if (checkDecorator(decorator, moduleImportResult!, ModuleDef)) {
               const arg = (decorator.expression as ts.CallExpression).arguments[0]
-              sigiModuleName = (arg as ts.StringLiteral).text
+              sigiModuleName = (arg as ts.StringLiteral | undefined)?.text ?? null
             }
           })
           if (sigiModuleName) {

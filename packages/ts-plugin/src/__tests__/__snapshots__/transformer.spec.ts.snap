@@ -27,6 +27,23 @@ if (process.env.NODE_ENV === \\"development\\" && module.hot) {
 "
 `;
 
+exports[`ts-plugin specs should skip inject hmr codes if non module name 1`] = `
+"import { Module, Effect } from '@sigi/core';
+import { Request } from 'express';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+interface AState {
+}
+@Module()
+export class ModuleA extends EffectModule<AState> {
+    @Effect()
+    whatever(payload$: Observable<string>) {
+        return payload$.pipe(map(() => this.createNoopAction()));
+    }
+}
+"
+`;
+
 exports[`ts-plugin specs should transform alias 1`] = `
 
 File: alias.tsx
@@ -105,6 +122,184 @@ TypeScript before transform:
 TypeScript after transform:
   import { EffectModule, Module } from '@sigi/core';
   import { Effect } from 'not-sigi';
+  import { Request } from 'express';
+  import { Observable } from 'rxjs';
+  import { map } from 'rxjs/operators';
+  interface AState {
+  }
+  @Module('A')
+  export class ModuleA extends EffectModule<AState> {
+    @Effect({
+      payloadGetter: (req: Request) => {
+        return require('md5')('hello');
+      }
+    })
+    whatever(payload$: Observable<string>) {
+      return payload$.pipe(map(() => this.createNoopAction()));
+    }
+    normalMethod() {
+    }
+  }
+  
+
+`;
+
+exports[`ts-plugin specs should transform do-nothing-2 1`] = `
+
+File: do-nothing-2.tsx
+TypeScript before transform:
+  import { Effect, EffectModule, Module } from 'not-sigi'
+  import { Request } from 'express'
+  import { Observable } from 'rxjs'
+  import { map } from 'rxjs/operators'
+  
+  interface AState {}
+  
+  @Module('A')
+  export class ModuleA extends EffectModule<AState> {
+    @Effect({
+      payloadGetter: (req: Request) => {
+        return require('md5')('hello')
+      }
+    })
+    whatever(payload$: Observable<string>) {
+      return payload$.pipe(
+        map(() => this.createNoopAction())
+      )
+    }
+  
+    normalMethod() {
+  
+    }
+  }
+  
+      ↓ ↓ ↓ ↓ ↓ ↓
+TypeScript after transform:
+  import { Effect, EffectModule, Module } from 'not-sigi';
+  import { Request } from 'express';
+  import { Observable } from 'rxjs';
+  import { map } from 'rxjs/operators';
+  interface AState {
+  }
+  @Module('A')
+  export class ModuleA extends EffectModule<AState> {
+    @Effect({
+      payloadGetter: (req: Request) => {
+        return require('md5')('hello');
+      }
+    })
+    whatever(payload$: Observable<string>) {
+      return payload$.pipe(map(() => this.createNoopAction()));
+    }
+    normalMethod() {
+    }
+  }
+  
+
+`;
+
+exports[`ts-plugin specs should transform do-nothing-4 1`] = `
+
+File: do-nothing-4.tsx
+TypeScript before transform:
+  import { EffectModule, Module, Effect } from '@sigi/core'
+  import { Request } from 'express'
+  import { Observable } from 'rxjs'
+  import { map } from 'rxjs/operators'
+  
+  interface AState {}
+  
+  const PayloadGetterString = 'payloadGetter'
+  
+  @Module('A')
+  export class ModuleA extends EffectModule<AState> {
+    @Effect({
+      payloadGetterTypo: (req: Request) => {
+        return require('md5')('hello')
+      }
+    })
+    whatever(payload$: Observable<string>) {
+      return payload$.pipe(
+        map(() => this.createNoopAction())
+      )
+    }
+  
+    @Effect({
+      [PayloadGetterString]: (req: Request) => {
+        return require('md5')('hello')
+      }
+    })
+    whatever1(payload$: Observable<string>) {
+      return payload$.pipe(
+        map(() => this.createNoopAction())
+      )
+    }
+  
+    @Effect
+    normalMethod() {
+  
+    }
+  }
+  
+      ↓ ↓ ↓ ↓ ↓ ↓
+TypeScript after transform:
+  import { EffectModule, Module, Effect } from '@sigi/core';
+  import { Request } from 'express';
+  import { Observable } from 'rxjs';
+  import { map } from 'rxjs/operators';
+  interface AState {
+  }
+  const PayloadGetterString = 'payloadGetter';
+  @Module('A')
+  export class ModuleA extends EffectModule<AState> {
+    @Effect({})
+    whatever(payload$: Observable<string>) {
+      return payload$.pipe(map(() => this.createNoopAction()));
+    }
+    @Effect({})
+    whatever1(payload$: Observable<string>) {
+      return payload$.pipe(map(() => this.createNoopAction()));
+    }
+    @Effect
+    normalMethod() {
+    }
+  }
+  
+
+`;
+
+exports[`ts-plugin specs should transform do-notiong-3 1`] = `
+
+File: do-notiong-3.tsx
+TypeScript before transform:
+  import '@sigi/core'
+  import { Request } from 'express'
+  import { Observable } from 'rxjs'
+  import { map } from 'rxjs/operators'
+  
+  interface AState {}
+  
+  @Module('A')
+  export class ModuleA extends EffectModule<AState> {
+    @Effect({
+      payloadGetter: (req: Request) => {
+        return require('md5')('hello')
+      }
+    })
+    whatever(payload$: Observable<string>) {
+      return payload$.pipe(
+        map(() => this.createNoopAction())
+      )
+    }
+  
+    normalMethod() {
+  
+    }
+  }
+  
+      ↓ ↓ ↓ ↓ ↓ ↓
+TypeScript after transform:
+  import '@sigi/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';

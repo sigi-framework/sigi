@@ -116,4 +116,35 @@ describe('ts-plugin specs', () => {
     expect(resultCode).toMatchSnapshot()
     process.env.NODE_ENV = NODE_ENV
   })
+
+  it('should skip inject hmr codes if non module name', () => {
+    const { NODE_ENV } = process.env
+    process.env.NODE_ENV = 'development'
+    const code = `
+    import { Module, Effect } from '@sigi/core'
+    import { Request } from 'express'
+    import { Observable } from 'rxjs'
+    import { map } from 'rxjs/operators'
+    
+    interface AState {}
+
+    @Module()
+    export class ModuleA extends EffectModule<AState> {
+      @Effect()
+      whatever(payload$: Observable<string>) {
+        return payload$.pipe(
+          map(() => this.createNoopAction())
+        )
+      }
+    }
+    `
+    const printer = ts.createPrinter()
+    const source = ts.createSourceFile('hmr', code, ts.ScriptTarget.ESNext, true)
+    const output = ts.transform(source, [SigiTransformer])
+
+    const [outputCode] = output.transformed
+    const resultCode = printer.printFile(outputCode)
+    expect(resultCode).toMatchSnapshot()
+    process.env.NODE_ENV = NODE_ENV
+  })
 })

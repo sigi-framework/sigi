@@ -493,4 +493,17 @@ describe('SSR specs:', () => {
     }).pendingState
     expect(state2['dataToPersist'].ServiceModule.name).toBe('server service')
   })
+
+  it('Module instance should be different cross different requests', async () => {
+    const req = {}
+    const { pendingState: pending1, injector: injector1 } = emitSSREffects(req, [CountModel], {
+      providers: MODULES,
+    })
+    const { pendingState: pending2, injector: injector2 } = emitSSREffects(req, [CountModel], {
+      providers: MODULES,
+    })
+    await Promise.all([pending1, pending2])
+    expect(injector1).not.toBe(injector2)
+    expect(injector1.getInstance(CountModel)).not.toBe(injector2.getInstance(CountModel))
+  })
 })
