@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/sigi-framework/sigi/compare/v2.7.0...v2.8.0) (2021-02-22)
+
+**Note:** Version bump only for package @sigi/testing
+
 # [2.6.0](https://github.com/sigi-framework/sigi/compare/v2.5.1...v2.6.0) (2021-02-01)
 
 ### Features

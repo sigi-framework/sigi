@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/sigi-framework/sigi/compare/v2.7.0...v2.8.0) (2021-02-22)
+
+### Bug Fixes
+
+- husky permission ([ad2255d](https://github.com/sigi-framework/sigi/commit/ad2255d7969ab8bdd421824961d0f42f20eb9114))
+
+### Performance Improvements
+
+- **ssr:** reduce closure creations ([5ede4ac](https://github.com/sigi-framework/sigi/commit/5ede4ac2c9b486ca8a9972283ba64a44533c9ff6))
+
 # [2.7.0](https://github.com/sigi-framework/sigi/compare/v2.6.0...v2.7.0) (2021-02-07)
 
 ### Features
