@@ -1,11 +1,9 @@
 import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@sigi/core'
 import { rootInjector, Injector, Provider } from '@sigi/di'
-import { ConstructorOf, Action, Epic, IStore } from '@sigi/types'
-import { from, race, timer, throwError, noop, Observable, Observer, NEVER } from 'rxjs'
+import { ConstructorOf, Action, Epic } from '@sigi/types'
+import { from, race, timer, throwError, Observable, Observer, NEVER, noop } from 'rxjs'
 import { tap, catchError, mergeMap } from 'rxjs/operators'
 
-import { oneShotCache } from './ssr-oneshot-cache'
-import { SSRStateCacheInstance } from './ssr-states'
 import { StateToPersist } from './state-to-persist'
 
 export type ModuleMeta = ConstructorOf<EffectModule<any>>
@@ -28,80 +26,61 @@ export const runSSREffects = <Context, Returned = any>(
   ctx: Context,
   modules: ModuleMeta[],
   config: {
-    uuid?: string | symbol
     timeout?: number
     providers?: Provider[]
   } = {},
-): Promise<StateToPersist<Returned>> => {
+): { injector: Injector; pendingState: Promise<StateToPersist<Returned>> } => {
   const stateToSerialize = {} as Returned
-  const { providers, uuid, timeout = 1 } = config
-  const injector = providers?.length ? new Injector(rootInjector).addProviders(providers) : rootInjector
-  return modules.length === 0
-    ? Promise.resolve(new StateToPersist(stateToSerialize))
-    : race(
-        from(modules).pipe(
-          mergeMap((constructor) => {
-            return new Observable((observer: Observer<StateToPersist<Returned>>) => {
-              let cleanup = noop
-              const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
-              let store: IStore<any>
-              let moduleName: string
+  const { providers, timeout = 1 } = config
+  const injector = rootInjector.createChild([...modules, ...(providers ?? [])])
+  const pendingState =
+    modules.length === 0
+      ? Promise.resolve(new StateToPersist(stateToSerialize))
+      : race(
+          from(modules).pipe(
+            mergeMap((constructor) => {
+              return new Observable((observer: Observer<void>) => {
+                const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
 
-              const errorCatcher = (prevEpic: Epic) => (action$: Observable<Action<unknown>>) =>
-                prevEpic(action$).pipe(
-                  catchError((e) => {
-                    observer.error(e)
-                    return NEVER
-                  }),
-                )
+                const errorCatcher = (prevEpic: Epic) => (action$: Observable<Action<unknown>>) =>
+                  prevEpic(action$).pipe(
+                    catchError((e) => {
+                      observer.error(e)
+                      return NEVER
+                    }),
+                  )
 
-              if (uuid) {
-                if (SSRStateCacheInstance.has(uuid, constructor)) {
-                  store = SSRStateCacheInstance.get(uuid, constructor)!
-                  moduleName = constructor.prototype.moduleName
-                } else {
-                  const effectModuleInstance: EffectModule<unknown> = injector.resolveAndInstantiate(constructor)
-                  moduleName = effectModuleInstance.moduleName
-                  store = effectModuleInstance.store
-                  store.addEpic(errorCatcher)
-                  SSRStateCacheInstance.set(uuid, constructor, store)
-                }
-              } else {
-                const effectModuleInstance: EffectModule<unknown> = injector.resolveAndInstantiate(constructor)
-                moduleName = effectModuleInstance.moduleName
-                store = effectModuleInstance.store
+                const effectModuleInstance: EffectModule<unknown> = injector.getInstance(constructor)
+                const { store, moduleName } = effectModuleInstance
                 store.addEpic(errorCatcher)
-                oneShotCache.store(ctx, constructor, store)
-              }
-              let effectsCount = ssrActionsMeta.length
-              let disposeFn = noop
-              cleanup = uuid
-                ? () => disposeFn()
-                : () => {
-                    store.dispose()
-                  }
+                let effectsCount = ssrActionsMeta.length
+                let terminatedCount = 0
 
-              let donePromise: Promise<void> | null
-              if (effectsCount > 0) {
-                donePromise = new Promise<void>((resolve) => {
-                  let terminatedCount = 0
-                  disposeFn = store.addEpic((prevEpic) => {
-                    return (action$) =>
-                      prevEpic(action$).pipe(
-                        tap(({ type }) => {
-                          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
-                            terminatedCount++
-                            if (terminatedCount === effectsCount) {
-                              resolve()
-                            }
-                          }
-                        }),
-                      )
-                  })
+                const defer: { resolve: () => void; promise: Promise<void> } = {
+                  resolve: noop,
+                  promise: Promise.resolve(),
+                }
+
+                defer.promise = new Promise<void>((resolve) => {
+                  defer.resolve = resolve
                 })
-              }
-              async function runEffects() {
-                await Promise.all(
+
+                const cleanup: (() => void) | null = store.addEpic((prevEpic) => {
+                  return (action$) =>
+                    prevEpic(action$).pipe(
+                      tap(({ type }) => {
+                        if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+                          terminatedCount++
+                        }
+                        if (terminatedCount === effectsCount) {
+                          defer.resolve()
+                          stateToSerialize[moduleName] = store.state
+                        }
+                      }),
+                    )
+                })
+
+                Promise.all(
                   ssrActionsMeta.map(async (ssrActionMeta: any) => {
                     if (ssrActionMeta.payloadGetter) {
                       const payload = await ssrActionMeta.payloadGetter(ctx, skipSymbol)
@@ -112,7 +91,7 @@ export const runSSREffects = <Context, Returned = any>(
                           store,
                         })
                       } else {
-                        effectsCount -= 1
+                        effectsCount--
                       }
                     } else {
                       store.dispatch({
@@ -123,25 +102,25 @@ export const runSSREffects = <Context, Returned = any>(
                     }
                   }),
                 )
+                  .then(() => (effectsCount === 0 ? null : defer.promise))
+                  .then(() => {
+                    observer.next()
+                    observer.complete()
+                  })
+                  .catch((e) => {
+                    observer.error(e)
+                  })
+                return () => {
+                  store.dispose()
+                  cleanup?.()
+                }
+              })
+            }),
+          ),
+          timer(timeout * 1000).pipe(mergeMap(() => throwError(new Error('Terminate timeout')))),
+        )
+          .toPromise()
+          .then(() => new StateToPersist(stateToSerialize))
 
-                return (
-                  donePromise?.then(() => {
-                    stateToSerialize[moduleName] = store.state
-                  }) ?? Promise.resolve()
-                )
-              }
-              runEffects()
-                .then(() => {
-                  observer.next(new StateToPersist(stateToSerialize))
-                  observer.complete()
-                })
-                .catch((e) => {
-                  observer.error(e)
-                })
-              return cleanup
-            })
-          }),
-        ),
-        timer(timeout * 1000).pipe(mergeMap(() => throwError(new Error('Terminate timeout')))),
-      ).toPromise()
+  return { injector, pendingState }
 }

@@ -1,0 +1,38 @@
+import { EffectModule, Module, Effect } from '@sigi/core'
+import { Request } from 'express'
+import { Observable } from 'rxjs'
+import { map } from 'rxjs/operators'
+
+interface AState {}
+
+const PayloadGetterString = 'payloadGetter'
+
+@Module('A')
+export class ModuleA extends EffectModule<AState> {
+  @Effect({
+    payloadGetterTypo: (req: Request) => {
+      return require('md5')('hello')
+    }
+  })
+  whatever(payload$: Observable<string>) {
+    return payload$.pipe(
+      map(() => this.createNoopAction())
+    )
+  }
+
+  @Effect({
+    [PayloadGetterString]: (req: Request) => {
+      return require('md5')('hello')
+    }
+  })
+  whatever1(payload$: Observable<string>) {
+    return payload$.pipe(
+      map(() => this.createNoopAction())
+    )
+  }
+
+  @Effect
+  normalMethod() {
+
+  }
+}
