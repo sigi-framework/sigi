@@ -216,6 +216,7 @@ describe('EffectModule Class', () => {
         }
 
         @Effect()
+        // eslint-disable-next-line sonarjs/no-identical-functions
         set(payload$: Observable<number>) {
           return payload$.pipe(
             tap(noop),

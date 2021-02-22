@@ -30,7 +30,7 @@ extends:
 settings:
   react:
     pragma: React
-    version: 16.13.0
+    version: 17.0.1
 
 rules:
   # 0 = off, 1 = warn, 2 = error
@@ -65,13 +65,13 @@ rules:
   'import/order': [2, { 'newlines-between': 'always', 'alphabetize': { 'order': 'asc', 'caseInsensitive': true } }]
 
   'react/prop-types': 0
-  'react/jsx-no-multiline-js': 0
   'react/jsx-equals-spacing': 0
-  'react/no-find-dom-node': 0
+  'react/no-find-dom-node': 2
   'react/jsx-key': 2
   'react/no-string-refs': 2
   'react/self-closing-comp': 2
   'react/no-deprecated': 2
+  'react/react-in-jsx-scope': 0
   # to be confirmed
   'react/display-name': 0 # 2?
   'react/jsx-no-target-blank': 0
@@ -82,9 +82,8 @@ rules:
 
   'sonarjs/cognitive-complexity': 0
   'sonarjs/no-duplicate-string': 0
-  'sonarjs/no-big-function': 0
-  'sonarjs/no-identical-functions': 0
-  'sonarjs/no-small-switch': 0
+  'sonarjs/no-identical-functions': 2
+  'sonarjs/no-small-switch': 2
 
   'react/jsx-no-bind': 2
 

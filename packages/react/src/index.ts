@@ -1,6 +1,6 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import React, { useMemo, useEffect, useRef } from 'react'
+import { useMemo, useEffect, useRef, useState } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -41,7 +41,7 @@ function _useModuleState<S, U = S>(
   dependencies: any[] = [],
   equalFn = shallowEqual,
 ): S | U {
-  const [appState, setState] = React.useState(() => {
+  const [appState, setState] = useState(() => {
     const initialState = store.state
     return selector ? selector(initialState) : initialState
   })

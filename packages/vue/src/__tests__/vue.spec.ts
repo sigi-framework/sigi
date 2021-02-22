@@ -64,12 +64,6 @@ describe('VueJS reactive binding', () => {
     expect(vm).toBeInstanceOf(Vue)
   })
 
-  it('should call reducer', () => {
-    const count = 1
-    vm.setCount(count)
-    expect(testingStub.getState().count).toBe(count)
-  })
-
   it('should be able to call reducer', () => {
     const count = 1
     vm.setCount(count)

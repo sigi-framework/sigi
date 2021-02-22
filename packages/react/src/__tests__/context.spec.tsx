@@ -97,6 +97,7 @@ describe('Context specs', () => {
       provide: Service,
       useValue: 2,
     }
+    // eslint-disable-next-line sonarjs/no-identical-functions
     const TestComponent1 = () => {
       const instance = useInstance(Module)
       expect(instance.service).toBe(mockService1.useValue)
