@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.1](https://github.com/sigi-framework/sigi/compare/v2.8.0...v2.8.1) (2021-03-03)
+
+### Bug Fixes
+
+- **ssr:** emit stateToPersist after all Modules was finished ([92f1790](https://github.com/sigi-framework/sigi/commit/92f179090358675c4c9fcbc1ce532983eda177de))
+
 # [2.8.0](https://github.com/sigi-framework/sigi/compare/v2.7.0...v2.8.0) (2021-02-22)
 
 ### Bug Fixes
