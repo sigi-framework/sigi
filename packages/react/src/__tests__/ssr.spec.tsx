@@ -391,7 +391,11 @@ describe('SSR specs:', () => {
       }
     }
     const state = await emitSSREffects(req, [WithoutSSRModule], { providers: MODULES }).pendingState
-    expect(state['dataToPersist']).toStrictEqual({})
+    expect(state['dataToPersist']).toStrictEqual({
+      WithoutSSR: {
+        count: 0,
+      },
+    })
   })
 
   it('should throw error if runEffects error', async () => {
@@ -493,5 +497,51 @@ describe('SSR specs:', () => {
       providers: [...MODULES, { provide: Service, useValue: { getName: () => of('server service') } }],
     }).pendingState
     expect(state2['dataToPersist'].ServiceModule.name).toBe('server service')
+  })
+
+  it('should persist states which mutated by the other modules', async () => {
+    @Module('InnerStateModule')
+    class StateModel extends EffectModule<{ count: number }> {
+      defaultState = { count: 0 }
+
+      @ImmerReducer()
+      setCount(state: Draft<{ count: number }>, count: number) {
+        state.count = count
+      }
+    }
+
+    @Module('InnerCountModel')
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    class CountModel extends EffectModule<{}> {
+      defaultState = {}
+
+      constructor(private readonly stateModule: StateModel) {
+        super()
+      }
+
+      @Effect({
+        ssr: true,
+      })
+      getCount(payload$: Observable<void>): Observable<Action> {
+        return payload$.pipe(
+          mergeMap(() =>
+            timer(20).pipe(
+              map(() => this.stateModule.getActions().setCount(1)),
+              endWith(this.terminate()),
+            ),
+          ),
+        )
+      }
+    }
+
+    const req = {}
+    const state = await emitSSREffects(req, [CountModel, StateModel]).pendingState
+
+    expect(state['dataToPersist']).toEqual({
+      InnerCountModel: {},
+      InnerStateModule: {
+        count: 1,
+      },
+    })
   })
 })
