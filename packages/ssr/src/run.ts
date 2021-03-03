@@ -33,6 +33,7 @@ export const runSSREffects = <Context, Returned = any>(
   const stateToSerialize = {} as Returned
   const { providers, timeout = 1 } = config
   const injector = rootInjector.createChild([...modules, ...(providers ?? [])])
+  const cleanupFns: (() => void)[] = []
   const pendingState =
     modules.length === 0
       ? Promise.resolve(new StateToPersist(stateToSerialize))
@@ -65,7 +66,7 @@ export const runSSREffects = <Context, Returned = any>(
                   defer.resolve = resolve
                 })
 
-                const cleanup: (() => void) | null = store.addEpic((prevEpic) => {
+                const cleanup: () => void = store.addEpic((prevEpic) => {
                   return (action$) =>
                     prevEpic(action$).pipe(
                       tap(({ type }) => {
@@ -74,7 +75,6 @@ export const runSSREffects = <Context, Returned = any>(
                         }
                         if (terminatedCount === effectsCount) {
                           defer.resolve()
-                          stateToSerialize[moduleName] = store.state
                         }
                       }),
                     )
@@ -110,17 +110,30 @@ export const runSSREffects = <Context, Returned = any>(
                   .catch((e) => {
                     observer.error(e)
                   })
-                return () => {
+                cleanupFns.push(() => {
                   store.dispose()
-                  cleanup?.()
-                }
+                  cleanup()
+                  stateToSerialize[moduleName] = store.state
+                })
               })
             }),
           ),
           timer(timeout * 1000).pipe(mergeMap(() => throwError(new Error('Terminate timeout')))),
         )
           .toPromise()
-          .then(() => new StateToPersist(stateToSerialize))
+          // Could not use `finally` here, because we need support Node.js@10
+          .then(() => {
+            for (const cleanup of cleanupFns) {
+              cleanup()
+            }
+            return new StateToPersist(stateToSerialize)
+          })
+          .catch((e) => {
+            for (const cleanup of cleanupFns) {
+              cleanup()
+            }
+            throw e
+          })
 
   return { injector, pendingState }
 }
