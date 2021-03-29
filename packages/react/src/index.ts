@@ -38,17 +38,18 @@ export function useDispatchers<M extends EffectModule<S>, S = any>(A: Constructo
 function _useModuleState<S, U = S>(
   store: IStore<S>,
   selector?: StateSelector<S, U>,
-  dependencies: any[] = [],
+  dependencies?: any[],
   equalFn = shallowEqual,
 ): S | U {
+  if (process.env.NODE_ENV === 'development' && selector && !dependencies) {
+    console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
+  }
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  dependencies = dependencies || []
   const [appState, setState] = useState(() => {
     const initialState = store.state
     return selector ? selector(initialState) : initialState
   })
-
-  if (process.env.NODE_ENV === 'development' && selector) {
-    console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
-  }
 
   useEffect(() => {
     const subscription = store.state$
