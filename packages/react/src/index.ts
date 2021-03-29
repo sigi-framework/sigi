@@ -1,6 +1,6 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import { useMemo, useEffect, useRef, useState } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -46,32 +46,24 @@ function _useModuleState<S, U = S>(
     return selector ? selector(initialState) : initialState
   })
 
-  const isFirstRendering = useRef(true)
-
-  if (process.env.NODE_ENV === 'development' && selector && !dependencies) {
+  if (process.env.NODE_ENV === 'development' && selector) {
     console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
   }
 
-  // https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops
-  // do not put subscribe in useEffect
-  const subscription = useMemo(() => {
-    return store.state$
+  useEffect(() => {
+    const subscription = store.state$
       .pipe(
         map((s) => (selector ? selector(s) : s)),
         distinctUntilChanged((s1, s2) => equalFn(s1, s2)),
         // skip initial state emission
-        skip(isFirstRendering.current ? 1 : 0),
+        skip(1),
       )
       .subscribe(setState)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store, ...(dependencies ?? [])])
-
-  useEffect(() => {
-    isFirstRendering.current = false
     return () => {
       subscription.unsubscribe()
     }
-  }, [store, subscription])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store, ...dependencies])
 
   return appState
 }
