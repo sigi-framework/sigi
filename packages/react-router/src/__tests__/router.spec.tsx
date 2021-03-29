@@ -3,7 +3,6 @@ import { EffectModule, Effect, Module, Reducer, Action, DefineAction } from '@si
 import { useInstance } from '@sigi/react'
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { History, createMemoryHistory } from 'history'
-import React from 'react'
 import { create, act, ReactTestRenderer } from 'react-test-renderer'
 import { Observable, Subject } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'

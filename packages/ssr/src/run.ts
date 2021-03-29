@@ -115,6 +115,9 @@ export const runSSREffects = <Context, Returned = any>(
                   cleanup()
                   stateToSerialize[moduleName] = store.state
                 })
+                return () => {
+                  defer.resolve()
+                }
               })
             }),
           ),
