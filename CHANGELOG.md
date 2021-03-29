@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.3](https://github.com/sigi-framework/sigi/compare/v2.8.2...v2.8.3) (2021-03-29)
+
+### Bug Fixes
+
+- **react:** emit warning while pass selector without dependencies ([3198ea5](https://github.com/sigi-framework/sigi/commit/3198ea5984a74592ea244c52f596f873d5b74439))
+
 ## [2.8.2](https://github.com/sigi-framework/sigi/compare/v2.8.1...v2.8.2) (2021-03-29)
 
 ### Bug Fixes
