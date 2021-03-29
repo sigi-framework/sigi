@@ -2,7 +2,7 @@ import 'reflect-metadata'
 
 import { Module, EffectModule, Effect, ImmerReducer, Action } from '@sigi/core'
 import { Draft } from 'immer'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { create, act, ReactTestRenderer } from 'react-test-renderer'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, endWith, switchMap } from 'rxjs/operators'
