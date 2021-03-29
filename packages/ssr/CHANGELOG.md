@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.2](https://github.com/sigi-framework/sigi/compare/v2.8.1...v2.8.2) (2021-03-29)
+
+### Bug Fixes
+
+- **ssr:** always resolve deferred promise to prevent floating Promise ([4493da0](https://github.com/sigi-framework/sigi/commit/4493da0bf7d899ddb008cf8da613a088a3f18808))
+
 ## [2.8.1](https://github.com/sigi-framework/sigi/compare/v2.8.0...v2.8.1) (2021-03-03)
 
 ### Bug Fixes

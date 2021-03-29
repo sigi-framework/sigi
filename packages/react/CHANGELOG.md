@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.2](https://github.com/sigi-framework/sigi/compare/v2.8.1...v2.8.2) (2021-03-29)
+
+### Bug Fixes
+
+- typecheck issues after upgrade to ts@4.2 ([390651e](https://github.com/sigi-framework/sigi/commit/390651ea9eb4857992e2e447ae615b517f896650))
+- **react:** useModule subscription should be in useEffect ([9603ffa](https://github.com/sigi-framework/sigi/commit/9603ffa8d5cc86acd1f4ba6dc7c1a8e031559838))
+
 ## [2.8.1](https://github.com/sigi-framework/sigi/compare/v2.8.0...v2.8.1) (2021-03-03)
 
 ### Bug Fixes
