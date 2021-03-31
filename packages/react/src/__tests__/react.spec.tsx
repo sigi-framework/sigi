@@ -146,7 +146,7 @@ describe('Hooks', () => {
     expect(testWrapper.root.findByType('div').children[0]).toBe('0')
   })
 
-  it.only('should not re-render if return state shallow equaled', () => {
+  it('should not re-render if return state shallow equaled', () => {
     const fooSpy = Sinon.spy()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
@@ -195,5 +195,42 @@ describe('Hooks', () => {
     expect(fooSpy.callCount).toBe(2)
     expect(spy.callCount).toBe(2)
     fooSpy.resetHistory()
+  })
+
+  it('should run selector with new closure', () => {
+    const setPlusCountStub = Sinon.stub()
+    const FooComponent = () => {
+      const [plusCount, setPlusCount] = useState(1)
+      const plusOneCount = useModuleState(CountModel, {
+        selector: (state) => plusCount + state.count,
+        dependencies: [plusCount],
+      })
+
+      useEffect(() => {
+        setPlusCountStub.callsFake(() => {
+          setPlusCount(2)
+        })
+      }, [])
+
+      return <div>{plusOneCount}</div>
+    }
+
+    let fooWrapper!: ReactTestRenderer
+    act(() => {
+      fooWrapper = create(<FooComponent />)
+    })
+
+    expect(fooWrapper.root.findByType('div').children[0]).toBe('1')
+    act(() => {
+      setPlusCountStub()
+    })
+    expect(fooWrapper.root.findByType('div').children[0]).toBe('2')
+
+    act(() => {
+      setCountStub()
+    })
+    expect(fooWrapper.root.findByType('div').children[0]).toBe('12')
+
+    setPlusCountStub.reset()
   })
 })

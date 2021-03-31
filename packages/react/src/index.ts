@@ -1,6 +1,6 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useEffect, useState, useRef } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -46,6 +46,7 @@ function _useModuleState<S, U = S>(
   }
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   dependencies = dependencies || []
+  const isFirstRendering = useRef(true)
   const [appState, setState] = useState(() => {
     const initialState = store.state
     return selector ? selector(initialState) : initialState
@@ -57,9 +58,10 @@ function _useModuleState<S, U = S>(
         map((s) => (selector ? selector(s) : s)),
         distinctUntilChanged((s1, s2) => equalFn(s1, s2)),
         // skip initial state emission
-        skip(1),
+        skip(isFirstRendering.current ? 1 : 0),
       )
       .subscribe(setState)
+    isFirstRendering.current = false
     return () => {
       subscription.unsubscribe()
     }
