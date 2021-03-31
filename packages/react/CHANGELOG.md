@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.4](https://github.com/sigi-framework/sigi/compare/v2.8.3...v2.8.4) (2021-03-31)
+
+
+### Bug Fixes
+
+* **react:** should still not skip first setState if not first rendering ([1349288](https://github.com/sigi-framework/sigi/commit/134928867bdfda1f3e1e6b55d84e60cd5061630f))
+
+
+
+
+
 ## [2.8.3](https://github.com/sigi-framework/sigi/compare/v2.8.2...v2.8.3) (2021-03-29)
 
 ### Bug Fixes
