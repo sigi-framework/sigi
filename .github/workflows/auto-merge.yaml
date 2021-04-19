@@ -1,7 +1,7 @@
 name: Dependabot auto merge
 
 on:
-  check_suite:
+  workflow_run:
     types:
       - completed
 
