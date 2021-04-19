@@ -4,6 +4,9 @@ on:
   workflow_run:
     types:
       - completed
+    workflows:
+      # List all required workflow names here.
+      - 'Test Commit'
 
 jobs:
   merge:
