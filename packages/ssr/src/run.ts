@@ -2,13 +2,13 @@ import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@s
 import { rootInjector, Injector, Provider } from '@sigi/di'
 import { ConstructorOf, Action, Epic } from '@sigi/types'
 import { from, race, timer, throwError, Observable, Observer, NEVER, noop } from 'rxjs'
-import { tap, catchError, mergeMap } from 'rxjs/operators'
+import { tap, catchError, mergeMap, last } from 'rxjs/operators'
 
 import { StateToPersist } from './state-to-persist'
 
 export type ModuleMeta = ConstructorOf<EffectModule<any>>
 
-const skipSymbol = Symbol('skip-symbol')
+const SKIP_SYMBOL = Symbol('skip-symbol')
 
 /**
  * Run all `@Effect({ ssr: true })` decorated effects of given modules and extract latest states.
@@ -83,8 +83,8 @@ export const runSSREffects = <Context, Returned = any>(
                 Promise.all(
                   ssrActionsMeta.map(async (ssrActionMeta: any) => {
                     if (ssrActionMeta.payloadGetter) {
-                      const payload = await ssrActionMeta.payloadGetter(ctx, skipSymbol)
-                      if (payload !== skipSymbol) {
+                      const payload = await ssrActionMeta.payloadGetter(ctx, SKIP_SYMBOL)
+                      if (payload !== SKIP_SYMBOL) {
                         store.dispatch({
                           type: ssrActionMeta.action,
                           payload,
@@ -120,6 +120,7 @@ export const runSSREffects = <Context, Returned = any>(
                 }
               })
             }),
+            last(),
           ),
           timer(timeout * 1000).pipe(mergeMap(() => throwError(new Error('Terminate timeout')))),
         )

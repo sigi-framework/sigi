@@ -101,6 +101,27 @@ class CountModel extends EffectModule<CountState> {
   }
 }
 
+interface InfinityWaitModelState {
+  count: number
+}
+
+@Module('InfinityWaitModel')
+class InfinityWaitModel extends EffectModule<InfinityWaitModelState> {
+  defaultState = { count: 0 }
+
+  @ImmerReducer()
+  setCount(state: Draft<InfinityWaitModelState>, count: number) {
+    state.count = count
+  }
+
+  @Effect({
+    ssr: true,
+  })
+  infinityWait(payload$: Observable<void>): Observable<Action> {
+    return payload$.pipe(map(() => this.getActions().setCount(1)))
+  }
+}
+
 @Module('TipModel')
 class TipModel extends EffectModule<TipState> {
   defaultState = { tip: '' }
@@ -359,6 +380,18 @@ describe('SSR specs:', () => {
   it('should timeout', async () => {
     const req = {}
     return emitSSREffects(req, [CountModel], { providers: MODULES, timeout: 0 }).pendingState.catch((e: Error) => {
+      expect(e.message).toBe('Terminate timeout')
+    })
+  })
+
+  // Do not use `Sinon.fakeTimers` here
+  // It would cause `UnhandledPromiseRejection`
+  it('should timeout #2', async () => {
+    const req = {}
+    const { pendingState } = emitSSREffects(req, [InfinityWaitModel, TipModel], {
+      timeout: 2 / 1000,
+    })
+    await pendingState.catch((e) => {
       expect(e.message).toBe('Terminate timeout')
     })
   })
