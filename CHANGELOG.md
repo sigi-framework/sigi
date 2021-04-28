@@ -3,16 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.8.4](https://github.com/sigi-framework/sigi/compare/v2.8.3...v2.8.4) (2021-03-31)
-
+## [2.8.5](https://github.com/sigi-framework/sigi/compare/v2.8.4...v2.8.5) (2021-04-28)
 
 ### Bug Fixes
 
-* **react:** should still not skip first setState if not first rendering ([1349288](https://github.com/sigi-framework/sigi/commit/134928867bdfda1f3e1e6b55d84e60cd5061630f))
+- **ssr:** race operator should only accept last value of SSR Modules ([44c3e1b](https://github.com/sigi-framework/sigi/commit/44c3e1b725d725bad6ca51c4d0b885e2cecb4f23))
 
+## [2.8.4](https://github.com/sigi-framework/sigi/compare/v2.8.3...v2.8.4) (2021-03-31)
 
+### Bug Fixes
 
-
+- **react:** should still not skip first setState if not first rendering ([1349288](https://github.com/sigi-framework/sigi/commit/134928867bdfda1f3e1e6b55d84e60cd5061630f))
 
 ## [2.8.3](https://github.com/sigi-framework/sigi/compare/v2.8.2...v2.8.3) (2021-03-29)
 
