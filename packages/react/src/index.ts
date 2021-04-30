@@ -1,6 +1,6 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import { useMemo, useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -16,23 +16,9 @@ export type StateSelectorConfig<S, U> = {
   equalFn?: (u1: U, u2: U) => boolean
 }
 
-function _useDispatchers<M extends EffectModule<S>, S = any>(effectModule: M) {
-  return useMemo(() => {
-    const store: IStore<S> = (effectModule as any).store!
-    const actionsCreator = effectModule.getActions()
-    return Object.keys(actionsCreator).reduce((acc, cur) => {
-      acc[cur] = (payload: any) => {
-        const action = (actionsCreator as any)[cur](payload)
-        store.dispatch(action)
-      }
-      return acc
-    }, Object.create(null))
-  }, [effectModule])
-}
-
 export function useDispatchers<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): ActionOfEffectModule<M, S> {
   const effectModule = useInstance(A)
-  return _useDispatchers(effectModule)
+  return effectModule.dispatchers
 }
 
 function _useModuleState<S, U = S>(
@@ -109,7 +95,7 @@ export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, 
   const effectModule = useInstance(A)
   const { store } = effectModule
   const appState = _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
-  const appDispatcher = _useDispatchers(effectModule)
+  const appDispatcher = effectModule.dispatchers
 
   return [appState, appDispatcher]
 }

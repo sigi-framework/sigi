@@ -29,6 +29,8 @@ export abstract class EffectModule<S> {
 
   readonly moduleName!: string
   readonly store: Store<S>
+  // give them `any` type and refer the right type in useDispatchers
+  readonly dispatchers: any = {}
 
   private internalDefaultState!: S
 
@@ -75,21 +77,34 @@ export abstract class EffectModule<S> {
       )
     })
 
+    // port common actions to dispatcher
+    this.actions['reset'] = this.reset.bind(this)
+    this.actions['terminate'] = this.terminate.bind(this)
+    this.actions['noop'] = this.noop.bind(this)
+    this.dispatchers['reset'] = () => {
+      this.store.dispatch(this.reset())
+    }
+    this.dispatchers['terminate'] = () => {
+      this.store.dispatch(this.terminate())
+    }
+    this.dispatchers['noop'] = () => {
+      this.store.dispatch(this.noop())
+    }
+
     // assemble actions and action steams for `getAction()` and `getAction$`
     this.actionNames.forEach((name) => {
+      const actionCreator = (payload: unknown) => ({ type: name, payload, store: this.store })
       // action getters
-      this.actions[name] = (payload: unknown) => ({ type: name, payload, store: this.store })
+      this.actions[name] = actionCreator
+      this.dispatchers[name] = (payload: unknown) => {
+        this.store.dispatch(actionCreator(payload))
+      }
       // action stream getters
       this.actionStreams[name] = this.store.action$.pipe(
         filter(({ type }) => type === name),
         map(({ payload }) => payload),
       )
     })
-
-    // port common actions to dispatcher
-    this.actions['reset'] = this.reset.bind(this)
-    this.actions['terminate'] = this.terminate.bind(this)
-    this.actions['noop'] = this.noop.bind(this)
   }
 
   /**
