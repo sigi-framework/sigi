@@ -27,5 +27,8 @@
     "@sigi/di": "^2.8.0",
     "@sigi/types": "^2.4.5",
     "immer": "^9.0.2"
+  },
+  "peerDependencies": {
+    "rxjs": ">= 7.0.0"
   }
 }
