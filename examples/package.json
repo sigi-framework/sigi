@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@abraham/reflection": "^0.7.0",
-    "antd": "^4.15.2",
+    "antd": "^4.15.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "reflect-metadata": "^0.1.13"
