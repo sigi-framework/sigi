@@ -233,4 +233,34 @@ describe('Hooks', () => {
 
     setPlusCountStub.reset()
   })
+
+  it('Child <-> Parent scenario', () => {
+    const name = 'tj'
+
+    const ChildComponent = () => {
+      const [state, dispatcher] = useModule(CountModel)
+      useEffect(() => {
+        dispatcher.setName(name)
+      }, [dispatcher])
+
+      return <span>{state.name}</span>
+    }
+
+    const FooComponent = () => {
+      const state = useModuleState(CountModel)
+      return (
+        <div>
+          {state.name}
+          <ChildComponent />
+        </div>
+      )
+    }
+
+    let fooWrapper!: ReactTestRenderer
+    act(() => {
+      fooWrapper = create(<FooComponent />)
+    })
+    expect(fooWrapper.root.findByType('span').children[0]).toBe(name)
+    expect(fooWrapper.root.findByType('div').children[0]).toBe(name)
+  })
 })
