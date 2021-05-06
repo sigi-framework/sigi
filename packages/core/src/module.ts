@@ -30,12 +30,12 @@ export abstract class EffectModule<S> {
   readonly moduleName!: string
   readonly store: Store<S>
   // give them `any` type and refer the right type in useDispatchers
-  readonly dispatchers: any = {}
+  readonly dispatchers: any
 
   private internalDefaultState!: S
 
   // give them `any` type and refer the right type in getters
-  private readonly actions: any = {}
+  private readonly actions: any
   private readonly actionStreams: any = {}
   private actionNames: string[] = []
   private restoredFromSSR = false
@@ -70,29 +70,34 @@ export abstract class EffectModule<S> {
     this.store = new Store<S>(this.moduleName, reducer, epic)
 
     // properties decorated by @DefinedAction() need to be Observable
-    definedActions.forEach((name) => {
+    for (const name of definedActions) {
       ;(this as any)[name] = this.store.action$.pipe(
         filter(({ type }) => type === name),
         map(({ payload }) => payload),
       )
-    })
+    }
 
     // port common actions to dispatcher
-    this.actions['reset'] = this.reset.bind(this)
-    this.actions['terminate'] = this.terminate.bind(this)
-    this.actions['noop'] = this.noop.bind(this)
-    this.dispatchers['reset'] = () => {
-      this.store.dispatch(this.reset())
+    this.actions = {
+      reset: this.reset,
+      terminate: this.terminate,
+      noop: this.noop,
     }
-    this.dispatchers['terminate'] = () => {
-      this.store.dispatch(this.terminate())
-    }
-    this.dispatchers['noop'] = () => {
-      this.store.dispatch(this.noop())
+
+    this.dispatchers = {
+      reset: () => {
+        this.store.dispatch(this.reset())
+      },
+      terminate: () => {
+        this.store.dispatch(this.terminate())
+      },
+      noop: () => {
+        this.store.dispatch(this.noop())
+      },
     }
 
     // assemble actions and action steams for `getAction()` and `getAction$`
-    this.actionNames.forEach((name) => {
+    for (const name of this.actionNames) {
       const actionCreator = (payload: unknown) => ({ type: name, payload, store: this.store })
       // action getters
       this.actions[name] = actionCreator
@@ -104,7 +109,7 @@ export abstract class EffectModule<S> {
         filter(({ type }) => type === name),
         map(({ payload }) => payload),
       )
-    })
+    }
   }
 
   /**
@@ -145,7 +150,7 @@ export abstract class EffectModule<S> {
    *
    * @deprecated use `this.noop()` instead
    */
-  protected createNoopAction(): Action<null> {
+  protected createNoopAction = (): Action<null> => {
     return this.noop()
   }
 
@@ -156,7 +161,7 @@ export abstract class EffectModule<S> {
    *
    * emit a terminate action can let us know.
    */
-  protected terminate(): Action<null> {
+  protected terminate = (): Action<null> => {
     return { type: TERMINATE_ACTION_TYPE_SYMBOL, payload: null, store: this.store }
   }
 
@@ -165,7 +170,7 @@ export abstract class EffectModule<S> {
    *
    * Used to reset store to default state.
    */
-  protected reset(): Action<null> {
+  protected reset = (): Action<null> => {
     return { type: RESET_ACTION_TYPE_SYMBOL, payload: null, store: this.store }
   }
 
