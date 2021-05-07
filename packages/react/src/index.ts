@@ -1,6 +1,6 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
@@ -38,8 +38,8 @@ function _useModuleState<S, U = S>(
     return selector ? selector(initialState) : initialState
   })
 
-  useEffect(() => {
-    const subscription = store.state$
+  const subscription = useMemo(() => {
+    return store.state$
       .pipe(
         map((s) => (selector ? selector(s) : s)),
         distinctUntilChanged((s1, s2) => equalFn(s1, s2)),
@@ -47,6 +47,10 @@ function _useModuleState<S, U = S>(
         skip(isFirstRendering.current ? 1 : 0),
       )
       .subscribe(setState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store, ...dependencies])
+
+  useEffect(() => {
     isFirstRendering.current = false
     return () => {
       subscription.unsubscribe()
