@@ -1,6 +1,7 @@
+/* eslint-disable sonarjs/no-identical-functions */
 import 'reflect-metadata'
 
-import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
+import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer, RETRY_KEY_SYMBOL } from '@sigi/core'
 import { Injectable, Injector } from '@sigi/di'
 import { emitSSREffects } from '@sigi/ssr'
 import { Action } from '@sigi/types'
@@ -53,6 +54,25 @@ class ServiceModule extends EffectModule<CountState> {
           endWith(this.terminate()),
         ),
       ),
+    )
+  }
+
+  @Effect({
+    payloadGetter: (ctx: { failure: boolean }, skip) => {
+      if (!ctx.failure) {
+        return skip
+      }
+      return 1
+    },
+  })
+  setNameWithFailure(payload$: Observable<number | undefined>): Observable<Action> {
+    return payload$.pipe(
+      mergeMap((p) => {
+        if (p) {
+          return of(this.retryOnClient().setNameWithFailure(), this.terminate())
+        }
+        return of(this.getActions().setName('From retry'))
+      }),
     )
   }
 }
@@ -377,6 +397,47 @@ describe('SSR specs:', () => {
     testRenderer.unmount()
   })
 
+  it('should retry action if needed on client side', () => {
+    const Component = () => {
+      const [state, dispatcher] = useModule(ServiceModule)
+      useEffect(() => {
+        dispatcher.setNameWithFailure(void 0)
+      }, [dispatcher])
+
+      return (
+        <>
+          <span>{state.name}</span>
+        </>
+      )
+    }
+
+    global[RETRY_KEY_SYMBOL] = {
+      ServiceModule: ['setNameWithFailure'],
+    }
+
+    const injector = new Injector().addProviders(MODULES)
+
+    const testRenderer = create(
+      <SSRContext value={injector}>
+        <Component />
+      </SSRContext>,
+    )
+
+    // eslint-disable-next-line sonarjs/no-identical-functions
+    act(() => {
+      testRenderer.update(
+        <SSRContext value={injector}>
+          <Component />
+        </SSRContext>,
+      )
+    })
+
+    expect(testRenderer.root.findByType('span').children[0]).toBe('From retry')
+
+    delete global[GLOBAL_KEY_SYMBOL]
+    testRenderer.unmount()
+  })
+
   it('should timeout', async () => {
     const req = {}
     return emitSSREffects(req, [CountModel], { providers: MODULES, timeout: 0 }).pendingState.catch((e: Error) => {
@@ -576,5 +637,57 @@ describe('SSR specs:', () => {
         count: 1,
       },
     })
+  })
+
+  it('should persist actions to retry if needed', async () => {
+    const req = { failure: true }
+    const state = await emitSSREffects(req, [ServiceModule], { providers: MODULES }).pendingState
+    expect(state['actionsToRetry']).toEqual({ ServiceModule: ['setNameWithFailure'] })
+  })
+
+  it('should be able to persist actions to retry on the other module', async () => {
+    @Module('InnerServiceModule')
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    class InnerServiceModule extends EffectModule<CountState> {
+      readonly defaultState = { count: 0, name: '' }
+
+      constructor(public readonly service: Service) {
+        super()
+      }
+
+      @ImmerReducer()
+      setName(state: Draft<CountState>, name: string) {
+        state.name = name
+      }
+
+      @Effect()
+      setNameWithFailure(payload$: Observable<number | undefined>): Observable<Action> {
+        return payload$.pipe(map(() => this.retryOnClient().setNameWithFailure()))
+      }
+    }
+    @Module('InnerCountModel2')
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    class InnerCountModule2 extends EffectModule<{}> {
+      defaultState = {}
+
+      constructor(private readonly serviceModule: InnerServiceModule) {
+        super()
+      }
+
+      @Effect({
+        ssr: true,
+      })
+      setName(payload$: Observable<void>): Observable<Action> {
+        return payload$.pipe(
+          mergeMap(() => of(this.serviceModule.getActions().setNameWithFailure(1), this.terminate())),
+        )
+      }
+    }
+
+    const req = {}
+    const state = await emitSSREffects(req, [InnerServiceModule, InnerCountModule2], { providers: MODULES })
+      .pendingState
+
+    expect(state['actionsToRetry']).toEqual({ InnerServiceModule: ['setNameWithFailure'] })
   })
 })

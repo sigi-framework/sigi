@@ -11,8 +11,10 @@ import {
   GLOBAL_KEY_SYMBOL,
   TERMINATE_ACTION_TYPE_SYMBOL,
   RESET_ACTION_TYPE_SYMBOL,
+  RETRY_ACTION_TYPE_SYMBOL,
+  RETRY_KEY_SYMBOL,
 } from './symbols'
-import { InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
+import { InstanceActionOfEffectModule, ActionStreamOfEffectModule, RetryActionOfEffectModule } from './types'
 
 type Effect<T> = (payload$: Observable<T>) => Observable<Action<unknown>>
 type ImmerReducer<S, T> = (prevState: Draft<S>, payload: T) => void
@@ -37,7 +39,8 @@ export abstract class EffectModule<S> {
   // give them `any` type and refer the right type in getters
   private readonly actions: any
   private readonly actionStreams: any = {}
-  private actionNames: string[] = []
+  private readonly retryActionsCreator: any = {}
+  private readonly actionNames: string[] = []
   private restoredFromSSR = false
 
   get state$() {
@@ -135,6 +138,15 @@ export abstract class EffectModule<S> {
   }
 
   /**
+   * Retry an action on client
+   */
+  retryOnClient<M extends EffectModule<S>>(
+    this: M,
+  ): M extends EffectModule<infer State> ? RetryActionOfEffectModule<M, State> : never {
+    return this.retryActionsCreator
+  }
+
+  /**
    * Get a noop action.
    *
    * Noop action will be ignore internally and even no log.
@@ -203,19 +215,28 @@ export abstract class EffectModule<S> {
       return (action$) => action$.pipe(ignoreElements())
     }
 
-    this.actionNames = [...this.actionNames, ...effectKeys]
+    this.actionNames.push(...effectKeys)
+    const actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
+    const actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) : undefined
 
     return (action$: Observable<Action>) => {
-      const actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) : undefined
-
       return merge(
         ...effectKeys.map((name) => {
           const effect: Effect<unknown> = (this as any)[name]
           const payload$ = action$.pipe(
             filter(({ type }) => type === name),
-            skip(actionsToSkip?.includes(name) ? 1 : 0),
+            skip(!actionsToRetry.has(name) && actionsToSkip?.includes(name) ? 1 : 0),
             map(({ payload }) => payload),
           )
+          this.retryActionsCreator[name] = () =>
+            ({
+              type: RETRY_ACTION_TYPE_SYMBOL,
+              payload: {
+                module: this,
+                name,
+              },
+              store: this.store,
+            } as Action)
           return effect.call(this, payload$)
         }),
       )
@@ -226,7 +247,7 @@ export abstract class EffectModule<S> {
     const reducerKeys = getDecoratedActions(this.constructor.prototype, 'Reducer', [])!
     const immerReducerKeys = getDecoratedActions(this.constructor.prototype, 'ImmerReducer', [])!
 
-    this.actionNames = [...this.actionNames, ...reducerKeys, ...immerReducerKeys]
+    this.actionNames.push(...reducerKeys, ...immerReducerKeys)
 
     const immerReducers = immerReducerKeys.reduce((acc, property) => {
       acc[property] = (this as any)[property].bind(this)
@@ -254,7 +275,7 @@ export abstract class EffectModule<S> {
 
   private combineDefineActions() {
     const defineActionKeys = getDecoratedActions(this.constructor.prototype, 'DefineAction', [])!
-    this.actionNames = [...this.actionNames, ...defineActionKeys]
+    this.actionNames.push(...defineActionKeys)
     return defineActionKeys
   }
 }

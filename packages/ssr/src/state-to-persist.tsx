@@ -1,10 +1,10 @@
-import { GLOBAL_KEY_SYMBOL } from '@sigi/core'
+import { GLOBAL_KEY_SYMBOL, RETRY_KEY_SYMBOL } from '@sigi/core'
 import serialize from 'serialize-javascript'
 
 const ScriptId = 'sigi-persisted-data'
 
 export class StateToPersist<T> {
-  constructor(private readonly dataToPersist: T) {}
+  constructor(private readonly dataToPersist: T, private readonly actionsToRetry: { [index: string]: string[] }) {}
 
   extractToScriptString(withScriptTag = true) {
     if (this.dataToPersist == null) {
@@ -34,6 +34,8 @@ export class StateToPersist<T> {
 
   private serialize() {
     const content = serialize(this.dataToPersist, { isJSON: true })
-    return `window['${GLOBAL_KEY_SYMBOL}']=${content}`
+    return `window['${GLOBAL_KEY_SYMBOL}']=${content};windows['${RETRY_KEY_SYMBOL}']=${JSON.stringify(
+      this.actionsToRetry,
+    )}`
   }
 }

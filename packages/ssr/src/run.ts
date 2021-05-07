@@ -1,7 +1,7 @@
-import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta } from '@sigi/core'
+import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta, RETRY_ACTION_TYPE_SYMBOL } from '@sigi/core'
 import { rootInjector, Injector, Provider } from '@sigi/di'
 import { ConstructorOf, Action, Epic } from '@sigi/types'
-import { from, race, timer, throwError, Observable, Observer, NEVER, noop } from 'rxjs'
+import { from, race, timer, throwError, Observable, Observer, NEVER, noop, lastValueFrom } from 'rxjs'
 import { tap, catchError, mergeMap, last } from 'rxjs/operators'
 
 import { StateToPersist } from './state-to-persist'
@@ -31,106 +31,119 @@ export const runSSREffects = <Context, Returned = any>(
   } = {},
 ): { injector: Injector; pendingState: Promise<StateToPersist<Returned>> } => {
   const stateToSerialize = {} as Returned
+  const actionsToRetry: { [index: string]: string[] } = {}
   const { providers, timeout = 1 } = config
   const injector = rootInjector.createChild([...modules, ...(providers ?? [])])
   const cleanupFns: (() => void)[] = []
   const pendingState =
     modules.length === 0
-      ? Promise.resolve(new StateToPersist(stateToSerialize))
-      : race(
-          from(modules).pipe(
-            mergeMap((constructor) => {
-              return new Observable((observer: Observer<void>) => {
-                const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
+      ? Promise.resolve(new StateToPersist(stateToSerialize, actionsToRetry))
+      : lastValueFrom(
+          race(
+            from(modules).pipe(
+              mergeMap((constructor) => {
+                return new Observable((observer: Observer<void>) => {
+                  const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
 
-                const errorCatcher = (prevEpic: Epic) => (action$: Observable<Action<unknown>>) =>
-                  prevEpic(action$).pipe(
-                    catchError((e) => {
-                      observer.error(e)
-                      return NEVER
-                    }),
-                  )
-
-                const effectModuleInstance: EffectModule<unknown> = injector.getInstance(constructor)
-                const { store, moduleName } = effectModuleInstance
-                store.addEpic(errorCatcher)
-                let effectsCount = ssrActionsMeta.length
-                let terminatedCount = 0
-
-                const defer: { resolve: () => void; promise: Promise<void> } = {
-                  resolve: noop,
-                  promise: Promise.resolve(),
-                }
-
-                defer.promise = new Promise<void>((resolve) => {
-                  defer.resolve = resolve
-                })
-
-                const cleanup: () => void = store.addEpic((prevEpic) => {
-                  return (action$) =>
+                  const errorCatcher = (prevEpic: Epic) => (action$: Observable<Action<unknown>>) =>
                     prevEpic(action$).pipe(
-                      tap(({ type }) => {
-                        if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
-                          terminatedCount++
-                        }
-                        if (terminatedCount === effectsCount) {
-                          defer.resolve()
-                        }
+                      catchError((e) => {
+                        observer.error(e)
+                        return NEVER
                       }),
                     )
-                })
 
-                Promise.all(
-                  ssrActionsMeta.map(async (ssrActionMeta: any) => {
-                    if (ssrActionMeta.payloadGetter) {
-                      const payload = await ssrActionMeta.payloadGetter(ctx, SKIP_SYMBOL)
-                      if (payload !== SKIP_SYMBOL) {
+                  const effectModuleInstance: EffectModule<unknown> = injector.getInstance(constructor)
+                  const { store, moduleName } = effectModuleInstance
+                  store.addEpic(errorCatcher)
+                  let terminatedCount = 0
+                  let effectsCount = ssrActionsMeta.length
+
+                  const defer: { resolve: () => void; promise: Promise<void> } = {
+                    resolve: noop,
+                    promise: Promise.resolve(),
+                  }
+
+                  defer.promise = new Promise<void>((resolve) => {
+                    defer.resolve = resolve
+                  })
+
+                  const cleanup = store.addEpic((prevEpic) => {
+                    return (action$) =>
+                      prevEpic(action$).pipe(
+                        tap(({ type, payload }) => {
+                          if (type === RETRY_ACTION_TYPE_SYMBOL) {
+                            const { module, name } = payload as any
+                            if (!actionsToRetry[module.moduleName]) {
+                              actionsToRetry[module.moduleName] = [name] as string[]
+                            } else {
+                              actionsToRetry[module.moduleName].push(name as string)
+                            }
+                          }
+                          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+                            terminatedCount++
+                          }
+                          if (terminatedCount === effectsCount) {
+                            defer.resolve()
+                          }
+                        }),
+                      )
+                  })
+
+                  Promise.all(
+                    ssrActionsMeta.map(async (ssrActionMeta: any) => {
+                      if (ssrActionMeta.payloadGetter) {
+                        const payload = await ssrActionMeta.payloadGetter(ctx, SKIP_SYMBOL)
+                        if (payload !== SKIP_SYMBOL) {
+                          store.dispatch({
+                            type: ssrActionMeta.action,
+                            payload,
+                            store,
+                          })
+                        } else {
+                          effectsCount--
+                          if (terminatedCount === effectsCount) {
+                            defer.resolve()
+                          }
+                        }
+                      } else {
                         store.dispatch({
                           type: ssrActionMeta.action,
-                          payload,
+                          payload: undefined,
                           store,
                         })
-                      } else {
-                        effectsCount--
                       }
-                    } else {
-                      store.dispatch({
-                        type: ssrActionMeta.action,
-                        payload: undefined,
-                        store,
-                      })
-                    }
-                  }),
-                )
-                  .then(() => (effectsCount === 0 ? null : defer.promise))
-                  .then(() => {
-                    observer.next()
-                    observer.complete()
+                    }),
+                  )
+                    .then(() => (effectsCount === 0 ? null : defer.promise))
+                    .then(() => {
+                      observer.next()
+                      observer.complete()
+                    })
+                    .catch((e) => {
+                      observer.error(e)
+                    })
+                  cleanupFns.push(() => {
+                    store.dispose()
+                    cleanup()
+                    stateToSerialize[moduleName] = store.state
                   })
-                  .catch((e) => {
-                    observer.error(e)
-                  })
-                cleanupFns.push(() => {
-                  store.dispose()
-                  cleanup()
-                  stateToSerialize[moduleName] = store.state
+                  return () => {
+                    defer.resolve()
+                  }
                 })
-                return () => {
-                  defer.resolve()
-                }
-              })
-            }),
-            last(),
+              }),
+              last(),
+            ),
+            timer(timeout * 1000).pipe(mergeMap(() => throwError(() => new Error('Terminate timeout')))),
           ),
-          timer(timeout * 1000).pipe(mergeMap(() => throwError(new Error('Terminate timeout')))),
         )
-          .toPromise()
           // Could not use `finally` here, because we need support Node.js@10
           .then(() => {
             for (const cleanup of cleanupFns) {
               cleanup()
             }
-            return new StateToPersist(stateToSerialize)
+            return new StateToPersist(stateToSerialize, actionsToRetry)
           })
           .catch((e) => {
             for (const cleanup of cleanupFns) {

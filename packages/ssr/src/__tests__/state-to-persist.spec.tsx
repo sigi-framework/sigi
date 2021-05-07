@@ -3,8 +3,8 @@ import { renderToString } from 'react-dom/server'
 import { StateToPersist } from '../state-to-persist'
 
 describe('StateToPersist specs', () => {
-  function createStateToPersist<T>(data?: T) {
-    return new StateToPersist(data)
+  function createStateToPersist<T>(data?: T, actionsToRetry = {}) {
+    return new StateToPersist(data, actionsToRetry)
   }
 
   const renderDocumentJSX = (child: React.ReactChild | null = null) => (
@@ -66,6 +66,11 @@ describe('StateToPersist specs', () => {
 
   it('should be able to renderToJSX', () => {
     const state = createStateToPersist({ foo: 1 })
+    expect(renderToString(renderDocumentJSX(state.renderToJSX()))).toMatchSnapshot()
+  })
+
+  it('should be able extract actionsToRetry', () => {
+    const state = createStateToPersist({ foo: 1 }, { home: ['initAppContext'] })
     expect(renderToString(renderDocumentJSX(state.renderToJSX()))).toMatchSnapshot()
   })
 })
