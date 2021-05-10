@@ -662,7 +662,7 @@ describe('SSR specs:', () => {
 
       @Effect()
       setNameWithFailure(payload$: Observable<number | undefined>): Observable<Action> {
-        return payload$.pipe(map(() => this.retryOnClient().setNameWithFailure()))
+        return payload$.pipe(mergeMap(() => of(this.retryOnClient().setNameWithFailure(), this.terminate())))
       }
     }
     @Module('InnerCountModel2')
@@ -678,9 +678,7 @@ describe('SSR specs:', () => {
         ssr: true,
       })
       setName(payload$: Observable<void>): Observable<Action> {
-        return payload$.pipe(
-          mergeMap(() => of(this.serviceModule.getActions().setNameWithFailure(1), this.terminate())),
-        )
+        return payload$.pipe(mergeMap(() => of(this.serviceModule.getActions().setNameWithFailure(1))))
       }
     }
 
