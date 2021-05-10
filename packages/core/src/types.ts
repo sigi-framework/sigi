@@ -51,6 +51,13 @@ export type InstanceActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
   keyof EffectModule<S>
 >
 
+export type RetryActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
+  {
+    [key in keyof M]: () => Action
+  },
+  keyof EffectModule<S>
+>
+
 export type ActionStreamOfEffectModule<M extends EffectModule<S>, S> = Omit<
   {
     [key in keyof M]: Observable<UnpackPayload<M[key], S>>

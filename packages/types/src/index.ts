@@ -1,4 +1,4 @@
-import { Subject, Observable, ReplaySubject } from 'rxjs'
+import type { Subject, Observable, ReplaySubject } from 'rxjs'
 
 export interface Action<Payload = unknown> {
   readonly type: string

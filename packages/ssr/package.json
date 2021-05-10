@@ -30,10 +30,14 @@
     "@sigi/core": "^2.8.6",
     "@sigi/di": "^2.8.0",
     "@sigi/types": "^2.4.5",
-    "serialize-javascript": "^5.0.1"
+    "serialize-javascript": "^5.0.1",
+    "tslib": "^2.2.0"
   },
   "devDependencies": {
     "@types/node": "^15.0.2",
     "@types/serialize-javascript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "rxjs": ">=7"
   }
 }

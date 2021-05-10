@@ -27,7 +27,8 @@
     "@sigi/core": "^2.8.6",
     "@sigi/di": "^2.8.0",
     "@sigi/react": "^2.8.6",
-    "@sigi/types": "^2.4.5"
+    "@sigi/types": "^2.4.5",
+    "tslib": "^2.2.0"
   },
   "devDependencies": {
     "@types/history": "^4.7.8",

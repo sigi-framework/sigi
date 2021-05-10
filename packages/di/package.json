@@ -22,5 +22,11 @@
   },
   "bugs": {
     "url": "https://github.com/sigi-framework/sigi/issues"
+  },
+  "dependencies": {
+    "tslib": "^2.2.0"
+  },
+  "peerDependencies": {
+    "@abraham/reflection": ">=0.7.0"
   }
 }

@@ -11,8 +11,10 @@ import {
   GLOBAL_KEY_SYMBOL,
   TERMINATE_ACTION_TYPE_SYMBOL,
   RESET_ACTION_TYPE_SYMBOL,
+  RETRY_ACTION_TYPE_SYMBOL,
+  RETRY_KEY_SYMBOL,
 } from './symbols'
-import { InstanceActionOfEffectModule, ActionStreamOfEffectModule } from './types'
+import { InstanceActionOfEffectModule, ActionStreamOfEffectModule, RetryActionOfEffectModule } from './types'
 
 type Effect<T> = (payload$: Observable<T>) => Observable<Action<unknown>>
 type ImmerReducer<S, T> = (prevState: Draft<S>, payload: T) => void
@@ -30,14 +32,15 @@ export abstract class EffectModule<S> {
   readonly moduleName!: string
   readonly store: Store<S>
   // give them `any` type and refer the right type in useDispatchers
-  readonly dispatchers: any = {}
+  readonly dispatchers: any
 
   private internalDefaultState!: S
 
   // give them `any` type and refer the right type in getters
-  private readonly actions: any = {}
+  private readonly actions: any
   private readonly actionStreams: any = {}
-  private actionNames: string[] = []
+  private readonly retryActionsCreator: any = {}
+  private readonly actionNames: string[] = []
   private restoredFromSSR = false
 
   get state$() {
@@ -70,29 +73,34 @@ export abstract class EffectModule<S> {
     this.store = new Store<S>(this.moduleName, reducer, epic)
 
     // properties decorated by @DefinedAction() need to be Observable
-    definedActions.forEach((name) => {
+    for (const name of definedActions) {
       ;(this as any)[name] = this.store.action$.pipe(
         filter(({ type }) => type === name),
         map(({ payload }) => payload),
       )
-    })
+    }
 
     // port common actions to dispatcher
-    this.actions['reset'] = this.reset.bind(this)
-    this.actions['terminate'] = this.terminate.bind(this)
-    this.actions['noop'] = this.noop.bind(this)
-    this.dispatchers['reset'] = () => {
-      this.store.dispatch(this.reset())
+    this.actions = {
+      reset: this.reset,
+      terminate: this.terminate,
+      noop: this.noop,
     }
-    this.dispatchers['terminate'] = () => {
-      this.store.dispatch(this.terminate())
-    }
-    this.dispatchers['noop'] = () => {
-      this.store.dispatch(this.noop())
+
+    this.dispatchers = {
+      reset: () => {
+        this.store.dispatch(this.reset())
+      },
+      terminate: () => {
+        this.store.dispatch(this.terminate())
+      },
+      noop: () => {
+        this.store.dispatch(this.noop())
+      },
     }
 
     // assemble actions and action steams for `getAction()` and `getAction$`
-    this.actionNames.forEach((name) => {
+    for (const name of this.actionNames) {
       const actionCreator = (payload: unknown) => ({ type: name, payload, store: this.store })
       // action getters
       this.actions[name] = actionCreator
@@ -104,7 +112,7 @@ export abstract class EffectModule<S> {
         filter(({ type }) => type === name),
         map(({ payload }) => payload),
       )
-    })
+    }
   }
 
   /**
@@ -130,6 +138,15 @@ export abstract class EffectModule<S> {
   }
 
   /**
+   * Retry an action on client
+   */
+  retryOnClient<M extends EffectModule<S>>(
+    this: M,
+  ): M extends EffectModule<infer State> ? RetryActionOfEffectModule<M, State> : never {
+    return this.retryActionsCreator
+  }
+
+  /**
    * Get a noop action.
    *
    * Noop action will be ignore internally and even no log.
@@ -145,7 +162,7 @@ export abstract class EffectModule<S> {
    *
    * @deprecated use `this.noop()` instead
    */
-  protected createNoopAction(): Action<null> {
+  protected createNoopAction = (): Action<null> => {
     return this.noop()
   }
 
@@ -156,7 +173,7 @@ export abstract class EffectModule<S> {
    *
    * emit a terminate action can let us know.
    */
-  protected terminate(): Action<null> {
+  protected terminate = (): Action<null> => {
     return { type: TERMINATE_ACTION_TYPE_SYMBOL, payload: null, store: this.store }
   }
 
@@ -165,7 +182,7 @@ export abstract class EffectModule<S> {
    *
    * Used to reset store to default state.
    */
-  protected reset(): Action<null> {
+  protected reset = (): Action<null> => {
     return { type: RESET_ACTION_TYPE_SYMBOL, payload: null, store: this.store }
   }
 
@@ -198,19 +215,28 @@ export abstract class EffectModule<S> {
       return (action$) => action$.pipe(ignoreElements())
     }
 
-    this.actionNames = [...this.actionNames, ...effectKeys]
+    this.actionNames.push(...effectKeys)
+    const actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
+    const actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) : undefined
 
     return (action$: Observable<Action>) => {
-      const actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) : undefined
-
       return merge(
         ...effectKeys.map((name) => {
           const effect: Effect<unknown> = (this as any)[name]
           const payload$ = action$.pipe(
             filter(({ type }) => type === name),
-            skip(actionsToSkip?.includes(name) ? 1 : 0),
+            skip(!actionsToRetry.has(name) && actionsToSkip?.includes(name) ? 1 : 0),
             map(({ payload }) => payload),
           )
+          this.retryActionsCreator[name] = () =>
+            ({
+              type: RETRY_ACTION_TYPE_SYMBOL,
+              payload: {
+                module: this,
+                name,
+              },
+              store: this.store,
+            } as Action)
           return effect.call(this, payload$)
         }),
       )
@@ -221,7 +247,7 @@ export abstract class EffectModule<S> {
     const reducerKeys = getDecoratedActions(this.constructor.prototype, 'Reducer', [])!
     const immerReducerKeys = getDecoratedActions(this.constructor.prototype, 'ImmerReducer', [])!
 
-    this.actionNames = [...this.actionNames, ...reducerKeys, ...immerReducerKeys]
+    this.actionNames.push(...reducerKeys, ...immerReducerKeys)
 
     const immerReducers = immerReducerKeys.reduce((acc, property) => {
       acc[property] = (this as any)[property].bind(this)
@@ -249,7 +275,7 @@ export abstract class EffectModule<S> {
 
   private combineDefineActions() {
     const defineActionKeys = getDecoratedActions(this.constructor.prototype, 'DefineAction', [])!
-    this.actionNames = [...this.actionNames, ...defineActionKeys]
+    this.actionNames.push(...defineActionKeys)
     return defineActionKeys
   }
 }

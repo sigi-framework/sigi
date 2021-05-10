@@ -16,7 +16,7 @@ export function cloneDeepPoj<T = any>(target: T): T {
         return obj[CloneTrait]()
       }
       if (Array.isArray(obj)) {
-        return (obj.map((item) => cloneDeepPoj(item)) as unknown) as T
+        return obj.map((item) => cloneDeepPoj(item)) as unknown as T
       }
 
       if (!isPlainObject(obj)) {
