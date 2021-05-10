@@ -40,7 +40,7 @@ export const reactive = <
   Methods,
   Computed,
   PropDef = object,
-  Props = object
+  Props = object,
 >(
   EffectModuleConstructor: ConstructorOf<M>,
   componentOptions: ReactiveComponentOptions<M, V, Data, Methods, Computed, PropDef>,

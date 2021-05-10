@@ -10,13 +10,11 @@ interface DecoratorReturnType<V> {
 
 export const DefineAction: () => any = createActionDecorator('DefineAction')
 
-export const ImmerReducer: <S = any>() => DecoratorReturnType<
-  (state: Draft<S>, params: any) => void
-> = createActionDecorator('ImmerReducer')
+export const ImmerReducer: <S = any>() => DecoratorReturnType<(state: Draft<S>, params: any) => void> =
+  createActionDecorator('ImmerReducer')
 
-export const Reducer: <S = any>() => DecoratorReturnType<(state: S, params: any) => S> = createActionDecorator(
-  'Reducer',
-)
+export const Reducer: <S = any>() => DecoratorReturnType<(state: S, params: any) => S> =
+  createActionDecorator('Reducer')
 
 export interface EffectOptions {
   ssr?: boolean
