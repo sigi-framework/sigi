@@ -7,8 +7,8 @@
   "homepage": "https://sigi.how",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "esm/index.js",
-  "esnext": "next/index.js",
+  "module": "esm/index.browser.js",
+  "esnext": "next/index.browser.js",
   "types": "esm/index.d.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

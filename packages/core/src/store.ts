@@ -124,6 +124,11 @@ export class Store<S> implements IStore<S> {
           this.action$.error(e)
         }
       },
+      error: (e) => {
+        if (!this.action$.closed) {
+          this.action$.error(e)
+        }
+      },
     })
   }
 }
