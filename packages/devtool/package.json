@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@sigi/core": "^2.8.6",
-    "@sigi/types": "^2.4.5"
+    "@sigi/types": "^2.4.5",
+    "tslib": "^2.2.0"
   }
 }
