@@ -31,7 +31,7 @@
     "@swc-node/jest": "^1.2.1",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.168",
-    "@types/node": "^15.0.1",
+    "@types/node": "^15.0.2",
     "@types/react-dom": "^17.0.3",
     "@types/react-test-renderer": "^17.0.1",
     "@types/sinon": "^10.0.0",
