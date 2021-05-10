@@ -3,9 +3,9 @@
 import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf } from '@sigi/types'
-import Vue, { ComponentOptions } from 'vue'
-import { RecordPropsDefinition, DataDef } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import type { ComponentOptions } from 'vue'
+import type { RecordPropsDefinition, DataDef } from 'vue/types/options'
+import type { CombinedVueInstance } from 'vue/types/vue'
 
 import { cloneDeepPoj } from './utils'
 
