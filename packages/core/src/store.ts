@@ -109,10 +109,13 @@ export class Store<S> implements IStore<S> {
   }
 
   dispose() {
-    this.action$.complete()
-    this.state$.complete()
     this.stateSub.unsubscribe()
     this.actionSub.unsubscribe()
+    this.action$.complete()
+    this.state$.complete()
+    this.epic$.complete()
+    this.action$.unsubscribe()
+    this.epic$.unsubscribe()
   }
 
   private subscribeAction() {

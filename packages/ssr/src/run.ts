@@ -1,8 +1,6 @@
 import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta, RETRY_ACTION_TYPE_SYMBOL } from '@sigi/core'
 import { rootInjector, Injector, Provider } from '@sigi/di'
-import { ConstructorOf, Action, Epic } from '@sigi/types'
-import { Observable, NEVER } from 'rxjs'
-import { tap, catchError } from 'rxjs/operators'
+import { ConstructorOf } from '@sigi/types'
 
 import { StateToPersist } from './state-to-persist'
 
@@ -38,6 +36,9 @@ export const runSSREffects = <Context, Returned = any>(
   let timer: NodeJS.Timer | null = null
   let terminatedCount = 0
   let effectsCount = 0
+  const moduleInstanceCache = new Map()
+  // @ts-expect-error
+  injector.serverCache = moduleInstanceCache
   const pendingState = new Promise<void>((resolve, reject) => {
     if (!modules.length) {
       return resolve()
@@ -48,40 +49,34 @@ export const runSSREffects = <Context, Returned = any>(
     for (const constructor of modules) {
       const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
 
-      const errorCatcher = (prevEpic: Epic) => (action$: Observable<Action<unknown>>) =>
-        prevEpic(action$).pipe(
-          catchError((e) => {
-            reject(e)
-            return NEVER
-          }),
-        )
-
       const effectModuleInstance: EffectModule<unknown> = injector.getInstance(constructor)
+
+      moduleInstanceCache.set(constructor, effectModuleInstance)
+
       const { store, moduleName } = effectModuleInstance
-      store.addEpic(errorCatcher)
 
       effectsCount += ssrActionsMeta.length
 
-      const cleanup = store.addEpic((prevEpic) => {
-        return (action$) =>
-          prevEpic(action$).pipe(
-            tap(({ type, payload }) => {
-              if (type === RETRY_ACTION_TYPE_SYMBOL) {
-                const { module, name } = payload as any
-                if (!actionsToRetry[module.moduleName]) {
-                  actionsToRetry[module.moduleName] = [name] as string[]
-                } else {
-                  actionsToRetry[module.moduleName].push(name as string)
-                }
-              }
-              if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
-                terminatedCount++
-              }
-              if (terminatedCount === effectsCount) {
-                resolve()
-              }
-            }),
-          )
+      const subscription = store.action$.subscribe({
+        next: ({ type, payload }) => {
+          if (type === RETRY_ACTION_TYPE_SYMBOL) {
+            const { module, name } = payload as any
+            if (!actionsToRetry[module.moduleName]) {
+              actionsToRetry[module.moduleName] = [name] as string[]
+            } else {
+              actionsToRetry[module.moduleName].push(name as string)
+            }
+          }
+          if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
+            terminatedCount++
+          }
+          if (terminatedCount === effectsCount) {
+            resolve()
+          }
+        },
+        error: (e) => {
+          reject(e)
+        },
       })
 
       for (const ssrActionMeta of ssrActionsMeta) {
@@ -119,8 +114,8 @@ export const runSSREffects = <Context, Returned = any>(
         }
       }
       cleanupFns.push(() => {
+        subscription.unsubscribe()
         store.dispose()
-        cleanup()
         stateToSerialize[moduleName] = store.state
       })
     }

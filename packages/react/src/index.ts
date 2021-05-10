@@ -1,7 +1,7 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf } from '@sigi/types'
 
-import { useInstance } from './injectable-context'
+import { useServerInstance } from './injectable-context'
 
 export type StateSelector<S, U> = {
   (state: S): U
@@ -42,7 +42,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
   config?: M extends EffectModule<infer S> ? StateSelectorConfig<S, U> : never,
 ) {
-  const { store } = useInstance(A)
+  const { store } = useServerInstance(A)
   return typeof config?.selector === 'function' ? config.selector(store.state) : store.state
 }
 
@@ -60,7 +60,7 @@ export function useModule<M extends EffectModule<any>, U>(
   : never
 
 export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, config?: StateSelectorConfig<S, U>) {
-  const effectModule = useInstance(A)
+  const effectModule = useServerInstance(A)
   const { store } = effectModule
   const appState = typeof config?.selector === 'function' ? config.selector(store.state) : store.state
 
