@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/sigi-framework/sigi/compare/v2.8.6...v2.9.0) (2021-05-11)
+
+### Bug Fixes
+
+- dependencies list ([4a44cdd](https://github.com/sigi-framework/sigi/commit/4a44cdd65b1fa83ba949f6993c2708d2f6c2b722))
+
 ## [2.8.6](https://github.com/sigi-framework/sigi/compare/v2.8.5...v2.8.6) (2021-05-06)
 
 **Note:** Version bump only for package @sigi/devtool

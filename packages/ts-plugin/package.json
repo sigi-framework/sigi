@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ts-plugin",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "TypeScript plugin for Sigi framework",
   "keywords": ["TypeScript", "Sigi", "Transformer"],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -27,7 +27,7 @@
     "typescript": ">=4"
   },
   "dependencies": {
-    "@sigi/types": "^2.4.5",
+    "@sigi/types": "^2.9.0",
     "tslib": "^2.2.0"
   }
 }

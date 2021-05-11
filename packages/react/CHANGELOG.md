@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/sigi-framework/sigi/compare/v2.8.6...v2.9.0) (2021-05-11)
+
+### Bug Fixes
+
+- **ssr:** should be able to emit terminate in the other modules ([cfb4c43](https://github.com/sigi-framework/sigi/commit/cfb4c43521b732e6da6cedb7c92dff1ff272e1e7))
+- dependencies list ([4a44cdd](https://github.com/sigi-framework/sigi/commit/4a44cdd65b1fa83ba949f6993c2708d2f6c2b722))
+- **react:** state mismatch while dispatch reducers in useEffect of Child component ([c92d4be](https://github.com/sigi-framework/sigi/commit/c92d4beb7e709d1577c6390d93bec5ad8deafb9f))
+
+### Features
+
+- **core:** ssr effect now could be marked retry on client ([116df59](https://github.com/sigi-framework/sigi/commit/116df5952c8f45cda94a0d352a5c538b78307ffe))
+
+### Performance Improvements
+
+- **react:** fast code path on server ([f7df497](https://github.com/sigi-framework/sigi/commit/f7df49708808f5421f40798151108280ab669359))
+- **ssr:** add fast path for ssr di logic ([8cd2f5a](https://github.com/sigi-framework/sigi/commit/8cd2f5a4517fed2f01058cc39d410af63fa53a3b))
+
 ## [2.8.6](https://github.com/sigi-framework/sigi/compare/v2.8.5...v2.8.6) (2021-05-06)
 
 **Note:** Version bump only for package @sigi/react
