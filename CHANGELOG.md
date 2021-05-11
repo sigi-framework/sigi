@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.1](https://github.com/sigi-framework/sigi/compare/v2.9.0...v2.9.1) (2021-05-11)
+
+### Bug Fixes
+
+- **react:** missing fallback logic in useServerInstance ([9922ae2](https://github.com/sigi-framework/sigi/commit/9922ae25c47ac6f32a3817304e402cb74f07c46f))
+
 # [2.9.0](https://github.com/sigi-framework/sigi/compare/v2.8.6...v2.9.0) (2021-05-11)
 
 ### Bug Fixes
