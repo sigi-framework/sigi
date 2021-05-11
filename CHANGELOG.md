@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.2](https://github.com/sigi-framework/sigi/compare/v2.9.1...v2.9.2) (2021-05-11)
+
+### Bug Fixes
+
+- **ssr:** typo windows => window ([0034a24](https://github.com/sigi-framework/sigi/commit/0034a24594859130e5eb046a58201bdaaa938e54))
+
 ## [2.9.1](https://github.com/sigi-framework/sigi/compare/v2.9.0...v2.9.1) (2021-05-11)
 
 ### Bug Fixes
