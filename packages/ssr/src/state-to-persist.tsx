@@ -34,7 +34,7 @@ export class StateToPersist<T> {
 
   private serialize() {
     const content = serialize(this.dataToPersist, { isJSON: true })
-    return `window['${GLOBAL_KEY_SYMBOL}']=${content};windows['${RETRY_KEY_SYMBOL}']=${JSON.stringify(
+    return `window['${GLOBAL_KEY_SYMBOL}']=${content};window['${RETRY_KEY_SYMBOL}']=${JSON.stringify(
       this.actionsToRetry,
     )}`
   }
