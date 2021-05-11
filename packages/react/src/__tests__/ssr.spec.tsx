@@ -12,7 +12,7 @@ import { create, act } from 'react-test-renderer'
 import { Observable, of, timer } from 'rxjs'
 import { endWith, switchMap, map, mergeMap, withLatestFrom } from 'rxjs/operators'
 
-import { SSRContext, useModule } from '../index'
+import { SSRContext, useModule } from '../index.browser'
 
 interface CountState {
   count: number

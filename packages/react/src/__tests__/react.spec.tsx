@@ -8,7 +8,7 @@ import { Observable, timer } from 'rxjs'
 import { mergeMap, map, endWith, switchMap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
-import { useModuleState, useModule } from '../index'
+import { useModuleState, useModule } from '../index.browser'
 
 interface CountState {
   count: number

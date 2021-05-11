@@ -1,10 +1,7 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
-import { ConstructorOf, IStore } from '@sigi/types'
-import { useEffect, useState, useRef, useMemo } from 'react'
-import { distinctUntilChanged, map, skip } from 'rxjs/operators'
+import { ConstructorOf } from '@sigi/types'
 
-import { useInstance } from './injectable-context'
-import { shallowEqual } from './shallow-equal'
+import { useServerInstance } from './injectable-context'
 
 export type StateSelector<S, U> = {
   (state: S): U
@@ -16,49 +13,16 @@ export type StateSelectorConfig<S, U> = {
   equalFn?: (u1: U, u2: U) => boolean
 }
 
-export function useDispatchers<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): ActionOfEffectModule<M, S> {
-  const effectModule = useInstance(A)
-  return effectModule.dispatchers
-}
-
-function _useModuleState<S, U = S>(
-  store: IStore<S>,
-  selector?: StateSelector<S, U>,
-  dependencies?: any[],
-  equalFn = shallowEqual,
-): S | U {
-  if (process.env.NODE_ENV === 'development' && selector && !dependencies) {
-    console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
-  }
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  dependencies = dependencies || []
-  const isFirstRendering = useRef(true)
-  const [appState, setState] = useState(() => {
-    const initialState = store.state
-    return selector ? selector(initialState) : initialState
-  })
-
-  const subscription = useMemo(() => {
-    return store.state$
-      .pipe(
-        map((s) => (selector ? selector(s) : s)),
-        distinctUntilChanged((s1, s2) => equalFn(s1, s2)),
-        // skip initial state emission
-        skip(isFirstRendering.current ? 1 : 0),
-      )
-      .subscribe(setState)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store, ...dependencies])
-
-  useEffect(() => {
-    isFirstRendering.current = false
-    return () => {
-      subscription.unsubscribe()
+const SERVER_DISPATCHERS = new Proxy(Object.create(null), {
+  apply() {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(new Error('Dispatch while calling react-dom/server functions is forbidden'))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store, ...dependencies])
+  },
+})
 
-  return appState
+export function useDispatchers<M extends EffectModule<S>, S = any>(_A: ConstructorOf<M>): ActionOfEffectModule<M, S> {
+  return SERVER_DISPATCHERS
 }
 
 export function useModuleState<M extends EffectModule<any>>(
@@ -78,8 +42,8 @@ export function useModuleState<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
   config?: M extends EffectModule<infer S> ? StateSelectorConfig<S, U> : never,
 ) {
-  const { store } = useInstance(A)
-  return _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
+  const { store } = useServerInstance(A)
+  return typeof config?.selector === 'function' ? config.selector(store.state) : store.state
 }
 
 export function useModule<M extends EffectModule<any>>(
@@ -96,12 +60,11 @@ export function useModule<M extends EffectModule<any>, U>(
   : never
 
 export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, config?: StateSelectorConfig<S, U>) {
-  const effectModule = useInstance(A)
+  const effectModule = useServerInstance(A)
   const { store } = effectModule
-  const appState = _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
-  const appDispatcher = effectModule.dispatchers
+  const appState = typeof config?.selector === 'function' ? config.selector(store.state) : store.state
 
-  return [appState, appDispatcher]
+  return [appState, SERVER_DISPATCHERS]
 }
 
 export { SSRContext } from './ssr-context'
