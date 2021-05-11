@@ -22,5 +22,5 @@ export function useServerInstance<T>(provider: Provider<T>): T {
   const childInjector = useContext(_InjectableContext)
 
   // @ts-expect-error
-  return childInjector.serverCache.get(provider)
+  return childInjector.serverCache.get(provider) || childInjector.getInstance(provider)
 }
