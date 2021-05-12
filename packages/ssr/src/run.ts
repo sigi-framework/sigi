@@ -128,6 +128,7 @@ export const runSSREffects = <Context, Returned = any>(
     .then(() => {
       if (timer) {
         clearTimeout(timer)
+        timer = null
       }
       for (const cleanup of cleanupFns) {
         cleanup()
@@ -135,6 +136,10 @@ export const runSSREffects = <Context, Returned = any>(
       return new StateToPersist(stateToSerialize, actionsToRetry)
     })
     .catch((e) => {
+      if (timer) {
+        clearTimeout(timer)
+        timer = null
+      }
       for (const cleanup of cleanupFns) {
         cleanup()
       }
