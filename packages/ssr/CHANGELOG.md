@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.3](https://github.com/sigi-framework/sigi/compare/v2.9.2...v2.9.3) (2021-05-12)
+
+### Bug Fixes
+
+- **ssr:** re-assign timer to null ([c7e6a55](https://github.com/sigi-framework/sigi/commit/c7e6a5500a47cd8730dc03fac7c8c514adfa17bd))
+
 ## [2.9.2](https://github.com/sigi-framework/sigi/compare/v2.9.1...v2.9.2) (2021-05-11)
 
 ### Bug Fixes
