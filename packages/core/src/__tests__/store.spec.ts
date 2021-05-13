@@ -1,6 +1,7 @@
 import { Action, Epic } from '@sigi/types'
 import { Reducer } from 'react'
-import { delay, filter, map, tap } from 'rxjs/operators'
+import { interval } from 'rxjs'
+import { delay, filter, map, mapTo, mergeMap, tap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { Store } from '../store'
@@ -106,6 +107,52 @@ describe('store specs', () => {
 
       store.dispatch({ type: UPDATE_FOO, payload: '2', store })
       expect(spy.callCount).toBe(0)
+    })
+  })
+
+  describe('Dispose', () => {
+    it('should complete all pending epic after disposed', () => {
+      const nextSpy = Sinon.spy()
+      const store = new Store('testStore', mockReducer, (action$) =>
+        action$.pipe(
+          mergeMap((action) => interval(1000).pipe(mapTo(action))),
+          tap({
+            next: nextSpy,
+          }),
+        ),
+      )
+      store.setup(defaultState)
+
+      store.dispatch({ type: UPDATE_FOO, payload: '2', store })
+      timer.tick(1000)
+      expect(nextSpy.callCount).toBe(1)
+      store.dispose()
+      timer.tick(1000)
+      expect(nextSpy.callCount).toBe(1)
+    })
+
+    it('should complete all pending epic after disposed on added epic', () => {
+      const nextSpy = Sinon.spy()
+      const store = new Store('testStore', mockReducer)
+      store.setup(defaultState)
+
+      store.addEpic(
+        // eslint-disable-next-line sonarjs/no-identical-functions
+        () => (action$) =>
+          action$.pipe(
+            mergeMap((action) => interval(1000).pipe(mapTo(action))),
+            tap({
+              next: nextSpy,
+            }),
+          ),
+      )
+
+      store.dispatch({ type: UPDATE_FOO, payload: '2', store })
+      timer.tick(1000)
+      expect(nextSpy.callCount).toBe(1)
+      store.dispose()
+      timer.tick(1000)
+      expect(nextSpy.callCount).toBe(1)
     })
   })
 })
