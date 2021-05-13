@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.10.0](https://github.com/sigi-framework/sigi/compare/v2.9.3...v2.10.0) (2021-05-13)
+
+### Features
+
+- **ssr:** force all epic to complete after disposed ([d89786a](https://github.com/sigi-framework/sigi/commit/d89786a4ead1ce84901543274a54f6ea6fa03e9b))
+
 # [2.9.0](https://github.com/sigi-framework/sigi/compare/v2.8.6...v2.9.0) (2021-05-11)
 
 ### Bug Fixes
