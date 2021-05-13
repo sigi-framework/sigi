@@ -1,6 +1,6 @@
 import { IStore, Epic, Action } from '@sigi/types'
-import { BehaviorSubject, ReplaySubject, Subject, Subscription, identity } from 'rxjs'
-import { share, switchMap } from 'rxjs/operators'
+import { BehaviorSubject, ReplaySubject, Subject, Subscription, identity, Observable } from 'rxjs'
+import { last, share, switchMap, takeUntil } from 'rxjs/operators'
 
 import { logStoreAction } from './logger'
 import { INIT_ACTION_TYPE_SYMBOL, TERMINATE_ACTION_TYPE_SYMBOL, NOOP_ACTION_TYPE_SYMBOL } from './symbols'
@@ -69,11 +69,13 @@ export class Store<S> implements IStore<S> {
     const prevEpic = epic$.getValue()
     epic$.next(
       combineEpic((action$) => {
+        let output$: Observable<Action>
         if (action$ instanceof Subject) {
-          return prevEpic(action$)
+          output$ = prevEpic(action$)
         } else {
-          return prevEpic(action$.pipe(share()))
+          output$ = prevEpic(action$.pipe(share()))
         }
+        return output$.pipe(takeUntil(this.action$.pipe(last(null, null))))
       }),
     )
 
@@ -119,19 +121,21 @@ export class Store<S> implements IStore<S> {
   }
 
   private subscribeAction() {
-    this.actionSub = this.epic$.pipe(switchMap((epic) => epic(this.action$))).subscribe({
-      next: (action) => {
-        try {
-          this.dispatch(action)
-        } catch (e) {
-          this.action$.error(e)
-        }
-      },
-      error: (e) => {
-        if (!this.action$.closed) {
-          this.action$.error(e)
-        }
-      },
-    })
+    this.actionSub = this.epic$
+      .pipe(switchMap((epic) => epic(this.action$).pipe(takeUntil(this.action$.pipe(last(null, null))))))
+      .subscribe({
+        next: (action) => {
+          try {
+            this.dispatch(action)
+          } catch (e) {
+            this.action$.error(e)
+          }
+        },
+        error: (e) => {
+          if (!this.action$.closed) {
+            this.action$.error(e)
+          }
+        },
+      })
   }
 }
