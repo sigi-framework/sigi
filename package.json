@@ -28,7 +28,7 @@
     "@abraham/reflection": "^0.8.0",
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
-    "@commitlint/config-lerna-scopes": "^12.1.1",
+    "@commitlint/config-lerna-scopes": "^12.1.4",
     "@swc-node/jest": "^1.2.1",
     "@types/jest": "^26.0.23",
     "@types/lodash": "^4.14.168",
