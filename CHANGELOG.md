@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/sigi-framework/sigi/compare/v2.10.0...v2.10.1) (2021-05-18)
+
+### Bug Fixes
+
+- **react:** serverCache in childInjector may be undefined ([b943c19](https://github.com/sigi-framework/sigi/commit/b943c19842db426dc452a57c5a79c7776512a18a))
+
 # [2.10.0](https://github.com/sigi-framework/sigi/compare/v2.9.3...v2.10.0) (2021-05-13)
 
 ### Features

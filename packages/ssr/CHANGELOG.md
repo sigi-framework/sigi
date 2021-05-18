@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.1](https://github.com/sigi-framework/sigi/compare/v2.10.0...v2.10.1) (2021-05-18)
+
+**Note:** Version bump only for package @sigi/ssr
+
 # [2.10.0](https://github.com/sigi-framework/sigi/compare/v2.9.3...v2.10.0) (2021-05-13)
 
 **Note:** Version bump only for package @sigi/ssr
