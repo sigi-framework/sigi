@@ -330,10 +330,10 @@
     resolve-global "1.0.0"
     yargs "^16.2.0"
 
-"@commitlint/config-conventional@^12.1.1":
-  version "12.1.1"
-  resolved "https://registry.npmjs.org/@commitlint/config-conventional/-/config-conventional-12.1.1.tgz#73dd3b1a7912138420d248f334f15c94c250bc9e"
-  integrity sha512-15CqbXMsQiEb0qbzjEHe2OkzaXPYSp7RxaS6KoSVk/4W0QiigquavQ+M0huBZze92h0lMS6Pxoq4AJ5CQ3D+iQ==
+"@commitlint/config-conventional@^12.1.4":
+  version "12.1.4"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-12.1.4.tgz#95bbab622f117a8a3e49f95917b08655040c66a8"
+  integrity sha512-ZIdzmdy4o4WyqywMEpprRCrehjCSQrHkaRTVZV411GyLigFQHlEBSJITAihLAWe88Qy/8SyoIe5uKvAsV5vRqQ==
   dependencies:
     conventional-changelog-conventionalcommits "^4.3.1"
 
@@ -1745,10 +1745,10 @@
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/lodash@^4.14.168":
-  version "4.14.168"
-  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
-  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
+"@types/lodash@^4.14.169":
+  version "4.14.169"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.169.tgz#83c217688f07a4d9ef8f28a3ebd1d318f6ff4cbb"
+  integrity sha512-DvmZHoHTFJ8zhVYwCLWbQ7uAbYQEk52Ev2/ZiQ7Y7gQGeV9pjBqjnQpECMHfKS1rCYAhMI7LHVxwyZLZinJgdw==
 
 "@types/minimatch@^3.0.3":
   version "3.0.4"
