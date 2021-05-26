@@ -1,6 +1,6 @@
 {
   "name": "@sigi/core",
-  "version": "2.10.0",
+  "version": "2.10.2",
   "description": "Sigi core library",
   "keywords": ["RxJS", "TypeScript", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
@@ -24,8 +24,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/di": "^2.9.0",
-    "@sigi/types": "^2.9.0",
+    "@sigi/di": "^2.10.2",
+    "@sigi/types": "^2.10.2",
     "tslib": "^2.2.0"
   },
   "peerDependencies": {
