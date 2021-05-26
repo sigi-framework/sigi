@@ -128,6 +128,14 @@ export class Store<S> implements IStore<S> {
           try {
             this.dispatch(action)
           } catch (e) {
+            // @ts-expect-error
+            this.log({
+              type: `${this.name}/CAUGHT_ERROR`,
+              payload: {
+                action: action.type,
+                error: e,
+              },
+            })
             this.action$.error(e)
           }
         },
