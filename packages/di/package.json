@@ -27,6 +27,6 @@
     "tslib": "^2.2.0"
   },
   "peerDependencies": {
-    "@abraham/reflection": ">=0.7.0"
+    "@abraham/reflection": ">=0.8.0"
   }
 }

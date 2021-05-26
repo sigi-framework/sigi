@@ -1,3 +1,4 @@
+import type { EffectOptions } from './decorators'
 import {
   DEFINE_ACTION_DECORATOR_SYMBOL,
   REDUCER_DECORATOR_SYMBOL,
@@ -6,8 +7,6 @@ import {
   SSR_ACTION_META_SYMBOL,
   ACTION_TO_SKIP_SYMBOL,
 } from './symbols'
-
-import type { EffectOptions } from './decorators'
 
 const actionEnum = {
   DefineAction: DEFINE_ACTION_DECORATOR_SYMBOL,

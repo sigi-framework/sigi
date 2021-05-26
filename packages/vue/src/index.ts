@@ -3,12 +3,11 @@
 import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
 import { rootInjector } from '@sigi/di'
 import { ConstructorOf } from '@sigi/types'
-
-import { cloneDeepPoj } from './utils'
-
 import type { ComponentOptions } from 'vue'
 import type { RecordPropsDefinition, DataDef } from 'vue/types/options'
 import type { CombinedVueInstance } from 'vue/types/vue'
+
+import { cloneDeepPoj } from './utils'
 
 type ReactiveComponentOptions<M extends EffectModule<any>, V extends Vue, Data, Methods, Computed, Prop> = {
   syncToSigi?: Array<keyof StateInEffectModule<M>>
