@@ -7,7 +7,8 @@
   "homepage": "https://sigi.how",
   "license": "MIT",
   "main": "dist/index.js",
-  "module": "esm/index.browser.js",
+  "module": "esm/index.js",
+  "browser": "esm/index.browser.js",
   "esnext": "next/index.browser.js",
   "types": "esm/index.d.ts",
   "publishConfig": {
@@ -15,7 +16,7 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next"],
+  "files": ["dist", "esm", "next", "es2015"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"

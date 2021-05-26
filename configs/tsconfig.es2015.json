@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "noEmit": true
+  },
+  "references": [
+    { "path": "../packages/core/tsconfig.es2015.json" },
+    { "path": "../packages/devtool/tsconfig.es2015.json" },
+    { "path": "../packages/react/tsconfig.es2015.json" },
+    { "path": "../packages/react-router/tsconfig.es2015.json" },
+    { "path": "../packages/vue/tsconfig.es2015.json" },
+    { "path": "../packages/di/tsconfig.es2015.json" },
+    { "path": "../packages/ssr/tsconfig.es2015.json" },
+    { "path": "../packages/testing/tsconfig.es2015.json" },
+    { "path": "../packages/ts-plugin/tsconfig.es2015.json" },
+    { "path": "../packages/types/tsconfig.es2015.json" }
+  ]
+}

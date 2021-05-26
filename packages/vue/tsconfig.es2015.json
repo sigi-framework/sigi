@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2015",
+    "outDir": "./es2015"
+  },
+  "references": [
+    { "path": "../core/tsconfig.es2015.json" },
+    { "path": "../di/tsconfig.es2015.json" },
+    { "path": "../testing/tsconfig.es2015.json" },
+    { "path": "../types/tsconfig.es2015.json" }
+  ],
+  "include": ["./src"]
+}
