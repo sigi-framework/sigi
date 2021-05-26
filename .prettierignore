@@ -1,5 +1,6 @@
-examples/.cache
+examples/.parcel-cache
 node_modules
 dist
 esm
 next
+es2015

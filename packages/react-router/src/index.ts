@@ -1,9 +1,8 @@
+import type { Provider } from '@sigi/di'
+import type { History } from 'history'
 import { NEVER, Observable } from 'rxjs'
 
 import { HistoryProvide, Router$Provide, RouterChanged } from './router.module'
-
-import type { Provider } from '@sigi/di'
-import type { History } from 'history'
 
 export function createHistoryProviders(history: History): [Provider<History>, Provider<Observable<RouterChanged>>] {
   return [
