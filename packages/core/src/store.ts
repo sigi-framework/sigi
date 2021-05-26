@@ -98,6 +98,9 @@ export class Store<S> implements IStore<S> {
     const prevState = this.internalState
     const newState = this.reducer(prevState, action)
     if (newState !== prevState) {
+      if (process.env.NODE_ENV !== 'production' && newState === undefined) {
+        console.warn(`${action.type} produced an undefined state, you may forget to return new State in @Reducer`)
+      }
       this.state$.next(newState)
     }
     this.log(action)
