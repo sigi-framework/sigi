@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@abraham/reflection": "^0.8.0",
-    "antd": "^4.15.6",
+    "antd": "^4.16.1",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
