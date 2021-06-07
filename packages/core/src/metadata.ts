@@ -56,9 +56,8 @@ export function createActionDecorator(type: ActionType) {
   }
 }
 
-export const { get: getSSREffectMeta, add: addSSREffectMeta } =
-  metadataFactory<{
-    action: string
-    payloadGetter?: EffectOptions['payloadGetter']
-  }>(SSR_ACTION_META_SYMBOL)
+export const { get: getSSREffectMeta, add: addSSREffectMeta } = metadataFactory<{
+  action: string
+  payloadGetter?: EffectOptions['payloadGetter']
+}>(SSR_ACTION_META_SYMBOL)
 export const { get: getActionsToSkip, add: addActionToSkip } = metadataFactory<string>(ACTION_TO_SKIP_SYMBOL)
