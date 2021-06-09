@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { Subject } from 'rxjs'

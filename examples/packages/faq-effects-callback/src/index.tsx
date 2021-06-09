@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 import 'antd/dist/antd.css'
 import { initDevtool } from '@sigi/devtool'
 import { useModule } from '@sigi/react'
