@@ -1,13 +1,21 @@
 const { join } = require('path')
 
 module.exports = {
-  preset: 'ts-jest',
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
-  },
   rootDir: join(__dirname, '..'),
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      '@swc-node/jest',
+      // configuration
+      {
+        target: 'es2019',
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+        react: {
+          runtime: 'automatic',
+        },
+      },
+    ],
+  },
   testEnvironment: 'jsdom',
   collectCoverageFrom: [
     'packages/*/src/**/*.{ts,tsx}',
