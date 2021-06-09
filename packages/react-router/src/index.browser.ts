@@ -74,3 +74,5 @@ export class RouterModule extends EffectModule<null> {
     )
   }
 }
+
+export * from './router-provider'

@@ -8,8 +8,8 @@ import { Observable, Subject } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
+import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../index.browser'
 import { SigiRouterProvider } from '../router-provider'
-import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../router.module'
 
 interface TestState {
   event: RouterChanged | null
@@ -208,15 +208,5 @@ describe('SigiRouterProvider', () => {
       )
     })
     expect(router$).not.toBe(routerModule.router$)
-  })
-
-  it('router$ should be unsubscribed after unmounted', () => {
-    const { router$ } = routerModule
-    // @ts-expect-error
-    const spy = Sinon.spy(router$, 'unsubscribe')
-    act(() => {
-      renderer.unmount()
-    })
-    expect(spy.callCount).toBe(1)
   })
 })

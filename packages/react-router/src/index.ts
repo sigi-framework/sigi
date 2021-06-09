@@ -1,26 +1,25 @@
-import type { Provider } from '@sigi/di'
-import type { History } from 'history'
-import { NEVER, Observable } from 'rxjs'
+import { Module, EffectModule } from '@sigi/core'
 
-import { HistoryProvide, Router$Provide, RouterChanged } from './router.module'
+@Module('@@Router')
+export class RouterModule extends EffectModule<null> {
+  defaultState = null
 
-export function createHistoryProviders(history: History): [Provider<History>, Provider<Observable<RouterChanged>>] {
-  return [
-    {
-      provide: HistoryProvide.provide,
-      useValue: history,
-    },
-    {
-      provide: Router$Provide.provide,
-      useFactory: () => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.warn('RouterModule.router$ will never emit values nor complete in SSR scenario')
-        }
-        return NEVER
-      },
-    },
-  ]
+  push() {
+    return this.noop()
+  }
+
+  go() {
+    return this.noop()
+  }
+
+  goBack() {
+    return this.noop()
+  }
+  goForward() {
+    return this.noop()
+  }
+
+  replace() {
+    return this.noop()
+  }
 }
-
-export { RouterModule } from './router.module'
-export * from './router-provider'

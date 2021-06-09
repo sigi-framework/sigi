@@ -26,6 +26,8 @@ const _globalThis =
       : window
     : globalThis
 
+const DEFAULT_STATE_KEY = 'defaultState'
+
 export abstract class EffectModule<S> {
   abstract readonly defaultState: S
 
@@ -56,17 +58,6 @@ export abstract class EffectModule<S> {
   }
 
   constructor() {
-    Object.defineProperty(this, 'defaultState', {
-      set: (value: S) => {
-        this.internalDefaultState = value
-        if (!this.store.ready) {
-          this.store.setup(this.getDefaultState())
-        }
-      },
-      get: () => {
-        return this.getDefaultState()
-      },
-    })
     const reducer = this.combineReducers()
     const definedActions = this.combineDefineActions()
     const epic = this.combineEffects()
@@ -112,6 +103,53 @@ export abstract class EffectModule<S> {
         filter(({ type }) => type === name),
         map(({ payload }) => payload),
       )
+    }
+
+    if (typeof Proxy !== 'undefined') {
+      const context = this
+      return new Proxy(this, {
+        defineProperty(target, p, attr) {
+          if (p === DEFAULT_STATE_KEY) {
+            if (attr.set) {
+              const rawSetter = attr.set
+              attr.set = function (this: typeof context, value: any) {
+                context.internalDefaultState = value
+                if (!context.store.ready) {
+                  context.store.setup(context.getDefaultState())
+                }
+                return rawSetter.call(this, value)
+              }
+            } else if ('value' in attr) {
+              context.internalDefaultState = attr.value
+              if (!context.store.ready) {
+                context.store.setup(context.getDefaultState())
+              }
+            }
+          }
+          return Reflect.defineProperty(target, p, attr)
+        },
+        set(target, p, value, receiver) {
+          if (p === DEFAULT_STATE_KEY) {
+            context.internalDefaultState = value
+            if (!context.store.ready) {
+              context.store.setup(context.getDefaultState())
+            }
+          }
+          return Reflect.set(target, p, value, receiver)
+        },
+      })
+    } else {
+      Object.defineProperty(this, DEFAULT_STATE_KEY, {
+        set: (value: S) => {
+          this.internalDefaultState = value
+          if (!this.store.ready) {
+            this.store.setup(this.getDefaultState())
+          }
+        },
+        get: () => {
+          return this.getDefaultState()
+        },
+      })
     }
   }
 
