@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.4](https://github.com/sigi-framework/sigi/compare/v2.10.3...v2.10.4) (2021-06-09)
+
+### Bug Fixes
+
+- **core:** compatible with es class property ([3f0e38a](https://github.com/sigi-framework/sigi/commit/3f0e38a8531f72ec62f50552c9dd866945245665))
+
 ## [2.10.3](https://github.com/sigi-framework/sigi/compare/v2.10.2...v2.10.3) (2021-06-09)
 
 **Note:** Version bump only for package @sigi/react-router
