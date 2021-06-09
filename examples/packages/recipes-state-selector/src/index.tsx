@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 import { initDevtool } from '@sigi/devtool'
 import { useModule, useModuleState } from '@sigi/react'
 import React from 'react'

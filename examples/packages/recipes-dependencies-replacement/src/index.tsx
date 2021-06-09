@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 import { ClassProvider } from '@sigi/di'
 import { useModule, InjectionProvidersContext } from '@sigi/react'
 import React from 'react'
