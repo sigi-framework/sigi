@@ -1,6 +1,6 @@
 {
   "name": "@sigi/vue",
-  "version": "2.10.2",
+  "version": "2.10.3",
   "description": "Sigi framework binding for VueJS",
   "keywords": ["Vue", "RxJS", "TypeScript", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
@@ -24,7 +24,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.10.2",
+    "@sigi/core": "^2.10.3",
     "@sigi/di": "^2.10.2",
     "@sigi/types": "^2.10.2"
   },

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.3](https://github.com/sigi-framework/sigi/compare/v2.10.2...v2.10.3) (2021-06-09)
+
+### Bug Fixes
+
+- **react:** react 18 cm safe ([fef08ff](https://github.com/sigi-framework/sigi/commit/fef08ff8e3904b53265e22e60a4869df74e6bd19))
+
 ## [2.10.2](https://github.com/sigi-framework/sigi/compare/v2.10.1...v2.10.2) (2021-05-26)
 
 **Note:** Version bump only for package @sigi/react
