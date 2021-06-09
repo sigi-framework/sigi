@@ -10,7 +10,7 @@
   "module": "esm/index.js",
   "browser": "esm/index.browser.js",
   "esnext": "next/index.js",
-  "types": "esm/index.d.ts",
+  "types": "esm/index.browser.d.ts",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

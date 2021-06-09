@@ -23,5 +23,3 @@ export class RouterModule extends EffectModule<null> {
     return this.noop()
   }
 }
-
-export * from './router-provider'

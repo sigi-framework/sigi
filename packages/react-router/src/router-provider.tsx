@@ -4,7 +4,7 @@ import { History, Location, Action } from 'history'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Subject } from 'rxjs'
 
-import { HistoryProvide, Router$Provide, RouterChanged } from './index.browser'
+import { HistoryProvide, Router$Provide, RouterChanged } from './browser.module'
 
 export const SigiRouterProvider = memo<{ history: History; children: React.ReactChild }>(({ history, children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps

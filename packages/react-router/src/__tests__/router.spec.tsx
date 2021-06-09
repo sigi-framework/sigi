@@ -8,7 +8,7 @@ import { Observable, Subject } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
-import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../index.browser'
+import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../browser.module'
 import { SigiRouterProvider } from '../router-provider'
 
 interface TestState {
