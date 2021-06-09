@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.5](https://github.com/sigi-framework/sigi/compare/v2.10.4...v2.10.5) (2021-06-09)
+
+### Bug Fixes
+
+- **react-router:** missing export types ([d9e8c65](https://github.com/sigi-framework/sigi/commit/d9e8c6544de81a8d112bc3b7141f8faec05777ad))
+
 ## [2.10.4](https://github.com/sigi-framework/sigi/compare/v2.10.3...v2.10.4) (2021-06-09)
 
 ### Bug Fixes
