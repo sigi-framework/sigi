@@ -1,7 +1,7 @@
 import { Action, Epic } from '@sigi/types'
 import produce, { Draft } from 'immer'
 import { Observable, merge } from 'rxjs'
-import { map, filter, skip, ignoreElements } from 'rxjs/operators'
+import { map, filter, ignoreElements } from 'rxjs/operators'
 
 import { hmrEnabled, hmrInstanceCache } from './hmr'
 import { getDecoratedActions, getActionsToSkip } from './metadata'
@@ -43,6 +43,8 @@ export abstract class EffectModule<S> {
   private readonly actionStreams: any = {}
   private readonly retryActionsCreator: any = {}
   private readonly actionNames: string[] = []
+  private actionsToRetry: Set<string> = new Set()
+  private actionsToSkip!: string[]
   private restoredFromSSR = false
 
   get state$() {
@@ -116,6 +118,11 @@ export abstract class EffectModule<S> {
                 context.internalDefaultState = value
                 if (!context.store.ready) {
                   context.store.setup(context.getDefaultState())
+                  context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
+                  context.actionsToSkip = context.restoredFromSSR
+                    ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                      getActionsToSkip(context.constructor.prototype) || []
+                    : []
                 }
                 return rawSetter.call(this, value)
               }
@@ -123,6 +130,11 @@ export abstract class EffectModule<S> {
               context.internalDefaultState = attr.value
               if (!context.store.ready) {
                 context.store.setup(context.getDefaultState())
+                context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[context.moduleName] || [])
+                context.actionsToSkip = context.restoredFromSSR
+                  ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                    getActionsToSkip(context.constructor.prototype) || []
+                  : []
               }
             }
           }
@@ -133,6 +145,11 @@ export abstract class EffectModule<S> {
             context.internalDefaultState = value
             if (!context.store.ready) {
               context.store.setup(context.getDefaultState())
+              context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[context.moduleName] || [])
+              context.actionsToSkip = context.restoredFromSSR
+                ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                  getActionsToSkip(context.constructor.prototype) || []
+                : []
             }
           }
           return Reflect.set(target, p, value, receiver)
@@ -144,6 +161,9 @@ export abstract class EffectModule<S> {
           this.internalDefaultState = value
           if (!this.store.ready) {
             this.store.setup(this.getDefaultState())
+            this.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            this.actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) || [] : []
           }
         },
         get: () => {
@@ -254,16 +274,16 @@ export abstract class EffectModule<S> {
     }
 
     this.actionNames.push(...effectKeys)
-    const actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
-    const actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) : undefined
 
     return (action$: Observable<Action>) => {
       return merge(
         ...effectKeys.map((name) => {
           const effect: Effect<unknown> = (this as any)[name]
           const payload$ = action$.pipe(
-            filter(({ type }) => type === name),
-            skip(!actionsToRetry.has(name) && actionsToSkip?.includes(name) ? 1 : 0),
+            filter(({ type }, index) => {
+              const skipCount = !this.actionsToRetry.has(name) && this.actionsToSkip?.includes(name) ? 1 : 0
+              return type === name && skipCount <= index
+            }),
             map(({ payload }) => payload),
           )
           this.retryActionsCreator[name] = () =>
