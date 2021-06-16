@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.8](https://github.com/sigi-framework/sigi/compare/v2.10.7...v2.10.8) (2021-06-16)
+
+### Bug Fixes
+
+- **ssr:** skipped actions should always be retried on client ([4000e27](https://github.com/sigi-framework/sigi/commit/4000e27bc1ca2ccc3f8e5a8440ce3384b218d8e1))
+
 ## [2.10.7](https://github.com/sigi-framework/sigi/compare/v2.10.6...v2.10.7) (2021-06-15)
 
 **Note:** Version bump only for package @sigi/react
