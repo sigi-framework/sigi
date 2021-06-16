@@ -43,8 +43,8 @@ export abstract class EffectModule<S> {
   private readonly actionStreams: any = {}
   private readonly retryActionsCreator: any = {}
   private readonly actionNames: string[] = []
-  private actionsToRetry: Set<string> = new Set()
-  private actionsToSkip!: string[]
+  private actionsToRetry!: Set<string>
+  private actionsToSkip!: Set<string>
   private restoredFromSSR = false
 
   get state$() {
@@ -119,10 +119,12 @@ export abstract class EffectModule<S> {
                 if (!context.store.ready) {
                   context.store.setup(context.getDefaultState())
                   context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
-                  context.actionsToSkip = context.restoredFromSSR
-                    ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                      getActionsToSkip(context.constructor.prototype) || []
-                    : []
+                  context.actionsToSkip = new Set(
+                    context.restoredFromSSR
+                      ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                        getActionsToSkip(context.constructor.prototype) || []
+                      : [],
+                  )
                 }
                 return rawSetter.call(this, value)
               }
@@ -131,10 +133,12 @@ export abstract class EffectModule<S> {
               if (!context.store.ready) {
                 context.store.setup(context.getDefaultState())
                 context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[context.moduleName] || [])
-                context.actionsToSkip = context.restoredFromSSR
-                  ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                    getActionsToSkip(context.constructor.prototype) || []
-                  : []
+                context.actionsToSkip = new Set(
+                  context.restoredFromSSR
+                    ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                      getActionsToSkip(context.constructor.prototype) || []
+                    : [],
+                )
               }
             }
           }
@@ -146,10 +150,12 @@ export abstract class EffectModule<S> {
             if (!context.store.ready) {
               context.store.setup(context.getDefaultState())
               context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[context.moduleName] || [])
-              context.actionsToSkip = context.restoredFromSSR
-                ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                  getActionsToSkip(context.constructor.prototype) || []
-                : []
+              context.actionsToSkip = new Set(
+                context.restoredFromSSR
+                  ? // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+                    getActionsToSkip(context.constructor.prototype) || []
+                  : [],
+              )
             }
           }
           return Reflect.set(target, p, value, receiver)
@@ -163,7 +169,7 @@ export abstract class EffectModule<S> {
             this.store.setup(this.getDefaultState())
             this.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-            this.actionsToSkip = this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) || [] : []
+            this.actionsToSkip = new Set(this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) || [] : [])
           }
         },
         get: () => {
@@ -281,7 +287,7 @@ export abstract class EffectModule<S> {
           const effect: Effect<unknown> = (this as any)[name]
           const payload$ = action$.pipe(
             filter(({ type }, index) => {
-              const skipCount = !this.actionsToRetry.has(name) && this.actionsToSkip?.includes(name) ? 1 : 0
+              const skipCount = !this.actionsToRetry.has(name) && this.actionsToSkip?.has(name) ? 1 : 0
               return type === name && skipCount <= index
             }),
             map(({ payload }) => payload),

@@ -1,6 +1,6 @@
 import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta, RETRY_ACTION_TYPE_SYMBOL } from '@sigi/core'
 import { rootInjector, Injector, Provider } from '@sigi/di'
-import { ConstructorOf } from '@sigi/types'
+import { ConstructorOf, Action } from '@sigi/types'
 
 import { StateToPersist } from './state-to-persist'
 
@@ -60,11 +60,11 @@ export const runSSREffects = <Context, Returned = any>(
       const subscription = store.action$.subscribe({
         next: ({ type, payload }) => {
           if (type === RETRY_ACTION_TYPE_SYMBOL) {
-            const { module, name } = payload as any
-            if (!actionsToRetry[module.moduleName]) {
-              actionsToRetry[module.moduleName] = [name] as string[]
+            const { name } = payload as Action<{ name: string }>['payload']
+            if (!actionsToRetry[moduleName]) {
+              actionsToRetry[moduleName] = [name] as string[]
             } else {
-              actionsToRetry[module.moduleName].push(name as string)
+              actionsToRetry[moduleName].push(name as string)
             }
           }
           if (type === TERMINATE_ACTION_TYPE_SYMBOL) {
@@ -96,6 +96,11 @@ export const runSSREffects = <Context, Returned = any>(
                   store,
                 })
               } else {
+                if (!actionsToRetry[moduleName]) {
+                  actionsToRetry[moduleName] = [ssrActionMeta.action]
+                } else {
+                  actionsToRetry[moduleName].push(ssrActionMeta.action)
+                }
                 effectsCount--
                 if (terminatedCount === effectsCount) {
                   resolve()
