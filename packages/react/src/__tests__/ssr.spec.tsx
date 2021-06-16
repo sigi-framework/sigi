@@ -645,7 +645,7 @@ describe('SSR specs:', () => {
     expect(state['actionsToRetry']).toEqual({ ServiceModule: ['setNameWithFailure'] })
   })
 
-  it('should be able to persist actions to retry on the other module', async () => {
+  it('should be able to persist actions to retry on the other module, and the skipped actions', async () => {
     @Module('InnerServiceModule')
     // eslint-disable-next-line @typescript-eslint/ban-types
     class InnerServiceModule extends EffectModule<CountState> {
@@ -680,12 +680,24 @@ describe('SSR specs:', () => {
       setName(payload$: Observable<void>): Observable<Action> {
         return payload$.pipe(mergeMap(() => of(this.serviceModule.getActions().setNameWithFailure(1))))
       }
+
+      @Effect({
+        payloadGetter(_: any, skipAction) {
+          return skipAction
+        },
+      })
+      skippedSetName(payload$: Observable<void>): Observable<Action> {
+        return payload$.pipe(map(() => this.serviceModule.getActions().setName('skipped')))
+      }
     }
 
     const req = {}
     const state = await emitSSREffects(req, [InnerServiceModule, InnerCountModule2], { providers: MODULES })
       .pendingState
 
-    expect(state['actionsToRetry']).toEqual({ InnerServiceModule: ['setNameWithFailure'] })
+    expect(state['actionsToRetry']).toEqual({
+      InnerCountModel2: ['skippedSetName'],
+      InnerServiceModule: ['setNameWithFailure'],
+    })
   })
 })
