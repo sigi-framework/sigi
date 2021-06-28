@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2015",
     "outDir": "./es2015"
   },
   "references": [
