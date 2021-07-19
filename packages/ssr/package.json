@@ -1,8 +1,11 @@
 {
   "name": "@sigi/ssr",
-  "version": "2.10.8",
+  "version": "2.11.0",
   "description": "Server side rendering support for sigi framework",
-  "keywords": ["Sigi", "SSR"],
+  "keywords": [
+    "Sigi",
+    "SSR"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework/",
   "license": "MIT",
@@ -15,7 +18,12 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015"
+  ],
   "engines": {
     "node": ">= 10.17"
   },

@@ -1,8 +1,13 @@
 {
   "name": "@sigi/react-router",
-  "version": "2.10.9",
+  "version": "2.11.0",
   "description": "React router integration for sigi framework",
-  "keywords": ["Sigi", "Router", "React", "RxJS"],
+  "keywords": [
+    "Sigi",
+    "Router",
+    "React",
+    "RxJS"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -16,7 +21,12 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -27,7 +37,7 @@
   "dependencies": {
     "@sigi/core": "^2.10.8",
     "@sigi/di": "^2.10.2",
-    "@sigi/react": "^2.10.9",
+    "@sigi/react": "^2.11.0",
     "@sigi/types": "^2.10.2",
     "tslib": "^2.2.0"
   },
