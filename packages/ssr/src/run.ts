@@ -6,7 +6,7 @@ import { StateToPersist } from './state-to-persist'
 
 export type ModuleMeta = ConstructorOf<EffectModule<any>>
 
-const SKIP_SYMBOL = Symbol('skip-symbol')
+export const SKIP_SYMBOL = Symbol('skip-symbol')
 
 /**
  * Run all `@Effect({ ssr: true })` decorated effects of given modules and extract latest states.

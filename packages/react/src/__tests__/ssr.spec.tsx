@@ -3,7 +3,7 @@ import 'reflect-metadata'
 
 import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer, RETRY_KEY_SYMBOL } from '@sigi/core'
 import { Injectable, Injector } from '@sigi/di'
-import { emitSSREffects } from '@sigi/ssr'
+import { emitSSREffects, match } from '@sigi/ssr'
 import { Action } from '@sigi/types'
 import { Draft } from 'immer'
 import { useEffect } from 'react'
@@ -698,6 +698,44 @@ describe('SSR specs:', () => {
     expect(state['actionsToRetry']).toEqual({
       InnerCountModel2: ['skippedSetName'],
       InnerServiceModule: ['setNameWithFailure'],
+    })
+  })
+
+  it('should support match fn', async () => {
+    @Module('InnerServiceModule2')
+    class InnerServiceModule2 extends EffectModule<CountState> {
+      readonly defaultState = { count: 0, name: '' }
+
+      @ImmerReducer()
+      setName(state: Draft<CountState>, name: string) {
+        state.name = name
+      }
+
+      @Effect({
+        payloadGetter: match(
+          ['/users/:id'],
+          (ctx: any) => ctx.request.path,
+        )((ctx) => {
+          return ctx.request.path.length
+        }),
+      })
+      setNameWithFailure(payload$: Observable<number>): Observable<Action> {
+        return payload$.pipe(mergeMap((l) => of(this.getActions().setName(`length: ${l}`), this.terminate())))
+      }
+    }
+
+    const req = {
+      request: {
+        path: '/users/linus',
+      },
+    }
+    const state = await emitSSREffects(req, [InnerServiceModule2], { providers: [InnerServiceModule2] }).pendingState
+
+    expect(state['dataToPersist']).toEqual({
+      InnerServiceModule2: {
+        count: 0,
+        name: `length: ${req.request.path.length}`,
+      },
     })
   })
 })

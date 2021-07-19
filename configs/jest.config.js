@@ -7,7 +7,7 @@ module.exports = {
       '@swc-node/jest',
       // configuration
       {
-        target: 'es2019',
+        target: 'es2020',
         experimentalDecorators: true,
         emitDecoratorMetadata: true,
         react: {
