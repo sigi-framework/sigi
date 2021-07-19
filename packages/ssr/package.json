@@ -30,6 +30,7 @@
     "@sigi/core": "^2.10.8",
     "@sigi/di": "^2.10.2",
     "@sigi/types": "^2.10.2",
+    "path-to-regexp": "^6.2.0",
     "serialize-javascript": "^5.0.1",
     "tslib": "^2.2.0"
   },
