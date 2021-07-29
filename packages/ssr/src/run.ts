@@ -47,7 +47,17 @@ export const runSSREffects = <Context, Returned = any>(
       reject(new Error('Terminate timeout'))
     }, timeout * 1000)
     for (const constructor of modules) {
+      let isAllSkiped = true
+
       const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
+
+      // sacrifice a little performance for neat code
+      // const isAllSkiped = ssrActionsMeta.every((ssrActionMeta) => {
+      //   const maybeDeferredPayload = ssrActionMeta.payloadGetter?.(ctx, SKIP_SYMBOL)
+      //   return maybeDeferredPayload === SKIP_SYMBOL
+      // })
+
+      // if (isAllSkiped) return
 
       const effectModuleInstance: EffectModule<unknown> = injector.getInstance(constructor)
 
@@ -59,6 +69,7 @@ export const runSSREffects = <Context, Returned = any>(
 
       const subscription = store.action$.subscribe({
         next: ({ type, payload }) => {
+          isAllSkiped = false
           if (type === RETRY_ACTION_TYPE_SYMBOL) {
             const { name } = payload as Action<{ name: string }>['payload']
             if (!actionsToRetry[moduleName]) {
@@ -90,6 +101,7 @@ export const runSSREffects = <Context, Returned = any>(
           Promise.resolve(maybeDeferredPayload)
             .then((payload) => {
               if (payload !== SKIP_SYMBOL) {
+                isAllSkiped = false
                 store.dispatch({
                   type: ssrActionMeta.action,
                   payload,
@@ -111,6 +123,7 @@ export const runSSREffects = <Context, Returned = any>(
               reject(e)
             })
         } else {
+          isAllSkiped = false
           store.dispatch({
             type: ssrActionMeta.action,
             payload: undefined,
@@ -121,7 +134,7 @@ export const runSSREffects = <Context, Returned = any>(
       cleanupFns.push(() => {
         subscription.unsubscribe()
         store.dispose()
-        stateToSerialize[moduleName] = store.state
+        !isAllSkiped && (stateToSerialize[moduleName] = store.state)
       })
     }
     if (!effectsCount) {
