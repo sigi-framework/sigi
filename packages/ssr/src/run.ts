@@ -51,14 +51,6 @@ export const runSSREffects = <Context, Returned = any>(
 
       const ssrActionsMeta = getSSREffectMeta(constructor.prototype, [])!
 
-      // sacrifice a little performance for neat code
-      // const isAllSkiped = ssrActionsMeta.every((ssrActionMeta) => {
-      //   const maybeDeferredPayload = ssrActionMeta.payloadGetter?.(ctx, SKIP_SYMBOL)
-      //   return maybeDeferredPayload === SKIP_SYMBOL
-      // })
-
-      // if (isAllSkiped) return
-
       const effectModuleInstance: EffectModule<unknown> = injector.getInstance(constructor)
 
       moduleInstanceCache.set(constructor, effectModuleInstance)
