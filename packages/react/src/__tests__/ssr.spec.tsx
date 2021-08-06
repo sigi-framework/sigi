@@ -485,11 +485,7 @@ describe('SSR specs:', () => {
       }
     }
     const state = await emitSSREffects(req, [WithoutSSRModule], { providers: MODULES }).pendingState
-    expect(state['dataToPersist']).toStrictEqual({
-      WithoutSSR: {
-        count: 0,
-      },
-    })
+    expect(state['dataToPersist']).toStrictEqual({})
   })
 
   it('should throw error if runEffects error', async () => {
