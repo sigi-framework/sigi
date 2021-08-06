@@ -5,6 +5,7 @@ import { Provider, ValueProvider, ClassProvider, FactoryProvider, Token, Type, I
 export class Injector {
   readonly provider = new InjectionProvider()
 
+  readonly resolvedInstances = new Set<unknown>()
   protected readonly resolvedProviders = new Map<ReflectiveProvider<unknown>, unknown>()
   protected readonly providersCache = new Map<Provider, ReflectiveProvider<unknown>>()
 
@@ -22,11 +23,11 @@ export class Injector {
   }
 
   getInstance<T>(provider: Provider<T>): T {
-    return this.getInstanceInternal(provider, true)
+    return this.getInstanceInternal(provider, true, this)
   }
 
   resolveAndInstantiate<T>(provider: Provider<T>): T {
-    return this.getInstanceInternal(provider, false)
+    return this.getInstanceInternal(provider, false, this)
   }
 
   createChild(providers: Provider<unknown>[]): Injector {
@@ -47,7 +48,7 @@ export class Injector {
     return reflectiveProvider
   }
 
-  private getInstanceInternal<T>(provider: Provider<T>, useCache: boolean): T {
+  private getInstanceInternal<T>(provider: Provider<T>, useCache: boolean, currentInjector: Injector): T {
     let injector: Injector | null = this
     let instance: T | null = null
     let reflectiveProvider: ReflectiveProvider<T> | null = null
@@ -63,7 +64,7 @@ export class Injector {
           if (useCache && (injector === this || this.checkDependenciesClean(injector, deps))) {
             instance = injector.resolvedProviders.get(reflectiveProvider) as T
           } else {
-            instance = this.resolveByReflectiveProvider(reflectiveProvider, useCache, this)
+            instance = this.resolveByReflectiveProvider(reflectiveProvider, useCache, this, currentInjector)
             if (useCache) {
               this.provider.addProvider(provider)
               this.providersCache.set(provider, reflectiveProvider)
@@ -73,11 +74,11 @@ export class Injector {
         } else {
           instance = useCache
             ? (injector.resolvedProviders.get(reflectiveProvider) as T)
-            : this.resolveByReflectiveProvider(reflectiveProvider, false, this)
+            : this.resolveByReflectiveProvider(reflectiveProvider, false, this, currentInjector)
         }
         break
       }
-      instance = injector.resolveByReflectiveProvider(reflectiveProvider, useCache, this)
+      instance = injector.resolveByReflectiveProvider(reflectiveProvider, useCache, this, currentInjector)
       if (instance) {
         if (useCache) {
           this.provider.addProvider(provider)
@@ -92,6 +93,7 @@ export class Injector {
       reflectiveProvider = new ReflectiveProvider(provider)
       throw new TypeError(`No provider for ${reflectiveProvider.name}!`)
     }
+    currentInjector.resolvedInstances.add(instance)
     return instance
   }
 
@@ -99,25 +101,28 @@ export class Injector {
     reflectiveProvider: ReflectiveProvider<T>,
     useCache = true,
     leaf = this,
+    currentInjector: Injector,
   ): T | null {
     let instance: T | null = null
     const { provider, name } = reflectiveProvider
     if (typeof provider === 'function') {
       const deps: Array<Type<unknown> | InjectionToken<T>> = Reflect.getMetadata('design:paramtypes', provider) ?? []
-      const depsInstance = deps.map((dep) => leaf.getInstanceInternal(leaf.findExisting(dep), useCache))
+      const depsInstance = deps.map((dep) =>
+        leaf.getInstanceInternal(leaf.findExisting(dep), useCache, currentInjector),
+      )
       instance = new provider(...depsInstance)
     } else if ('useValue' in provider) {
       instance = provider.useValue
     } else if ('useClass' in provider) {
-      instance = leaf.getInstanceInternal(provider.useClass, useCache)
+      instance = leaf.getInstanceInternal(provider.useClass, useCache, currentInjector)
     } else if ('useFactory' in provider) {
       let deps: unknown[] = []
       if (provider.deps) {
-        deps = provider.deps!.map((dep) => leaf.getInstanceInternal(leaf.findExisting(dep), useCache))
+        deps = provider.deps!.map((dep) => leaf.getInstanceInternal(leaf.findExisting(dep), useCache, currentInjector))
       }
       instance = provider.useFactory(...deps)
     } else if ('useExisting' in provider) {
-      instance = leaf.getInstanceInternal(this.findExisting(provider.useExisting), useCache)
+      instance = leaf.getInstanceInternal(this.findExisting(provider.useExisting), useCache, currentInjector)
     }
     if (!instance) {
       throw new TypeError(`Can not resolve ${name}, it's not a valid provider`)

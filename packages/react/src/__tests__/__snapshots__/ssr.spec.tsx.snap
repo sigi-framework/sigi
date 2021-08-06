@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`SSR specs: should return right state if emit other module's effect 1`] = `
+Object {
+  "CountModel": Object {
+    "count": 1,
+    "name": "",
+  },
+  "ServiceModule": Object {
+    "count": 0,
+    "name": "foo",
+  },
+}
+`;
+
 exports[`SSR specs: should return right state in hooks 1`] = `"<span>1</span>"`;
 
 exports[`SSR specs: should run ssr effects 1`] = `

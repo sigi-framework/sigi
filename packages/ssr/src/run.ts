@@ -138,6 +138,11 @@ export const runSSREffects = <Context, Returned = any>(
       for (const cleanup of cleanupFns) {
         cleanup()
       }
+      for (const instance of injector.resolvedInstances) {
+        if (instance instanceof EffectModule && instance.state !== instance.defaultState) {
+          stateToSerialize[instance.moduleName] = instance.state
+        }
+      }
       return new StateToPersist(stateToSerialize, actionsToRetry)
     })
     .catch((e) => {

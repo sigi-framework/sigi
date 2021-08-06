@@ -81,6 +81,10 @@ class ServiceModule extends EffectModule<CountState> {
 class CountModel extends EffectModule<CountState> {
   defaultState = { count: 0, name: '' }
 
+  constructor(public readonly serviceModule: ServiceModule) {
+    super()
+  }
+
   @ImmerReducer()
   setCount(state: Draft<CountState>, count: number) {
     state.count = count
@@ -114,6 +118,20 @@ class CountModel extends EffectModule<CountState> {
       switchMap((name) =>
         timer(20).pipe(
           map(() => this.getActions().setName(name)),
+          endWith(this.terminate()),
+        ),
+      ),
+    )
+  }
+
+  @Effect({
+    payloadGetter: (ctx: { name: string }, skip) => ctx.name || skip,
+  })
+  emitOtherEffect(payload$: Observable<string>): Observable<Action> {
+    return payload$.pipe(
+      switchMap((name) =>
+        timer(20).pipe(
+          map(() => this.serviceModule.getActions().setName(name)),
           endWith(this.terminate()),
         ),
       ),
@@ -277,6 +295,15 @@ describe('SSR specs:', () => {
     const moduleState = state['dataToPersist']['CountModel']
 
     expect(moduleState.name).toBe('')
+    expect(state['dataToPersist']).toMatchSnapshot()
+  })
+
+  it("should return right state if emit other module's effect", async () => {
+    const state = await emitSSREffects({ name: 'foo' }, [CountModel], {
+      providers: [],
+    }).pendingState
+    const moduleState = state['dataToPersist']['ServiceModule']
+    expect(moduleState.name).toBe('foo')
     expect(state['dataToPersist']).toMatchSnapshot()
   })
 

@@ -307,6 +307,31 @@ describe('injectable specs', () => {
     expect(service).toBe(service1)
   })
 
+  it('should resolve instances in child injector', () => {
+    class Dep {}
+
+    const token = new InjectionToken<Dep>('whatever')
+
+    rootInjector.addProvider({
+      provide: token,
+      useClass: Dep,
+    })
+
+    @Injectable()
+    class Service {
+      constructor(@Inject(token) public dep: Dep) {}
+    }
+
+    const replacementProvider = {
+      provide: token,
+      useValue: 1,
+    }
+
+    const newInjector = rootInjector.createChild([replacementProvider])
+    newInjector.getInstance(Service)
+    expect(newInjector.resolvedInstances.size).toBe(2)
+  })
+
   it('should be able to inject provider via InjectableConfigs', () => {
     @Injectable()
     class Dep {}
