@@ -3,6 +3,7 @@
   "compilerOptions": {
     "jsx": "react",
     "target": "ESNext",
+    "module": "ES2015",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
