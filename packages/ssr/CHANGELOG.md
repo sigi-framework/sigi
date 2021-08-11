@@ -3,16 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.11.0](https://github.com/sigi-framework/sigi/compare/v2.10.9...v2.11.0) (2021-07-19)
+## [2.11.1](https://github.com/sigi-framework/sigi/compare/v2.11.0...v2.11.1) (2021-08-11)
 
+### Bug Fixes
+
+- init while payloadgetter skip ([f317101](https://github.com/sigi-framework/sigi/commit/f3171014fa30b591dd65b3473f917316793a0833))
+- **ssr:** payloadGetter type in match function ([38738ab](https://github.com/sigi-framework/sigi/commit/38738ab80d1f9b46baeb80824bb9369bcf118c5a))
+
+# [2.11.0](https://github.com/sigi-framework/sigi/compare/v2.10.9...v2.11.0) (2021-07-19)
 
 ### Features
 
-* **ssr:** support match fn ([f899954](https://github.com/sigi-framework/sigi/commit/f899954a24ad6f3a903675868f335aeb0fa3568f))
-
-
-
-
+- **ssr:** support match fn ([f899954](https://github.com/sigi-framework/sigi/commit/f899954a24ad6f3a903675868f335aeb0fa3568f))
 
 ## [2.10.8](https://github.com/sigi-framework/sigi/compare/v2.10.7...v2.10.8) (2021-06-16)
 
