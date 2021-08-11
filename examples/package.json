@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@abraham/reflection": "^0.8.0",
-    "antd": "^4.16.1"
+    "antd": "^4.16.11"
   },
   "devDependencies": {
-    "@parcel/transformer-typescript-tsc": "^2.0.0-beta.3.1",
-    "@types/parcel-env": "^0.0.0",
-    "parcel": "^2.0.0-beta.3.1"
+    "@parcel/transformer-vue": "2.0.0-rc.0",
+    "@types/parcel-env": "^0.0.1",
+    "parcel": "^2.0.0-rc.0"
   }
 }
