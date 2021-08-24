@@ -1,6 +1,6 @@
 {
   "name": "@sigi/react",
-  "version": "2.11.1",
+  "version": "2.11.2",
   "description": "React bindings for sigi framework",
   "keywords": ["Hooks", "RxJS", "TypeScript", "React", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
@@ -25,9 +25,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.10.8",
+    "@sigi/core": "^2.11.2",
     "@sigi/di": "^2.10.2",
-    "@sigi/ssr": "^2.11.1",
+    "@sigi/ssr": "^2.11.2",
     "@sigi/types": "^2.10.2",
     "tslib": "^2.2.0"
   },

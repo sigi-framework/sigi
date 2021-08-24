@@ -1,6 +1,6 @@
 {
   "name": "@sigi/core",
-  "version": "2.10.8",
+  "version": "2.11.2",
   "description": "Sigi core library",
   "keywords": ["RxJS", "TypeScript", "Sigi"],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",

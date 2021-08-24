@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.2](https://github.com/sigi-framework/sigi/compare/v2.11.1...v2.11.2) (2021-08-24)
+
+### Bug Fixes
+
+- **core:** skipCount should less equal than the filtered index ([ff38eb6](https://github.com/sigi-framework/sigi/commit/ff38eb6667cc8f0274a893211669925cd3e7f334))
+
 ## [2.10.8](https://github.com/sigi-framework/sigi/compare/v2.10.7...v2.10.8) (2021-06-16)
 
 ### Bug Fixes
