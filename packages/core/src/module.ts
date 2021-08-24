@@ -286,9 +286,14 @@ export abstract class EffectModule<S> {
         ...effectKeys.map((name) => {
           const effect: Effect<unknown> = (this as any)[name]
           const payload$ = action$.pipe(
-            filter(({ type }, index) => {
+            filter(({ type }) => type === name),
+            // If this Module restored from `SIGI_STATE` successfully.
+            // We should skip the effects decorated by `payloadGetter`, which was dispatched in the server side.
+            // So we need `filter` the decorated effects by `index: 0`, which is the first time we dispatch the action in the client side.
+            // Which means we should filter by the `action.type` first, and `filter` by the `index` again then.
+            filter((_, index) => {
               const skipCount = !this.actionsToRetry.has(name) && this.actionsToSkip?.has(name) ? 1 : 0
-              return type === name && skipCount <= index
+              return skipCount <= index
             }),
             map(({ payload }) => payload),
           )

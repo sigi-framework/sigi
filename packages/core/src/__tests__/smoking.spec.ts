@@ -1,7 +1,9 @@
+/* eslint-disable sonarjs/no-identical-functions */
+
 import 'reflect-metadata'
 import { rootInjector } from '@sigi/di'
 import { Observable } from 'rxjs'
-import { delay, map } from 'rxjs/operators'
+import { delay, map, tap } from 'rxjs/operators'
 import * as Sinon from 'sinon'
 
 import { Reducer, Effect } from '../decorators'
@@ -82,5 +84,57 @@ describe('Smoking tests', () => {
     barStore.dispose()
     timer.restore()
     rootInjector.reset()
+  })
+
+  it('should skip all effects restored from persisted state', () => {
+    type State = { foo: string; bar: number }
+    const staticState = { foo: 'foo', bar: 42 }
+    global['SIGI_STATE'] = {
+      SSRPersistModule: staticState,
+    }
+    const spy = Sinon.spy()
+    @Module('SSRPersistModule')
+    class SSRPersistModule extends EffectModule<State> {
+      defaultState = {
+        foo: '1',
+        bar: 2,
+      }
+
+      @Reducer()
+      set(state: State, payload: string | number) {
+        if (typeof payload === 'string') {
+          return { ...state, foo: payload }
+        } else {
+          return { ...state, bar: payload }
+        }
+      }
+
+      @Effect({
+        payloadGetter: () => '2',
+      })
+      setFoo(payload$: Observable<string>) {
+        return payload$.pipe(
+          tap(spy),
+          map((payload) => this.getActions().set(payload)),
+        )
+      }
+
+      @Effect({
+        payloadGetter: () => 3,
+      })
+      setBar(payload$: Observable<number>) {
+        return payload$.pipe(
+          tap(spy),
+          map((payload) => this.getActions().set(payload)),
+        )
+      }
+    }
+
+    const module = rootInjector.getInstance(SSRPersistModule)
+    module.dispatchers.setFoo(staticState.foo + 1)
+    module.dispatchers.setBar(staticState.bar + 1)
+    expect(spy.callCount).toBe(0)
+    expect(module.state.foo).toBe(staticState.foo)
+    expect(module.state.bar).toBe(staticState.bar)
   })
 })
