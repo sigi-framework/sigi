@@ -1,8 +1,13 @@
 {
   "name": "@sigi-stringke/vue",
-  "version": "2.11.2",
+  "version": "2.11.3-alpha.0",
   "description": "Sigi framework binding for VueJS",
-  "keywords": ["Vue", "RxJS", "TypeScript", "Sigi"],
+  "keywords": [
+    "Vue",
+    "RxJS",
+    "TypeScript",
+    "Sigi"
+  ],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -15,7 +20,12 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -24,9 +34,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi-stringke/core": "^2.11.2",
-    "@sigi-stringke/di": "^2.10.2",
-    "@sigi-stringke/types": "^2.10.2"
+    "@sigi-stringke/core": "^2.11.3-alpha.0",
+    "@sigi-stringke/di": "^2.11.3-alpha.0",
+    "@sigi-stringke/types": "^2.11.3-alpha.0"
   },
   "peerDependencies": {
     "vue": ">=2"

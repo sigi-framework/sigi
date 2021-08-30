@@ -1,8 +1,11 @@
 {
   "name": "@sigi-stringke/di",
-  "version": "2.10.2",
+  "version": "2.11.3-alpha.0",
   "description": "Dependencies injection library for sigi framework",
-  "keywords": ["DI", "Sigi"],
+  "keywords": [
+    "DI",
+    "Sigi"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -15,7 +18,12 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"

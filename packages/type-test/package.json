@@ -1,9 +1,13 @@
 {
   "name": "@sigi-stringke/type-test",
-  "version": "2.0.0",
+  "version": "2.11.3-alpha.0",
   "private": true,
   "description": "Type tests for Sigi framework bindings",
-  "keywords": ["Sigi", "Vue", "VueJS"],
+  "keywords": [
+    "Sigi",
+    "Vue",
+    "VueJS"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
