@@ -22,7 +22,7 @@
 </div>
 </template>
 <script lang="ts">
-import { reactive } from '@sigi-stringke/vue'
+import { reactive } from '@stringke/sigi-vue'
 
 import { CommitsModule } from './commits.module'
 

@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-stringke/di",
+  "name": "@stringke/sigi-di",
   "version": "2.11.3-alpha.0",
   "description": "Dependencies injection library for sigi framework",
   "keywords": [

@@ -1,4 +1,4 @@
-import { useModule } from '@sigi-stringke/react'
+import { useModule } from '@stringke/sigi-react'
 import React from 'react'
 
 import { AsyncModule } from './async.module'

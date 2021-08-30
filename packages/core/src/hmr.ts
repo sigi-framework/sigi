@@ -1,4 +1,4 @@
-import { IStore } from '@sigi-stringke/types'
+import { IStore } from '@stringke/sigi-types'
 
 // @ts-expect-error
 export const hmrEnabled = process.env.NODE_ENV === 'development' && module.hot

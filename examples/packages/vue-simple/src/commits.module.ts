@@ -1,4 +1,4 @@
-import { Module, EffectModule, Effect, ImmerReducer } from '@sigi-stringke/core'
+import { Module, EffectModule, Effect, ImmerReducer } from '@stringke/sigi-core'
 import { Draft } from 'immer'
 import { Observable } from 'rxjs'
 import { map, combineLatest, switchMap, distinctUntilKeyChanged } from 'rxjs/operators'

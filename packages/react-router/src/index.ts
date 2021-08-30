@@ -1,4 +1,4 @@
-import { Module, EffectModule } from '@sigi-stringke/core'
+import { Module, EffectModule } from '@stringke/sigi-core'
 
 @Module('@@Router')
 export class RouterModule extends EffectModule<null> {

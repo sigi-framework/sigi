@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-identical-functions */
 
 import 'reflect-metadata'
-import { rootInjector } from '@sigi-stringke/di'
+import { rootInjector } from '@stringke/sigi-di'
 import { Observable } from 'rxjs'
 import { delay, map, tap } from 'rxjs/operators'
 import * as Sinon from 'sinon'

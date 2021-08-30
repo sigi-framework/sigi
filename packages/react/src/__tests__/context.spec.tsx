@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 
-import { Injectable } from '@sigi-stringke/di'
+import { Injectable } from '@stringke/sigi-di'
 import React from 'react'
 import { create } from 'react-test-renderer'
 

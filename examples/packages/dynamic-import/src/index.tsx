@@ -1,7 +1,7 @@
 import '@abraham/reflection'
 import 'antd/dist/antd.css'
-import { initDevtool } from '@sigi-stringke/devtool'
-import { useModule } from '@sigi-stringke/react'
+import { initDevtool } from '@stringke/sigi-devtool'
+import { useModule } from '@stringke/sigi-react'
 import React, { useState, useCallback, useEffect } from 'react'
 import { render } from 'react-dom'
 

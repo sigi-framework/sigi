@@ -1,11 +1,11 @@
-# `@sigi-stringke/react-router`
+# `@stringke/sigi-react-router`
 
 > React router integration for sigi framework
 
 ## Usage
 
 ```ts
-import { RouterModule } from '@sigi-stringke/react-router'
+import { RouterModule } from '@stringke/sigi-react-router'
 
 @Module('App')
 export class AppModule extends EffectModule<{}> {

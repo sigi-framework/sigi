@@ -1,5 +1,5 @@
-import { ValueProvider } from '@sigi-stringke/di'
-import { InjectionProvidersContext } from '@sigi-stringke/react'
+import { ValueProvider } from '@stringke/sigi-di'
+import { InjectionProvidersContext } from '@stringke/sigi-react'
 import { History, Location, Action } from 'history'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Subject } from 'rxjs'

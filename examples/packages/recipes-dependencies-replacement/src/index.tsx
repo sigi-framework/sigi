@@ -1,6 +1,6 @@
 import '@abraham/reflection'
-import { ClassProvider } from '@sigi-stringke/di'
-import { useModule, InjectionProvidersContext } from '@sigi-stringke/react'
+import { ClassProvider } from '@stringke/sigi-di'
+import { useModule, InjectionProvidersContext } from '@stringke/sigi-react'
 import React from 'react'
 import { render } from 'react-dom'
 

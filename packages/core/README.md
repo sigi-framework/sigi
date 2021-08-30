@@ -1,4 +1,4 @@
-# `@sigi-stringke/core`
+# `@stringke/sigi-core`
 
 ## Usage
 

@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 
-import { EffectModule, Module, ImmerReducer, Effect } from '@sigi-stringke/core'
-import { Test, SigiTestModule, SigiTestStub } from '@sigi-stringke/testing'
+import { EffectModule, Module, ImmerReducer, Effect } from '@stringke/sigi-core'
+import { Test, SigiTestModule, SigiTestStub } from '@stringke/sigi-testing'
 import { Draft } from 'immer'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, switchMap } from 'rxjs/operators'

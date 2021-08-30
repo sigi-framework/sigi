@@ -1,5 +1,5 @@
 import '@abraham/reflection'
-import { initDevtool } from '@sigi-stringke/devtool'
+import { initDevtool } from '@stringke/sigi-devtool'
 import Vue from 'vue'
 
 import Commits from './commits.vue'

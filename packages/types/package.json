@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-stringke/types",
+  "name": "@stringke/sigi-types",
   "version": "2.11.3-alpha.0",
   "description": "Types definition for sigi framework",
   "keywords": [

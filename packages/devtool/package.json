@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-stringke/devtool",
+  "name": "@stringke/sigi-devtool",
   "version": "2.11.3-alpha.0",
   "description": "Connect sigi to redux devtool",
   "keywords": [
@@ -32,8 +32,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi-stringke/core": "^2.11.3-alpha.0",
-    "@sigi-stringke/types": "^2.11.3-alpha.0",
+    "@stringke/sigi-core": "^2.11.3-alpha.0",
+    "@stringke/sigi-types": "^2.11.3-alpha.0",
     "tslib": "^2.2.0"
   }
 }

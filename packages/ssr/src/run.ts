@@ -1,6 +1,6 @@
-import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta, RETRY_ACTION_TYPE_SYMBOL } from '@sigi-stringke/core'
-import { rootInjector, Injector, Provider } from '@sigi-stringke/di'
-import { ConstructorOf, Action } from '@sigi-stringke/types'
+import { EffectModule, TERMINATE_ACTION_TYPE_SYMBOL, getSSREffectMeta, RETRY_ACTION_TYPE_SYMBOL } from '@stringke/sigi-core'
+import { rootInjector, Injector, Provider } from '@stringke/sigi-di'
+import { ConstructorOf, Action } from '@stringke/sigi-types'
 
 import { StateToPersist } from './state-to-persist'
 

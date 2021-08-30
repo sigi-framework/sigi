@@ -1,7 +1,7 @@
-import { Maybe } from '@sigi-stringke/types'
+import { Maybe } from '@stringke/sigi-types'
 import * as ts from 'typescript'
 
-const EffectLibraryName = '@sigi-stringke/core'
+const EffectLibraryName = '@stringke/sigi-core'
 const EffectName = 'Effect'
 const PayloadGetterName = 'payloadGetter'
 const ModuleDef = 'Module'
@@ -158,7 +158,7 @@ function createHMRCode(moduleName: string, moduleClassName: string) {
 if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept()
   module.hot.dispose(() => {
-    const { rootInjector } = require('@sigi-stringke/di')
+    const { rootInjector } = require('@stringke/sigi-di')
     const instance = rootInjector.getInstance(${moduleClassName})
     Module.removeModule('${moduleName}', instance)
   })

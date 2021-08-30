@@ -1,4 +1,4 @@
-import { Action } from '@sigi-stringke/types'
+import { Action } from '@stringke/sigi-types'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export let logStoreAction: (action: Action<unknown>) => void = (_action) => {}

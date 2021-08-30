@@ -57,7 +57,7 @@ describe('ts-plugin specs', () => {
 
   it('should throw if Effect option is dynamic', () => {
     const code = `
-    import { EffectModule, Module, Effect } from '@sigi-stringke/core'
+    import { EffectModule, Module, Effect } from '@stringke/sigi-core'
     import { Request } from 'express'
     import { Observable } from 'rxjs'
     import { map } from 'rxjs/operators'
@@ -90,7 +90,7 @@ describe('ts-plugin specs', () => {
     const { NODE_ENV } = process.env
     process.env.NODE_ENV = 'development'
     const code = `
-    import { Module, Effect } from '@sigi-stringke/core'
+    import { Module, Effect } from '@stringke/sigi-core'
     import { Request } from 'express'
     import { Observable } from 'rxjs'
     import { map } from 'rxjs/operators'
@@ -121,7 +121,7 @@ describe('ts-plugin specs', () => {
     const { NODE_ENV } = process.env
     process.env.NODE_ENV = 'development'
     const code = `
-    import { Module, Effect } from '@sigi-stringke/core'
+    import { Module, Effect } from '@stringke/sigi-core'
     import { Request } from 'express'
     import { Observable } from 'rxjs'
     import { map } from 'rxjs/operators'

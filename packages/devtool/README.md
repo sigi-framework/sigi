@@ -1,11 +1,11 @@
-# `@sigi-stringke/devtool`
+# `@stringke/sigi-devtool`
 
 [Sigi documents](https://sigi.how)
 
 ## Usage
 
 ```ts
-import { initDevtool } from '@sigi-stringke/devtool'
+import { initDevtool } from '@stringke/sigi-devtool'
 import { render } from 'react-dom'
 
 

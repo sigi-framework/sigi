@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 
-import { Module, EffectModule, Effect, ImmerReducer, Action } from '@sigi-stringke/core'
+import { Module, EffectModule, Effect, ImmerReducer, Action } from '@stringke/sigi-core'
 import { Draft } from 'immer'
 import { useEffect, useState } from 'react'
 import { create, act, ReactTestRenderer } from 'react-test-renderer'

@@ -29,7 +29,7 @@
     "paths": {
       "react": ["node_modules/@types/react"],
       "vue": ["node_modules/vue"],
-      "@sigi-stringke/*": ["./*/src/index.ts"]
+      "@stringke/sigi-*": ["./*/src/index.ts"]
     }
   },
   "include": ["./packages/**/*"]

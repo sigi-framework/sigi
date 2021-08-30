@@ -1,5 +1,5 @@
-import { Injectable } from '@sigi-stringke/di'
-import { IStore } from '@sigi-stringke/types'
+import { Injectable } from '@stringke/sigi-di'
+import { IStore } from '@stringke/sigi-types'
 
 import { hmrEnabled, hmrInstanceCache } from './hmr'
 

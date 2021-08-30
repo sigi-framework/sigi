@@ -1,4 +1,4 @@
-import { IStore, Epic, Action } from '@sigi-stringke/types'
+import { IStore, Epic, Action } from '@stringke/sigi-types'
 import { BehaviorSubject, ReplaySubject, Subject, Subscription, identity, Observable } from 'rxjs'
 import { last, share, switchMap, takeUntil } from 'rxjs/operators'
 
@@ -60,7 +60,7 @@ export class Store<S> implements IStore<S> {
   }
 
   /**
-   * @param combineEpic {(combineEpic: import('@sigi-stringke/types').Epic) => import('@sigi-stringke/types').Epic}
+   * @param combineEpic {(combineEpic: import('@stringke/sigi-types').Epic) => import('@stringke/sigi-types').Epic}
    * accept `combineEpic` factory to produce new `Epic`
    * The streams on old `Epic` will be switched.
    */

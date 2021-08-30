@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-stringke/vue",
+  "name": "@stringke/sigi-vue",
   "version": "2.11.3-alpha.0",
   "description": "Sigi framework binding for VueJS",
   "keywords": [
@@ -34,9 +34,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi-stringke/core": "^2.11.3-alpha.0",
-    "@sigi-stringke/di": "^2.11.3-alpha.0",
-    "@sigi-stringke/types": "^2.11.3-alpha.0"
+    "@stringke/sigi-core": "^2.11.3-alpha.0",
+    "@stringke/sigi-di": "^2.11.3-alpha.0",
+    "@stringke/sigi-types": "^2.11.3-alpha.0"
   },
   "peerDependencies": {
     "vue": ">=2"
