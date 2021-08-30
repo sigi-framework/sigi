@@ -3,7 +3,7 @@
   "version": "2.11.2",
   "description": "React bindings for sigi framework",
   "keywords": ["Hooks", "RxJS", "TypeScript", "React", "Sigi"],
-  "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
+  "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": ["dist", "esm", "next", "es2015", "src"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -29,7 +29,7 @@
     "@sigi/di": "^2.10.2",
     "@sigi/ssr": "^2.11.2",
     "@sigi/types": "^2.10.2",
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.1"
   },
   "peerDependencies": {
     "react": ">=17",

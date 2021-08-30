@@ -16,7 +16,7 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": ["dist", "esm", "next", "es2015", "src"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -29,10 +29,10 @@
     "@sigi/di": "^2.10.2",
     "@sigi/react": "^2.11.2",
     "@sigi/types": "^2.10.2",
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/history": "^4.7.8",
+    "@types/history": "^4.7.9",
     "history": "4"
   }
 }
