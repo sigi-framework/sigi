@@ -1,4 +1,4 @@
-export type { Action, IStore, Option, Maybe, ConstructorOf } from '@sigi/types'
+export type { Action, IStore, Option, Maybe, ConstructorOf } from '@sigi-stringke/types'
 
 export * from './module'
 export {

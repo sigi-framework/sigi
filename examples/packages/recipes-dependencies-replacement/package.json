@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-example/recipes-dependencies-replacement",
+  "name": "@sigi-stringke-example/recipes-dependencies-replacement",
   "version": "0.0.0",
   "description": "Dependencies replacement recipe for Sigi framework",
   "keywords": ["Sigi", "framework"],

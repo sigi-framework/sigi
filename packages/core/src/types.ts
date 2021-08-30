@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
-import { Action } from '@sigi/types'
+import { Action } from '@sigi-stringke/types'
 import { Draft } from 'immer'
 import { Observable } from 'rxjs'
 

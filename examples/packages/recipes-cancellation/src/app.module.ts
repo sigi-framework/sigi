@@ -1,4 +1,4 @@
-import { Module, EffectModule, Reducer, Effect, Action } from '@sigi/core'
+import { Module, EffectModule, Reducer, Effect, Action } from '@sigi-stringke/core'
 import { Observable } from 'rxjs'
 import { takeUntil, map, tap, startWith, endWith, switchMap } from 'rxjs/operators'
 

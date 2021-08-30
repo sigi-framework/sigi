@@ -1,10 +1,10 @@
-# `@sigi/ts-plugin`
+# `@sigi-stringke/ts-plugin`
 
 ## Usage
 
 ```ts
 // webpack.config.js
-const { SigiTransformer } = require('@sigi/ts-plugin')
+const { SigiTransformer } = require('@sigi-stringke/ts-plugin')
 
 module.exports = {
   // ...

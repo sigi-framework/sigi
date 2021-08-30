@@ -1,10 +1,10 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import 'reflect-metadata'
 
-import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer, RETRY_KEY_SYMBOL } from '@sigi/core'
-import { Injectable, Injector } from '@sigi/di'
-import { emitSSREffects, match } from '@sigi/ssr'
-import { Action } from '@sigi/types'
+import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer, RETRY_KEY_SYMBOL } from '@sigi-stringke/core'
+import { Injectable, Injector } from '@sigi-stringke/di'
+import { emitSSREffects, match } from '@sigi-stringke/ssr'
+import { Action } from '@sigi-stringke/types'
 import { Draft } from 'immer'
 import { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'

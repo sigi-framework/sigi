@@ -24,7 +24,7 @@ module.exports = {
     '!packages/{core,react-router,devtool}/src/index.ts',
   ],
   moduleNameMapper: {
-    '@sigi/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2',
+    '@sigi-stringke/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2',
   },
   testPathIgnorePatterns: ['/node_modules/', '/examples/', '\\.js$', '\\.d\\.ts$'],
 }

@@ -11,10 +11,10 @@ const pkgs = readdirSync(join(__dirname, '..', 'packages')).filter(
 
 const external = [
   'rxjs',
-  '@sigi/core',
-  '@sigi/di',
-  '@sigi/react',
-  '@sigi/ssr',
+  '@sigi-stringke/core',
+  '@sigi-stringke/di',
+  '@sigi-stringke/react',
+  '@sigi-stringke/ssr',
   'rxjs/operators',
   'immer',
   'react',

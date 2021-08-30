@@ -1,3 +1,3 @@
-# `@sigi/types`
+# `@sigi-stringke/types`
 
 [Sigi documents](https://sigi.how)

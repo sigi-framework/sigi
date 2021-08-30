@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ts-plugin specs should output hmr codes 1`] = `
-"import { Module, Effect } from '@sigi/core';
+"import { Module, Effect } from '@sigi-stringke/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,7 +17,7 @@ export class ModuleA extends EffectModule<AState> {
 if (process.env.NODE_ENV === \\"development\\" && module.hot) {
     module.hot.accept();
     module.hot.dispose(() => {
-        const { rootInjector } = require(\\"@sigi/di\\");
+        const { rootInjector } = require(\\"@sigi-stringke/di\\");
         const instance = rootInjector
             .
                 getInstance(ModuleA);
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === \\"development\\" && module.hot) {
 `;
 
 exports[`ts-plugin specs should skip inject hmr codes if non module name 1`] = `
-"import { Module, Effect } from '@sigi/core';
+"import { Module, Effect } from '@sigi-stringke/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -48,13 +48,13 @@ exports[`ts-plugin specs should transform alias 1`] = `
 
 File: alias.tsx
 TypeScript before transform:
-  import { EffectModule, Module, Effect as _Effect } from '@sigi/core'
+  import { EffectModule, Module, Effect as _Effect } from '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @_Effect({
@@ -68,10 +68,10 @@ TypeScript before transform:
       )
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module, Effect as _Effect } from '@sigi/core';
+  import { EffectModule, Module, Effect as _Effect } from '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -84,7 +84,7 @@ TypeScript after transform:
       return payload$.pipe(map(() => this.createNoopAction()));
     }
   }
-  
+
 
 `;
 
@@ -92,14 +92,14 @@ exports[`ts-plugin specs should transform do-nothing 1`] = `
 
 File: do-nothing.tsx
 TypeScript before transform:
-  import { EffectModule, Module } from '@sigi/core'
+  import { EffectModule, Module } from '@sigi-stringke/core'
   import { Effect } from 'not-sigi'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect({
@@ -112,15 +112,15 @@ TypeScript before transform:
         map(() => this.createNoopAction())
       )
     }
-  
+
     normalMethod() {
-  
+
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module } from '@sigi/core';
+  import { EffectModule, Module } from '@sigi-stringke/core';
   import { Effect } from 'not-sigi';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
@@ -140,7 +140,7 @@ TypeScript after transform:
     normalMethod() {
     }
   }
-  
+
 
 `;
 
@@ -152,9 +152,9 @@ TypeScript before transform:
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect({
@@ -167,12 +167,12 @@ TypeScript before transform:
         map(() => this.createNoopAction())
       )
     }
-  
+
     normalMethod() {
-  
+
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
   import { Effect, EffectModule, Module } from 'not-sigi';
@@ -194,7 +194,7 @@ TypeScript after transform:
     normalMethod() {
     }
   }
-  
+
 
 `;
 
@@ -202,15 +202,15 @@ exports[`ts-plugin specs should transform do-nothing-4 1`] = `
 
 File: do-nothing-4.tsx
 TypeScript before transform:
-  import { EffectModule, Module, Effect } from '@sigi/core'
+  import { EffectModule, Module, Effect } from '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   const PayloadGetterString = 'payloadGetter'
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect({
@@ -223,7 +223,7 @@ TypeScript before transform:
         map(() => this.createNoopAction())
       )
     }
-  
+
     @Effect({
       [PayloadGetterString]: (req: Request) => {
         return require('md5')('hello')
@@ -234,16 +234,16 @@ TypeScript before transform:
         map(() => this.createNoopAction())
       )
     }
-  
+
     @Effect
     normalMethod() {
-  
+
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module, Effect } from '@sigi/core';
+  import { EffectModule, Module, Effect } from '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -264,7 +264,7 @@ TypeScript after transform:
     normalMethod() {
     }
   }
-  
+
 
 `;
 
@@ -272,13 +272,13 @@ exports[`ts-plugin specs should transform do-notiong-3 1`] = `
 
 File: do-notiong-3.tsx
 TypeScript before transform:
-  import '@sigi/core'
+  import '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect({
@@ -291,15 +291,15 @@ TypeScript before transform:
         map(() => this.createNoopAction())
       )
     }
-  
+
     normalMethod() {
-  
+
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import '@sigi/core';
+  import '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -318,7 +318,7 @@ TypeScript after transform:
     normalMethod() {
     }
   }
-  
+
 
 `;
 
@@ -326,13 +326,13 @@ exports[`ts-plugin specs should transform named-import 1`] = `
 
 File: named-import.tsx
 TypeScript before transform:
-  import { EffectModule, Module, Effect } from '@sigi/core'
+  import { EffectModule, Module, Effect } from '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect({
@@ -347,10 +347,10 @@ TypeScript before transform:
       )
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module, Effect } from '@sigi/core';
+  import { EffectModule, Module, Effect } from '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -363,7 +363,7 @@ TypeScript after transform:
       return payload$.pipe(map(() => this.createNoopAction()));
     }
   }
-  
+
 
 `;
 
@@ -371,16 +371,16 @@ exports[`ts-plugin specs should transform namespace-import 1`] = `
 
 File: namespace-import.tsx
 TypeScript before transform:
-  import * as Sigi from '@sigi/core'
+  import * as Sigi from '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
-  @Sigi.Module('A')
+
+  @sigi-stringke.Module('A')
   export class ModuleA extends Sigi.EffectModule<AState> {
-    @Sigi.Effect({
+    @sigi-stringke.Effect({
       payloadGetter: (req: Request) => {
         return require('md5')('hello')
       }
@@ -391,23 +391,23 @@ TypeScript before transform:
       )
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import * as Sigi from '@sigi/core';
+  import * as Sigi from '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
   interface AState {
   }
-  @Sigi.Module('A')
+  @sigi-stringke.Module('A')
   export class ModuleA extends Sigi.EffectModule<AState> {
-    @Sigi.Effect({})
+    @sigi-stringke.Effect({})
     whatever(payload$: Observable<string>) {
       return payload$.pipe(map(() => this.createNoopAction()));
     }
   }
-  
+
 
 `;
 
@@ -415,13 +415,13 @@ exports[`ts-plugin specs should transform no-argument 1`] = `
 
 File: no-argument.tsx
 TypeScript before transform:
-  import { EffectModule, Module, Reducer, Effect } from '@sigi/core'
+  import { EffectModule, Module, Reducer, Effect } from '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect()
@@ -430,16 +430,16 @@ TypeScript before transform:
         map(() => this.createNoopAction())
       )
     }
-  
+
     @Reducer()
     reducer(state: AState) {
       return { ...state }
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module, Reducer, Effect } from '@sigi/core';
+  import { EffectModule, Module, Reducer, Effect } from '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -456,7 +456,7 @@ TypeScript after transform:
       return { ...state };
     }
   }
-  
+
 
 `;
 
@@ -464,13 +464,13 @@ exports[`ts-plugin specs should transform without-named-binding 1`] = `
 
 File: without-named-binding.tsx
 TypeScript before transform:
-  import { EffectModule, Module } from '@sigi/core'
+  import { EffectModule, Module } from '@sigi-stringke/core'
   import { Request } from 'express'
   import { Observable } from 'rxjs'
   import { map } from 'rxjs/operators'
-  
+
   interface AState {}
-  
+
   @Module('A')
   export class ModuleA extends EffectModule<AState> {
     @Effect({
@@ -484,10 +484,10 @@ TypeScript before transform:
       )
     }
   }
-  
+
       ↓ ↓ ↓ ↓ ↓ ↓
 TypeScript after transform:
-  import { EffectModule, Module } from '@sigi/core';
+  import { EffectModule, Module } from '@sigi-stringke/core';
   import { Request } from 'express';
   import { Observable } from 'rxjs';
   import { map } from 'rxjs/operators';
@@ -504,6 +504,6 @@ TypeScript after transform:
       return payload$.pipe(map(() => this.createNoopAction()));
     }
   }
-  
+
 
 `;

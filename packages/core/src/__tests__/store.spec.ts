@@ -1,4 +1,4 @@
-import { Action, Epic } from '@sigi/types'
+import { Action, Epic } from '@sigi-stringke/types'
 import { Reducer } from 'react'
 import { interval } from 'rxjs'
 import { delay, filter, map, mapTo, mergeMap, tap } from 'rxjs/operators'

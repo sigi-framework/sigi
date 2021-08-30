@@ -1,5 +1,5 @@
 {
-  "name": "@sigi/ssr",
+  "name": "@sigi-stringke/ssr",
   "version": "2.11.2",
   "description": "Server side rendering support for sigi framework",
   "keywords": ["Sigi", "SSR"],
@@ -27,9 +27,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.11.2",
-    "@sigi/di": "^2.10.2",
-    "@sigi/types": "^2.10.2",
+    "@sigi-stringke/core": "^2.11.2",
+    "@sigi-stringke/di": "^2.10.2",
+    "@sigi-stringke/types": "^2.10.2",
     "path-to-regexp": "^6.2.0",
     "serialize-javascript": "^5.0.1",
     "tslib": "^2.2.0"

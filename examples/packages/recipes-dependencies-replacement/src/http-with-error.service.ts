@@ -1,4 +1,4 @@
-import { Injectable } from '@sigi/di'
+import { Injectable } from '@sigi-stringke/di'
 import { Observable, throwError } from 'rxjs'
 
 @Injectable()

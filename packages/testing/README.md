@@ -1,4 +1,4 @@
-# `@sigi/testing`
+# `@sigi-stringke/testing`
 
 ## Usage
 

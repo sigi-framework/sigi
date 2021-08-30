@@ -1,5 +1,5 @@
 {
-  "name": "@sigi/type-test",
+  "name": "@sigi-stringke/type-test",
   "version": "2.0.0",
   "private": true,
   "description": "Type tests for Sigi framework bindings",

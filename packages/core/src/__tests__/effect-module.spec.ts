@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 
-import { rootInjector } from '@sigi/di'
-import { Action, IStore } from '@sigi/types'
+import { rootInjector } from '@sigi-stringke/di'
+import { Action, IStore } from '@sigi-stringke/types'
 import { Draft } from 'immer'
 import { of, Observable, noop } from 'rxjs'
 import { delay, map, withLatestFrom, takeUntil, tap, switchMap, exhaustMap, startWith, share } from 'rxjs/operators'

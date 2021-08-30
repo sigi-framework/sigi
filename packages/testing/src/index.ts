@@ -1,5 +1,5 @@
-import { EffectModule, ActionOfEffectModule, IStore } from '@sigi/core'
-import { TestModule, Type } from '@sigi/di'
+import { EffectModule, ActionOfEffectModule, IStore } from '@sigi-stringke/core'
+import { TestModule, Type } from '@sigi-stringke/di'
 
 export class SigiTestModule extends TestModule {
   getTestingStub<M extends EffectModule<S>, S = M extends EffectModule<infer State> ? State : never>(
@@ -27,4 +27,4 @@ export class SigiTestStub<M extends EffectModule<S>, S = M extends EffectModule<
   }
 }
 
-export { Test, TestModule, AbstractTestModule } from '@sigi/di'
+export { Test, TestModule, AbstractTestModule } from '@sigi-stringke/di'

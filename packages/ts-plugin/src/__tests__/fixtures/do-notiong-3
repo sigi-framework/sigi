@@ -1,4 +1,4 @@
-import '@sigi/core'
+import '@sigi-stringke/core'
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'

@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-example/faq-effects-pure-state",
+  "name": "@sigi-stringke-example/faq-effects-pure-state",
   "version": "0.0.0",
   "description": "Faq manage effect with pure state example for Sigi framework",
   "keywords": ["Sigi", "framework"],

@@ -1,5 +1,5 @@
-import { EffectModule, ActionOfEffectModule } from '@sigi/core'
-import { ConstructorOf } from '@sigi/types'
+import { EffectModule, ActionOfEffectModule } from '@sigi-stringke/core'
+import { ConstructorOf } from '@sigi-stringke/types'
 
 import { useServerInstance } from './injectable-context'
 

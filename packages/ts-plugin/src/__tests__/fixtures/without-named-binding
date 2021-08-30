@@ -1,4 +1,4 @@
-import { EffectModule, Module } from '@sigi/core'
+import { EffectModule, Module } from '@sigi-stringke/core'
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'

@@ -1,11 +1,11 @@
-# `@sigi/vue`
+# `@sigi-stringke/vue`
 
 [Sigi documents](https://sigi.how)
 
 ## Install
 
 ```bash
-yarn install @sigi/{vue,core,di}
+yarn install @sigi-stringke/{vue,core,di}
 ```
 
 ## Usage

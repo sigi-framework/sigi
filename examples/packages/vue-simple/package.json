@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-example/vue-simple",
+  "name": "@sigi-stringke-example/vue-simple",
   "version": "0.0.0",
   "description": "Simple VueJS application using Sigi framework",
   "keywords": ["Sigi", "Vue", "VueJS", "RxJS"],

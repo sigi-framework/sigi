@@ -1,5 +1,5 @@
 {
-  "name": "@sigi/core",
+  "name": "@sigi-stringke/core",
   "version": "2.11.2",
   "description": "Sigi core library",
   "keywords": ["RxJS", "TypeScript", "Sigi"],
@@ -24,8 +24,8 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/di": "^2.10.2",
-    "@sigi/types": "^2.10.2",
+    "@sigi-stringke/di": "^2.10.2",
+    "@sigi-stringke/types": "^2.10.2",
     "tslib": "^2.2.0"
   },
   "peerDependencies": {

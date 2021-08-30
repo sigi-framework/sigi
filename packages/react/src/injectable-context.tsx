@@ -1,4 +1,4 @@
-import { rootInjector, Provider, Injector } from '@sigi/di'
+import { rootInjector, Provider, Injector } from '@sigi-stringke/di'
 import React, { createContext, useContext, useMemo, memo } from 'react'
 
 // @internal

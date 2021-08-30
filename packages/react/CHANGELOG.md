@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.11.2](https://github.com/sigi-framework/sigi/compare/v2.11.1...v2.11.2) (2021-08-24)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.11.1](https://github.com/sigi-framework/sigi/compare/v2.11.0...v2.11.1) (2021-08-11)
 
@@ -21,7 +21,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.10.9](https://github.com/sigi-framework/sigi/compare/v2.10.8...v2.10.9) (2021-06-28)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.10.8](https://github.com/sigi-framework/sigi/compare/v2.10.7...v2.10.8) (2021-06-16)
 
@@ -31,7 +31,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.10.7](https://github.com/sigi-framework/sigi/compare/v2.10.6...v2.10.7) (2021-06-15)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.10.4](https://github.com/sigi-framework/sigi/compare/v2.10.3...v2.10.4) (2021-06-09)
 
@@ -47,7 +47,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.10.2](https://github.com/sigi-framework/sigi/compare/v2.10.1...v2.10.2) (2021-05-26)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.10.1](https://github.com/sigi-framework/sigi/compare/v2.10.0...v2.10.1) (2021-05-18)
 
@@ -57,15 +57,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.10.0](https://github.com/sigi-framework/sigi/compare/v2.9.3...v2.10.0) (2021-05-13)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.9.3](https://github.com/sigi-framework/sigi/compare/v2.9.2...v2.9.3) (2021-05-12)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.9.2](https://github.com/sigi-framework/sigi/compare/v2.9.1...v2.9.2) (2021-05-11)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.9.1](https://github.com/sigi-framework/sigi/compare/v2.9.0...v2.9.1) (2021-05-11)
 
@@ -92,7 +92,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.8.6](https://github.com/sigi-framework/sigi/compare/v2.8.5...v2.8.6) (2021-05-06)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.8.5](https://github.com/sigi-framework/sigi/compare/v2.8.4...v2.8.5) (2021-04-28)
 
@@ -127,7 +127,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.8.0](https://github.com/sigi-framework/sigi/compare/v2.7.0...v2.8.0) (2021-02-22)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 # [2.7.0](https://github.com/sigi-framework/sigi/compare/v2.6.0...v2.7.0) (2021-02-07)
 
@@ -137,7 +137,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.6.0](https://github.com/sigi-framework/sigi/compare/v2.5.1...v2.6.0) (2021-02-01)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.5.1](https://github.com/sigi-framework/sigi/compare/v2.5.0...v2.5.1) (2021-01-22)
 
@@ -153,7 +153,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.4.5](https://github.com/sigi-framework/sigi/compare/v2.4.4...v2.4.5) (2020-12-14)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.4.4](https://github.com/sigi-framework/sigi/compare/v2.4.3...v2.4.4) (2020-11-27)
 
@@ -163,15 +163,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.4.3](https://github.com/sigi-framework/sigi/compare/v2.4.2...v2.4.3) (2020-11-22)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.4.2](https://github.com/sigi-framework/sigi/compare/v2.4.1...v2.4.2) (2020-10-15)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 ## [2.4.1](https://github.com/sigi-framework/sigi/compare/v2.4.0...v2.4.1) (2020-08-27)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 # [2.4.0](https://github.com/sigi-framework/sigi/compare/v2.3.1...v2.4.0) (2020-07-28)
 
@@ -187,7 +187,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.3.0](https://github.com/sigi-framework/sigi/compare/v2.2.0...v2.3.0) (2020-07-05)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react
 
 # [2.2.0](https://github.com/sigi-framework/sigi/compare/v2.1.0...v2.2.0) (2020-06-28)
 
@@ -197,4 +197,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # [2.1.0](https://github.com/sigi-framework/sigi/compare/v2.0.2...v2.1.0) (2020-06-02)
 
-**Note:** Version bump only for package @sigi/react
+**Note:** Version bump only for package @sigi-stringke/react

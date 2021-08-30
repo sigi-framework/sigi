@@ -1,4 +1,4 @@
-import { Action } from '@sigi/types'
+import { Action } from '@sigi-stringke/types'
 import { Draft } from 'immer'
 import { Observable } from 'rxjs'
 

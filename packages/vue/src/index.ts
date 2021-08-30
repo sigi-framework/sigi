@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi/core'
-import { rootInjector } from '@sigi/di'
-import { ConstructorOf } from '@sigi/types'
+import { EffectModule, ActionOfEffectModule, StateInEffectModule } from '@sigi-stringke/core'
+import { rootInjector } from '@sigi-stringke/di'
+import { ConstructorOf } from '@sigi-stringke/types'
 import type { ComponentOptions } from 'vue'
 import type { RecordPropsDefinition, DataDef } from 'vue/types/options'
 import type { CombinedVueInstance } from 'vue/types/vue'

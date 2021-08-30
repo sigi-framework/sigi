@@ -171,7 +171,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Bug Fixes
 
-- **react-router:** missing @sigi/{di,types} dependencies ([6f50a97](https://github.com/sigi-framework/sigi/commit/6f50a9792a2acf3b604c1a736861ea2d1009b206))
+- **react-router:** missing @sigi-stringke/{di,types} dependencies ([6f50a97](https://github.com/sigi-framework/sigi/commit/6f50a9792a2acf3b604c1a736861ea2d1009b206))
 
 ### Features
 
@@ -258,23 +258,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # v2.0.2
 
-## @sigi/react
+## @sigi-stringke/react
 
 - remove useless `SSR_LOADED_KEY` and related logic
 
 # v2.0.1
 
-## @sigi/react
+## @sigi-stringke/react
 
 - fix: `Reflect.deleteMetadata` is not implemented by [`@abraham/reflection`](https://github.com/abraham/reflection)
 
 # v2.0.0
 
-## @sigi/core
+## @sigi-stringke/core
 
 - rename internal state owner to `store`
 
-## @sigi/react
+## @sigi-stringke/react
 
 - (Breaking change) merge `@SSREffect` into `@Effect` [#67](https://github.com/sigi-framework/sigi/pull/67)
 - (Breaking change) rename `useEffectModule` => `useModule`

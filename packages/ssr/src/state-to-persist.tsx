@@ -1,4 +1,4 @@
-import { GLOBAL_KEY_SYMBOL, RETRY_KEY_SYMBOL } from '@sigi/core'
+import { GLOBAL_KEY_SYMBOL, RETRY_KEY_SYMBOL } from '@sigi-stringke/core'
 import serialize from 'serialize-javascript'
 
 const ScriptId = 'sigi-persisted-data'

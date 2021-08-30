@@ -1,4 +1,4 @@
-import { Action, Epic } from '@sigi/types'
+import { Action, Epic } from '@sigi-stringke/types'
 import produce, { Draft } from 'immer'
 import { Observable, merge } from 'rxjs'
 import { map, filter, ignoreElements } from 'rxjs/operators'

@@ -1,5 +1,5 @@
-import { EffectModule, ActionOfEffectModule } from '@sigi/core'
-import { ConstructorOf, IStore } from '@sigi/types'
+import { EffectModule, ActionOfEffectModule } from '@sigi-stringke/core'
+import { ConstructorOf, IStore } from '@sigi-stringke/types'
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import { distinctUntilChanged, map, skip } from 'rxjs/operators'
 

@@ -1,6 +1,6 @@
 import '@abraham/reflection'
 
-import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
+import { Test, SigiTestModule, SigiTestStub } from '@sigi-stringke/testing'
 import { Subject } from 'rxjs'
 import * as Sinon from 'sinon'
 

@@ -1,4 +1,4 @@
-# `@sigi/di`
+# `@sigi-stringke/di`
 
 [Sigi documents](https://sigi.how)
 
@@ -9,7 +9,7 @@
 ### Basic
 
 ```ts
-import { Injectable, InjectableFactory } from '@sigi/di'
+import { Injectable, InjectableFactory } from '@sigi-stringke/di'
 
 @Injectable()
 class Engine {}
@@ -27,7 +27,7 @@ expect(car.engine).to.be.instanceof(Engine)
 ### Value Provider
 
 ```ts
-import { Inject, InjectionToken, Injectable, InjectableFactory, ValueProvider } from '@sigi/di'
+import { Inject, InjectionToken, Injectable, InjectableFactory, ValueProvider } from '@sigi-stringke/di'
 import Axios from 'axios'
 
 const token = new InjectionToken<Axios>('Axios client')
@@ -52,7 +52,7 @@ expect(client.axios).to.equal(Axios)
 ### Factory Provider
 
 ```ts
-import { Inject, InjectionToken, Injectable, InjectableFactory, FactoryProvider } from '@sigi/di'
+import { Inject, InjectionToken, Injectable, InjectableFactory, FactoryProvider } from '@sigi-stringke/di'
 import Axios from 'axios'
 
 const token = new InjectionToken<Axios>('Axios client')

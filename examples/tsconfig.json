@@ -12,7 +12,7 @@
     "paths": {
       "react": ["node_modules/@types/react"],
       "vue": ["node_modules/vue"],
-      "@sigi/*": ["./*/src/index.ts"]
+      "@sigi-stringke/*": ["./*/src/index.ts"]
     }
   },
   "include": ["./**/*"]

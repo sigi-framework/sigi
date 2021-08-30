@@ -1,5 +1,5 @@
-import { replaceLogger } from '@sigi/core'
-import { Action } from '@sigi/types'
+import { replaceLogger } from '@sigi-stringke/core'
+import { Action } from '@sigi-stringke/types'
 import { noop } from 'rxjs'
 
 interface GlobalState {

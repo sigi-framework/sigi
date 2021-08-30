@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-example/recipes-error-loading-handling",
+  "name": "@sigi-stringke-example/recipes-error-loading-handling",
   "version": "0.0.0",
   "description": "Error and loading handling recipe for sigi framework",
   "keywords": ["Sigi", "framework"],

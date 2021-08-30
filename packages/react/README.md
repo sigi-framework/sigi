@@ -1,4 +1,4 @@
-# `@sigi/react`
+# `@sigi-stringke/react`
 
 ## Usage
 

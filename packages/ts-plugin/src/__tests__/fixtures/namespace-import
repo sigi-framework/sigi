@@ -1,13 +1,13 @@
-import * as Sigi from '@sigi/core'
+import * as Sigi from '@sigi-stringke/core'
 import { Request } from 'express'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 interface AState {}
 
-@Sigi.Module('A')
+@sigi-stringke.Module('A')
 export class ModuleA extends Sigi.EffectModule<AState> {
-  @Sigi.Effect({
+  @sigi-stringke.Effect({
     payloadGetter: (req: Request) => {
       return require('md5')('hello')
     }

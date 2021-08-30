@@ -1,4 +1,4 @@
-import { reactive } from '@sigi/vue'
+import { reactive } from '@sigi-stringke/vue'
 
 import { CommitsModule } from './commits.module'
 

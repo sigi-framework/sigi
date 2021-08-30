@@ -1,5 +1,5 @@
 {
-  "name": "@sigi-example/recipes-state-selector",
+  "name": "@sigi-stringke-example/recipes-state-selector",
   "version": "0.0.0",
   "description": "State selector recipes for sigi framework",
   "keywords": ["Sigi", "framework"],

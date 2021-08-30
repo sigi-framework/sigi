@@ -1,5 +1,5 @@
 {
-  "name": "@sigi/types",
+  "name": "@sigi-stringke/types",
   "version": "2.10.2",
   "description": "Types definition for sigi framework",
   "keywords": ["Sigi", "TypeScript"],

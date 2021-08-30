@@ -1,5 +1,5 @@
 {
-  "name": "@sigi/react-router",
+  "name": "@sigi-stringke/react-router",
   "version": "2.11.2",
   "description": "React router integration for sigi framework",
   "keywords": ["Sigi", "Router", "React", "RxJS"],
@@ -25,10 +25,10 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.11.2",
-    "@sigi/di": "^2.10.2",
-    "@sigi/react": "^2.11.2",
-    "@sigi/types": "^2.10.2",
+    "@sigi-stringke/core": "^2.11.2",
+    "@sigi-stringke/di": "^2.10.2",
+    "@sigi-stringke/react": "^2.11.2",
+    "@sigi-stringke/types": "^2.10.2",
     "tslib": "^2.2.0"
   },
   "devDependencies": {

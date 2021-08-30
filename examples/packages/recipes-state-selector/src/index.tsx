@@ -1,6 +1,6 @@
 import '@abraham/reflection'
-import { initDevtool } from '@sigi/devtool'
-import { useModule, useModuleState } from '@sigi/react'
+import { initDevtool } from '@sigi-stringke/devtool'
+import { useModule, useModuleState } from '@sigi-stringke/react'
 import React from 'react'
 import { render } from 'react-dom'
 
