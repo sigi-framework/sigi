@@ -1,6 +1,6 @@
 {
   "name": "@stringke/sigi-type-test",
-  "version": "2.11.3-alpha.0",
+  "version": "2.11.3-alpha.1",
   "private": true,
   "description": "Type tests for Sigi framework bindings",
   "keywords": [

@@ -1,6 +1,6 @@
 {
   "name": "@stringke/sigi-testing",
-  "version": "2.11.3-alpha.0",
+  "version": "2.11.3-alpha.1",
   "description": "Testing library for sigi framework",
   "keywords": [
     "Testing",
@@ -32,7 +32,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@stringke/sigi-core": "^2.11.3-alpha.0",
-    "@stringke/sigi-di": "^2.11.3-alpha.0"
+    "@stringke/sigi-core": "^2.11.3-alpha.1",
+    "@stringke/sigi-di": "^2.11.3-alpha.1"
   }
 }

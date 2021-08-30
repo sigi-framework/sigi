@@ -1,6 +1,6 @@
 {
   "name": "@stringke/sigi-react",
-  "version": "2.11.3-alpha.0",
+  "version": "2.11.3-alpha.1",
   "description": "React bindings for sigi framework",
   "keywords": [
     "Hooks",
@@ -36,10 +36,10 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@stringke/sigi-core": "^2.11.3-alpha.0",
-    "@stringke/sigi-di": "^2.11.3-alpha.0",
-    "@stringke/sigi-ssr": "^2.11.3-alpha.0",
-    "@stringke/sigi-types": "^2.11.3-alpha.0",
+    "@stringke/sigi-core": "^2.11.3-alpha.1",
+    "@stringke/sigi-di": "^2.11.3-alpha.1",
+    "@stringke/sigi-ssr": "^2.11.3-alpha.1",
+    "@stringke/sigi-types": "^2.11.3-alpha.1",
     "tslib": "^2.2.0"
   },
   "peerDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@stringke/sigi-ts-plugin",
-  "version": "2.11.3-alpha.0",
+  "version": "2.11.3-alpha.1",
   "description": "TypeScript plugin for Sigi framework",
   "keywords": [
     "TypeScript",
@@ -36,7 +36,7 @@
     "typescript": ">=4"
   },
   "dependencies": {
-    "@stringke/sigi-types": "^2.11.3-alpha.0",
+    "@stringke/sigi-types": "^2.11.3-alpha.1",
     "tslib": "^2.2.0"
   }
 }
