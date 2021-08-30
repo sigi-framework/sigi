@@ -16,7 +16,7 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015"],
+  "files": ["dist", "esm", "next", "es2015", "src"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
