@@ -20,7 +20,7 @@
     "suppressExcessPropertyErrors": true,
     "forceConsistentCasingInFileNames": true,
     "target": "ES5",
-    "sourceMap": true,
+    "sourceMap": false,
     "esModuleInterop": true,
     "useDefineForClassFields": false,
     "stripInternal": true,
