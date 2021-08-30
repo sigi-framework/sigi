@@ -31,12 +31,12 @@
     "@sigi/di": "^2.10.2",
     "@sigi/types": "^2.10.2",
     "path-to-regexp": "^6.2.0",
-    "serialize-javascript": "^5.0.1",
-    "tslib": "^2.2.0"
+    "serialize-javascript": "^6.0.0",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/node": "^15.12.1",
-    "@types/serialize-javascript": "^5.0.0"
+    "@types/node": "^16.7.6",
+    "@types/serialize-javascript": "^5.0.1"
   },
   "peerDependencies": {
     "rxjs": ">=7"

@@ -26,7 +26,7 @@
   "dependencies": {
     "@sigi/di": "^2.10.2",
     "@sigi/types": "^2.10.2",
-    "tslib": "^2.2.0"
+    "tslib": "^2.3.1"
   },
   "peerDependencies": {
     "immer": ">=9",
