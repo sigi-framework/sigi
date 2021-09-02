@@ -73,4 +73,14 @@ describe('StateToPersist specs', () => {
     const state = createStateToPersist({ foo: 1 }, { home: ['initAppContext'] })
     expect(renderToString(renderDocumentJSX(state.renderToJSX()))).toMatchSnapshot()
   })
+
+  it('empty data should return empty string', () => {
+    const state = createStateToPersist()
+    expect(state.extractToJSONScriptString()).toBe('')
+  })
+
+  it('should be able to extractToJSONScriptString', () => {
+    const state = createStateToPersist({ foo: 'bar' })
+    expect(state.extractToJSONScriptString()).toMatchSnapshot()
+  })
 })
