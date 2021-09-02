@@ -32,6 +32,16 @@ export class StateToPersist<T> {
     return doc.substr(0, endBodyPosition) + this.extractToScriptString() + doc.substring(endBodyPosition)
   }
 
+  extractToJSONScriptString() {
+    if (this.dataToPersist == null) {
+      return ''
+    }
+    const stateContent = serialize(this.dataToPersist, { isJSON: true })
+    return `<script id="${GLOBAL_KEY_SYMBOL}" type="application/json">${stateContent}</script><script id="${RETRY_KEY_SYMBOL}" type="application/json">${JSON.stringify(
+      this.actionsToRetry,
+    )}</script>`
+  }
+
   private serialize() {
     const content = serialize(this.dataToPersist, { isJSON: true })
     return `window['${GLOBAL_KEY_SYMBOL}']=${content};window['${RETRY_KEY_SYMBOL}']=${JSON.stringify(
