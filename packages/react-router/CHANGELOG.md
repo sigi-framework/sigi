@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.12.0](https://github.com/sigi-framework/sigi/compare/v2.11.3...v2.12.0) (2021-09-02)
+
+**Note:** Version bump only for package @sigi/react-router
+
 ## [2.11.3](https://github.com/sigi-framework/sigi/compare/v2.11.2...v2.11.3) (2021-08-30)
 
 **Note:** Version bump only for package @sigi/react-router
