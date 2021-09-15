@@ -1,7 +1,8 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
-import { distinctUntilChanged, map, skip } from 'rxjs/operators'
+import { identity } from 'rxjs'
+import { distinctUntilChanged, skip } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
 import { shallowEqual } from './shallow-equal'
@@ -33,22 +34,26 @@ function _useModuleState<S, U = S>(
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   dependencies = dependencies || []
   const isFirstRendering = useRef(true)
-  const [appState, setState] = useState(() => {
-    const initialState = store.state
-    return selector ? selector(initialState) : initialState
-  })
+  const [appState, setState] = useState(store.state)
+
+  const cachedSelector = useCallback(
+    (state: S) => {
+      return selector ? selector(state) : identity(state)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [...dependencies],
+  )
 
   const subscribe = useCallback(() => {
     return store.state$
       .pipe(
-        map((s) => (selector ? selector(s) : s)),
-        distinctUntilChanged((s1, s2) => equalFn(s1, s2)),
-        // skip initial state emission
-        skip(isFirstRendering.current ? 1 : 0),
+        distinctUntilChanged((s1, s2) => equalFn(cachedSelector(s1), cachedSelector(s2))),
+        // skip initial state emission and updated cachedSelector
+        skip(1),
       )
       .subscribe(setState)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store, ...dependencies])
+  }, [store, cachedSelector])
 
   const subscription = useMemo(() => {
     return subscribe()
@@ -63,7 +68,7 @@ function _useModuleState<S, U = S>(
     }
   }, [subscription, subscribe])
 
-  return appState
+  return cachedSelector(appState)
 }
 
 export function useModuleState<M extends EffectModule<any>>(
