@@ -68,7 +68,7 @@ describe('React components test', () => {
       selector: (state) => state.count + localCount,
       dependencies: [localCount],
     })
-    spy()
+    spy(state)
     stub.callsFake(() => {
       setLocalCount(localCount + 1)
     })
@@ -82,12 +82,15 @@ describe('React components test', () => {
   it('should render once while initial rendering', () => {
     create(<TestComponent />)
     expect(spy.callCount).toBe(1)
+    expect(spy.getCall(0).calledWith(0)).toBe(true)
   })
 
   it('should render three times while change local state which in dependencies list', () => {
     const reactNode = create(<TestComponent />)
     act(() => stub())
-    expect(spy.callCount).toBe(3)
+    expect(spy.callCount).toBe(2)
+    expect(spy.getCall(0).calledWith(0)).toBe(true)
+    expect(spy.getCall(1).calledWith(1)).toBe(true)
     expect(reactNode).toMatchSnapshot()
   })
 })
