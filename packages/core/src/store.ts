@@ -17,7 +17,6 @@ export class Store<S> implements IStore<S> {
   private readonly reducer: Reducer<S, Action>
   private readonly epic$: BehaviorSubject<Epic>
   private actionSub = new Subscription()
-  private readonly stateSub = new Subscription()
   private readonly initAction: Action<null> = {
     type: INIT_ACTION_TYPE_SYMBOL,
     payload: null,
@@ -47,14 +46,8 @@ export class Store<S> implements IStore<S> {
    */
   setup(defaultState: S) {
     this.internalState = defaultState
-
+    this.state$.next(defaultState)
     this.subscribeAction()
-    this.stateSub.add(
-      this.state$.subscribe((state) => {
-        this.internalState = state
-      }),
-    )
-    this.state$.next(this.state)
     this.log(this.initAction)
     this.isReady = true
   }
@@ -101,6 +94,7 @@ export class Store<S> implements IStore<S> {
       if (process.env.NODE_ENV !== 'production' && newState === undefined) {
         console.warn(`${action.type} produced an undefined state, you may forget to return new State in @Reducer`)
       }
+      this.internalState = newState
       this.state$.next(newState)
     }
     this.log(action)
@@ -114,7 +108,6 @@ export class Store<S> implements IStore<S> {
   }
 
   dispose() {
-    this.stateSub.unsubscribe()
     this.actionSub.unsubscribe()
     this.action$.complete()
     this.state$.complete()

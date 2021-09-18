@@ -1,7 +1,8 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
-import { distinctUntilChanged, map, skip } from 'rxjs/operators'
+import { identity } from 'rxjs'
+import { skip, tap } from 'rxjs/operators'
 
 import { useInstance } from './injectable-context'
 import { shallowEqual } from './shallow-equal'
@@ -32,38 +33,41 @@ function _useModuleState<S, U = S>(
   }
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   dependencies = dependencies || []
-  const isFirstRendering = useRef(true)
-  const [appState, setState] = useState(() => {
-    const initialState = store.state
-    return selector ? selector(initialState) : initialState
-  })
+  const stateRef = useRef<S | U>()
+  const depsRef = useRef<any[]>()
+  const selectorRef = useRef<(s: S) => S | U>()
 
-  const subscribe = useCallback(() => {
-    return store.state$
-      .pipe(
-        map((s) => (selector ? selector(s) : s)),
-        distinctUntilChanged((s1, s2) => equalFn(s1, s2)),
-        // skip initial state emission
-        skip(isFirstRendering.current ? 1 : 0),
-      )
-      .subscribe(setState)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store, ...dependencies])
+  if (!equalFn(depsRef.current, dependencies)) {
+    selectorRef.current = selector ?? identity
+    stateRef.current = selectorRef.current(store.state)
+  }
+  depsRef.current = dependencies
 
-  const subscription = useMemo(() => {
-    return subscribe()
+  const [_, _flipSig] = useState(false)
+
+  const tryUpdateState = useCallback((state: S) => {
+    const newState = selectorRef.current!(state)
+    if (!equalFn(stateRef.current, newState)) {
+      stateRef.current = newState
+      _flipSig((v) => !v)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscribe])
+  }, [])
+
+  const subscribe = useCallback(
+    () => store.state$.pipe(skip(1), tap(tryUpdateState)).subscribe(),
+    [store, tryUpdateState],
+  )
+  const subscription = useMemo(() => subscribe(), [subscribe])
 
   useEffect(() => {
-    isFirstRendering.current = false
     const maybeReSubscribeInConcurrencyMode = subscription.closed ? subscribe() : subscription
     return () => {
       maybeReSubscribeInConcurrencyMode.unsubscribe()
     }
   }, [subscription, subscribe])
 
-  return appState
+  return stateRef.current!
 }
 
 export function useModuleState<M extends EffectModule<any>>(

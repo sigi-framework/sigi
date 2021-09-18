@@ -103,6 +103,7 @@ export const reactive = <
       }
     }
     if (changed) {
+      store['internalState'] = latestState
       store.state$.next(latestState)
     }
     if (typeof originalBeforeUpdate === 'function') {
