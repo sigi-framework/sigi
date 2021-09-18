@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ssr",
-  "version": "2.12.0",
+  "version": "2.12.1",
   "description": "Server side rendering support for sigi framework",
   "keywords": ["Sigi", "SSR"],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -27,7 +27,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.11.3",
+    "@sigi/core": "^2.12.1",
     "@sigi/di": "^2.11.3",
     "@sigi/types": "^2.11.3",
     "path-to-regexp": "^6.2.0",

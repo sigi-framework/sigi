@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.1](https://github.com/sigi-framework/sigi/compare/v2.12.0...v2.12.1) (2021-09-18)
+
+### Bug Fixes
+
+- **react:** state selector may use old closures ([69b19ce](https://github.com/sigi-framework/sigi/commit/69b19ced8f5da2802edf8c1dc793300af448b19e))
+
 # [2.12.0](https://github.com/sigi-framework/sigi/compare/v2.11.3...v2.12.0) (2021-09-02)
 
 **Note:** Version bump only for package @sigi/react

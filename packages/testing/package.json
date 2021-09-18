@@ -1,6 +1,6 @@
 {
   "name": "@sigi/testing",
-  "version": "2.11.3",
+  "version": "2.12.1",
   "description": "Testing library for sigi framework",
   "keywords": ["Testing", "Sigi"],
   "author": "LongYinan <lynweklm@gmail.com>",
@@ -24,7 +24,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.11.3",
+    "@sigi/core": "^2.12.1",
     "@sigi/di": "^2.11.3"
   }
 }
