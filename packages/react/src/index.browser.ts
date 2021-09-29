@@ -1,6 +1,6 @@
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import { useEffect, useState, useRef, useMemo, useCallback } from 'react'
+import { useEffect, useRef, useMemo, useCallback, useReducer } from 'react'
 import { identity } from 'rxjs'
 import { skip, tap } from 'rxjs/operators'
 
@@ -20,6 +20,12 @@ export type StateSelectorConfig<S, U> = {
 export function useDispatchers<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): ActionOfEffectModule<M, S> {
   const effectModule = useInstance(A)
   return effectModule.dispatchers
+}
+
+function useForceUpdate() {
+  const [, forceRender] = useReducer((a) => a + 1, 0)
+
+  return forceRender
 }
 
 function _useModuleState<S, U = S>(
@@ -43,13 +49,13 @@ function _useModuleState<S, U = S>(
   }
   depsRef.current = dependencies
 
-  const [_, _flipSig] = useState(false)
+  const forceUpdate = useForceUpdate()
 
   const tryUpdateState = useCallback((state: S) => {
     const newState = selectorRef.current!(state)
     if (!equalFn(stateRef.current, newState)) {
       stateRef.current = newState
-      _flipSig((v) => !v)
+      forceUpdate()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
