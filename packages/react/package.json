@@ -1,6 +1,6 @@
 {
   "name": "@sigi/react",
-  "version": "2.12.1",
+  "version": "2.12.2",
   "description": "React bindings for sigi framework",
   "keywords": ["Hooks", "RxJS", "TypeScript", "React", "Sigi"],
   "author": "LongYinan <lynweklm@gmail.com>",
