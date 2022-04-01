@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@abraham/reflection@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.npmjs.org/@abraham/reflection/-/reflection-0.8.0.tgz#f8103d1a4a0ed7b846668e35834c22c14044e0f1"
-  integrity sha512-Oy2jk9hHEI/t1avTgB4BCQtceUOqwrElQdecGS0wTqH5rc0KXysUrhpX4ep0vCMjoxzNyXSx7JU+KWkrkFIKOg==
+"@abraham/reflection@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@abraham/reflection/-/reflection-0.10.0.tgz#0028ab6b36f760f3ec9e90a4960bbe5766766a51"
+  integrity sha512-ltEjxbZn3B5CzPhUND30YJiondgOTH3m52edgshMxcuHTEjO2lRyL+EoO7H11yYzt1FIS5CfnMcACSP52WKrLA==
 
 "@babel/code-frame@7.12.11":
   version "7.12.11"
