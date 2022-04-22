@@ -34,16 +34,14 @@ export class AppModule extends EffectModule<AppState> {
     return payload$.pipe(
       exhaustMap(() => {
         return this.httpClient.get(`/resources`).pipe(
-          tap(
-            () => {
-              message.success('Got response')
-            },
-            (e) => {
-              message.error(e.message)
-            },
-          ),
+          tap(() => {
+            message.success('Got response')
+          }),
           map((response) => this.getActions().setList(response)),
-          catchError((e) => of(this.getActions().setList(e))),
+          catchError((e) => {
+            message.error(e.message)
+            return of(this.getActions().setList(e))
+          }),
           startWith(this.getActions().setList(null)),
           takeUntil(this.getAction$().cancel),
         )

@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-identical-functions */
 
-import 'reflect-metadata'
+import '@abraham/reflection'
 import { rootInjector } from '@sigi/di'
 import { Observable } from 'rxjs'
 import { delay, map, tap } from 'rxjs/operators'

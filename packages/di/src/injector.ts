@@ -142,7 +142,7 @@ export class Injector {
     return provider
   }
 
-  private findDeps<T>(provider: Provider<T>): Token<unknown>[] {
+  private findDeps<T>(provider: Provider<T>): Token<unknown>[] | null | undefined {
     return typeof provider === 'function'
       ? Reflect.getMetadata('design:paramtypes', provider)
       : (provider as ClassProvider<T>).useClass

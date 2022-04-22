@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { Inject, InjectionToken, Injectable, rootInjector } from '../index'
 

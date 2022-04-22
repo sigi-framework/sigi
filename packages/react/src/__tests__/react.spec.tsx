@@ -1,8 +1,8 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { Module, EffectModule, Effect, ImmerReducer, Action } from '@sigi/core'
 import { Draft } from 'immer'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { create, act, ReactTestRenderer } from 'react-test-renderer'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, endWith, switchMap } from 'rxjs/operators'
@@ -17,7 +17,7 @@ interface CountState {
 
 @Module('CountModel')
 class CountModel extends EffectModule<CountState> {
-  defaultState = { count: 0, name: '' }
+  defaultState: CountState = { count: 0, name: 'John Doe' }
 
   @ImmerReducer()
   setCount(state: Draft<CountState>, count: number) {
@@ -60,61 +60,48 @@ class CountModel extends EffectModule<CountState> {
 }
 
 describe('React components test', () => {
-  const stub = Sinon.stub()
-  const spy = Sinon.spy()
+  const renderSpy = Sinon.spy()
   const TestComponent = () => {
-    const [localCount, setLocalCount] = useState(0)
-    const state = useModuleState(CountModel, {
-      selector: (state) => {
-        return state.count + localCount
-      },
-      dependencies: [localCount],
-    })
-    spy(state)
-    stub.callsFake(() => {
-      setLocalCount(localCount + 1)
-    })
-    return <div onClick={stub}>{state}</div>
+    const state = useModuleState(CountModel)
+    renderSpy()
+    return (
+      <div>
+        {state.name}: {state.count}
+      </div>
+    )
   }
 
   afterEach(() => {
-    spy.resetHistory()
+    renderSpy.resetHistory()
   })
 
   it('should render once while initial rendering', () => {
-    create(<TestComponent />)
-    expect(spy.callCount).toBe(1)
-  })
-
-  it('should render three times while change local state which in dependencies list', () => {
-    const reactNode = create(<TestComponent />)
-    act(() => stub())
-    expect(spy.callCount).toBe(2)
-    expect(spy.args).toEqual([[0], [1]])
-    expect(reactNode).toMatchSnapshot()
+    const node = create(<TestComponent />)
+    expect(renderSpy.callCount).toBe(1)
+    expect(node).toMatchSnapshot()
   })
 })
 
 describe('Hooks', () => {
-  const resetStub = Sinon.stub()
-  const setCountStub = Sinon.stub()
-  const spy = Sinon.spy()
+  const resetStore = Sinon.stub()
+  const setCount = Sinon.stub()
+  const renderSpy = Sinon.spy()
   const TestComponent = () => {
     const [state, dispatcher] = useModule(CountModel, {
-      selector: (state) => state.count,
-      dependencies: [],
+      selector: (state) => {
+        return state.count
+      },
     })
-    spy()
+    renderSpy()
     useEffect(() => {
-      setCountStub.callsFake(() => {
+      setCount.callsFake(() => {
         dispatcher.setCount(10)
       })
-      resetStub.callsFake(() => {
+      resetStore.callsFake(() => {
         dispatcher.reset()
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
     return <div>{state}</div>
   }
   let testWrapper!: ReactTestRenderer
@@ -127,36 +114,38 @@ describe('Hooks', () => {
 
   afterEach(() => {
     act(() => {
-      resetStub()
+      resetStore()
       testWrapper.unmount()
     })
-    spy.resetHistory()
-    setCountStub.reset()
-    resetStub.reset()
+    renderSpy.resetHistory()
+    setCount.reset()
+    resetStore.reset()
   })
 
   it('could reset state from dispatcher', () => {
     expect(testWrapper.root.findByType('div').children[0]).toBe('0')
+    expect(renderSpy.callCount).toBe(1)
 
     act(() => {
-      setCountStub()
+      setCount()
     })
     expect(testWrapper.root.findByType('div').children[0]).toBe('10')
+    expect(renderSpy.callCount).toBe(2)
 
     act(() => {
-      resetStub()
+      resetStore()
     })
     expect(testWrapper.root.findByType('div').children[0]).toBe('0')
+    expect(renderSpy.callCount).toBe(3)
   })
 
   it('should not re-render if return state shallow equaled', () => {
-    const fooSpy = Sinon.spy()
+    const fooRenderSpy = Sinon.spy()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
-        selector: () => ({ name: 'John Doe' }),
-        dependencies: [],
+        selector: (state) => ({ name: state.name }),
       })
-      fooSpy()
+      fooRenderSpy()
       return <div>{state.name}</div>
     }
 
@@ -167,22 +156,21 @@ describe('Hooks', () => {
 
     expect(fooWrapper.root.findByType('div').children[0]).toBe('John Doe')
     act(() => {
-      setCountStub()
+      setCount()
     })
-    expect(fooSpy.callCount).toBe(1)
-    expect(spy.callCount).toBe(2)
-    fooSpy.resetHistory()
+    expect(fooRenderSpy.callCount).toBe(1)
+    expect(renderSpy.callCount).toBe(2)
+    fooRenderSpy.resetHistory()
   })
 
   it('should re-render if return state not pass custom equality function', () => {
-    const fooSpy = Sinon.spy()
+    const fooRenderSpy = Sinon.spy()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
-        selector: () => ({ name: 'John Doe' }),
-        dependencies: [],
+        selector: (state) => ({ name: state.name }),
         equalFn: (a, b) => a === b,
       })
-      fooSpy()
+      fooRenderSpy()
       return <div>{state.name}</div>
     }
 
@@ -193,48 +181,10 @@ describe('Hooks', () => {
 
     expect(fooWrapper.root.findByType('div').children[0]).toBe('John Doe')
     act(() => {
-      setCountStub()
+      setCount()
     })
-    expect(fooSpy.callCount).toBe(2)
-    expect(spy.callCount).toBe(2)
-    fooSpy.resetHistory()
-  })
-
-  it('should run selector with new closure', () => {
-    const setPlusCountStub = Sinon.stub()
-    const FooComponent = () => {
-      const [plusCount, setPlusCount] = useState(1)
-      const plusOneCount = useModuleState(CountModel, {
-        selector: (state) => plusCount + state.count,
-        dependencies: [plusCount],
-      })
-
-      useEffect(() => {
-        setPlusCountStub.callsFake(() => {
-          setPlusCount(2)
-        })
-      }, [])
-
-      return <div>{plusOneCount}</div>
-    }
-
-    let fooWrapper!: ReactTestRenderer
-    act(() => {
-      fooWrapper = create(<FooComponent />)
-    })
-
-    expect(fooWrapper.root.findByType('div').children[0]).toBe('1')
-    act(() => {
-      setPlusCountStub()
-    })
-    expect(fooWrapper.root.findByType('div').children[0]).toBe('2')
-
-    act(() => {
-      setCountStub()
-    })
-    expect(fooWrapper.root.findByType('div').children[0]).toBe('12')
-
-    setPlusCountStub.reset()
+    expect(fooRenderSpy.callCount).toBe(2)
+    fooRenderSpy.resetHistory()
   })
 
   it('Child <-> Parent scenario', () => {

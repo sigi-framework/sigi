@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-identical-functions */
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer, RETRY_KEY_SYMBOL } from '@sigi/core'
 import { Injectable, Injector } from '@sigi/di'
@@ -170,11 +170,7 @@ const Component = () => {
     actions.setName('new name')
   }, [actions])
 
-  return (
-    <>
-      <span>{state.count}</span>
-    </>
-  )
+  return <span>{state.count}</span>
 }
 
 const ComponentWithSelector = () => {
@@ -182,17 +178,12 @@ const ComponentWithSelector = () => {
     selector: (s) => ({
       count: s.count + 1,
     }),
-    dependencies: [],
   })
   useEffect(() => {
     actions.setName('new name')
   }, [actions])
 
-  return (
-    <>
-      <span>{state.count}</span>
-    </>
-  )
+  return <span>{state.count}</span>
 }
 
 const MODULES = [CountModel, TipModel, ServiceModule, Service]
@@ -362,11 +353,7 @@ describe('SSR specs:', () => {
         actions.getCount()
       }, [actions])
 
-      return (
-        <>
-          <span>{state.count}</span>
-        </>
-      )
+      return <span>{state.count}</span>
     }
 
     global[GLOBAL_KEY_SYMBOL] = {

@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { EffectModule, Module, ImmerReducer, Effect } from '@sigi/core'
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'

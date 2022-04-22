@@ -1,20 +1,22 @@
+/// <reference types="react/next" />
 import { EffectModule, ActionOfEffectModule } from '@sigi/core'
 import { ConstructorOf, IStore } from '@sigi/types'
-import { useEffect, useRef, useMemo, useCallback, useReducer } from 'react'
-import { identity } from 'rxjs'
-import { skip, tap } from 'rxjs/operators'
+import { useDebugValue } from 'react'
+import { identity, skip } from 'rxjs'
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector'
 
 import { useInstance } from './injectable-context'
 import { shallowEqual } from './shallow-equal'
 
-export type StateSelector<S, U> = {
+export type StateSelector<S, U = S> = {
   (state: S): U
 }
 
-export type StateSelectorConfig<S, U> = {
-  selector: StateSelector<S, U>
-  dependencies: any[]
+export type StateSelectorConfig<S, U = S> = {
+  selector: (state: S) => U
   equalFn?: (u1: U, u2: U) => boolean
+  // use never to tell user that it is not required any more
+  dependencies?: never
 }
 
 export function useDispatchers<M extends EffectModule<S>, S = any>(A: ConstructorOf<M>): ActionOfEffectModule<M, S> {
@@ -22,58 +24,26 @@ export function useDispatchers<M extends EffectModule<S>, S = any>(A: Constructo
   return effectModule.dispatchers
 }
 
-function useForceUpdate() {
-  const [, forceRender] = useReducer((a) => a + 1, 0)
-
-  return forceRender
-}
-
 function _useModuleState<S, U = S>(
   store: IStore<S>,
-  selector?: StateSelector<S, U>,
-  dependencies?: any[],
+  // @ts-expect-error valid assignment
+  selector: StateSelectorConfig<S, U>['selector'] = identity,
   equalFn = shallowEqual,
 ): S | U {
-  if (process.env.NODE_ENV === 'development' && selector && !dependencies) {
-    console.warn('You pass a selector but no dependencies with it, the selector will be treated as immutable')
-  }
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  dependencies = dependencies || []
-  const stateRef = useRef<S | U>()
-  const depsRef = useRef<any[]>()
-  const selectorRef = useRef<(s: S) => S | U>()
-
-  if (!equalFn(depsRef.current, dependencies)) {
-    selectorRef.current = selector ?? identity
-    stateRef.current = selectorRef.current(store.state)
-  }
-  depsRef.current = dependencies
-
-  const forceUpdate = useForceUpdate()
-
-  const tryUpdateState = useCallback((state: S) => {
-    const newState = selectorRef.current!(state)
-    if (!equalFn(stateRef.current, newState)) {
-      stateRef.current = newState
-      forceUpdate()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const subscribe = useCallback(
-    () => store.state$.pipe(skip(1), tap(tryUpdateState)).subscribe(),
-    [store, tryUpdateState],
+  const state = useSyncExternalStoreWithSelector(
+    (onStoreChange) => {
+      const sub = store.state$.pipe(skip(1)).subscribe(onStoreChange)
+      return () => sub.unsubscribe()
+    },
+    () => store.state,
+    () => store.state,
+    selector,
+    equalFn,
   )
-  const subscription = useMemo(() => subscribe(), [subscribe])
 
-  useEffect(() => {
-    const maybeReSubscribeInConcurrencyMode = subscription.closed ? subscribe() : subscription
-    return () => {
-      maybeReSubscribeInConcurrencyMode.unsubscribe()
-    }
-  }, [subscription, subscribe])
+  useDebugValue(state)
 
-  return stateRef.current!
+  return state
 }
 
 export function useModuleState<M extends EffectModule<any>>(
@@ -94,7 +64,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
   config?: M extends EffectModule<infer S> ? StateSelectorConfig<S, U> : never,
 ) {
   const { store } = useInstance(A)
-  return _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
+  return _useModuleState(store, config?.selector, config?.equalFn)
 }
 
 export function useModule<M extends EffectModule<any>>(
@@ -113,7 +83,7 @@ export function useModule<M extends EffectModule<any>, U>(
 export function useModule<M extends EffectModule<S>, U, S>(A: ConstructorOf<M>, config?: StateSelectorConfig<S, U>) {
   const effectModule = useInstance(A)
   const { store } = effectModule
-  const appState = _useModuleState(store, config?.selector, config?.dependencies, config?.equalFn)
+  const appState = _useModuleState(store, config?.selector)
   const appDispatcher = effectModule.dispatchers
 
   return [appState, appDispatcher]

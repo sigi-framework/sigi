@@ -4,7 +4,7 @@
     "rootDir": "./src",
     "outDir": "./esm",
     "composite": true,
-    "types": ["reflect-metadata", "jest", "node"]
+    "types": ["@abraham/reflection", "jest", "node"]
   },
   "include": ["./src"],
   "references": [{ "path": "../di" }, { "path": "../types" }, { "path": "../core" }]

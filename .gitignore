@@ -145,3 +145,4 @@ esm
 lib
 next
 es2015
+.parcel-cache

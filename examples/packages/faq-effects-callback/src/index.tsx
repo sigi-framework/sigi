@@ -3,7 +3,7 @@ import 'antd/dist/antd.css'
 import { initDevtool } from '@sigi/devtool'
 import { useModule } from '@sigi/react'
 import React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import { AppModule } from './app.module'
 
@@ -26,7 +26,7 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('app')
-render(<App />, rootElement)
-
 initDevtool()
+
+const rootElement = document.getElementById('app')!
+createRoot(rootElement).render(<App />)
