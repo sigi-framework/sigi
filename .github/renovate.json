@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "config:base",
+    "group:allNonMajor",
+    "group:linters",
+    ":preserveSemverRanges"
+  ],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["typescript", "ts-node"],
+      "addLabels": ["ts", "types"],
+      "groupName": "typescript"
+    },
+    {
+      "extends": "group:jsUnitTest",
+      "matchPackageNames": [
+        "ts-jest",
+        "@swc-node/jest"
+      ]
+    }
+  ],
+  "commitMessagePrefix": "chore: ",
+  "commitMessageAction": "bump up",
+  "commitMessageTopic": "{{depName}} version"
+}
