@@ -1,7 +1,11 @@
 const { join } = require('path')
 
-module.exports = {
+/**
+ * @type { import('@jest/types').Config.InitialOptions}
+ */
+const config = {
   rootDir: join(__dirname, '..'),
+  testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
   transform: {
     '^.+\\.(t|j)sx?$': [
       '@swc-node/jest',
@@ -16,7 +20,6 @@ module.exports = {
       },
     ],
   },
-  testEnvironment: 'jsdom',
   collectCoverageFrom: [
     'packages/*/src/**/*.{ts,tsx}',
     '!packages/**/*.spec.{ts,tsx}',
@@ -30,3 +33,5 @@ module.exports = {
 }
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true
+
+module.exports = config

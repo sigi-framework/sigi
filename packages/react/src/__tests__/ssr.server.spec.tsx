@@ -1,8 +1,7 @@
 /* eslint-disable sonarjs/no-identical-functions */
 import '@abraham/reflection'
 
-import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer, RETRY_KEY_SYMBOL } from '@sigi/core'
-import { Injectable, Injector } from '@sigi/di'
+import { GLOBAL_KEY_SYMBOL, EffectModule, ImmerReducer, Module, Effect, Reducer } from '@sigi/core'
 import { emitSSREffects, match } from '@sigi/ssr'
 import { Action } from '@sigi/types'
 import { Draft } from 'immer'
@@ -10,121 +9,19 @@ import { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
 import { create, act } from 'react-test-renderer'
 import { Observable, of, timer } from 'rxjs'
-import { endWith, switchMap, map, mergeMap, withLatestFrom } from 'rxjs/operators'
+import { endWith, map, mergeMap, withLatestFrom } from 'rxjs/operators'
 
 import { SSRContext, useModule } from '../index.browser'
 
-interface CountState {
-  count: number
-  name: string
-}
-
-interface TipState {
-  tip: string
-}
-
-@Injectable()
-class Service {
-  getName() {
-    return of('client service')
-  }
-}
-
-@Module('ServiceModule')
-class ServiceModule extends EffectModule<CountState> {
-  readonly defaultState = { count: 0, name: '' }
-
-  constructor(public readonly service: Service) {
-    super()
-  }
-
-  @ImmerReducer()
-  setName(state: Draft<CountState>, name: string) {
-    state.name = name
-  }
-
-  @Effect({
-    ssr: true,
-  })
-  setNameEffect(payload$: Observable<void>): Observable<Action> {
-    return payload$.pipe(
-      switchMap(() =>
-        this.service.getName().pipe(
-          map((name) => this.getActions().setName(name)),
-          endWith(this.terminate()),
-        ),
-      ),
-    )
-  }
-
-  @Effect({
-    payloadGetter: (ctx: { failure: boolean }, skip) => {
-      if (!ctx.failure) {
-        return skip
-      }
-      return 1
-    },
-  })
-  setNameWithFailure(payload$: Observable<number | undefined>): Observable<Action> {
-    return payload$.pipe(
-      mergeMap((p) => {
-        if (p) {
-          return of(this.retryOnClient().setNameWithFailure(), this.terminate())
-        }
-        return of(this.getActions().setName('From retry'))
-      }),
-    )
-  }
-}
-
-@Module('CountModel')
-class CountModel extends EffectModule<CountState> {
-  defaultState = { count: 0, name: '' }
-
-  @ImmerReducer()
-  setCount(state: Draft<CountState>, count: number) {
-    state.count = count
-  }
-
-  @ImmerReducer()
-  setName(state: Draft<CountState>, name: string) {
-    state.name = name
-  }
-
-  @Effect({
-    ssr: true,
-  })
-  getCount(payload$: Observable<void>): Observable<Action> {
-    return payload$.pipe(
-      mergeMap(() =>
-        timer(20).pipe(
-          map(() => this.getActions().setCount(1)),
-          endWith(this.terminate()),
-        ),
-      ),
-    )
-  }
-
-  @Effect({
-    payloadGetter: (ctx: { url: string }, skip) => ctx.url || skip,
-    skipFirstClientDispatch: false,
-  })
-  skippedEffect(payload$: Observable<string>): Observable<Action> {
-    return payload$.pipe(
-      switchMap((name) =>
-        timer(20).pipe(
-          map(() => this.getActions().setName(name)),
-          endWith(this.terminate()),
-        ),
-      ),
-    )
-  }
-}
+import { CountModule, TipModule, Service, ServiceModule } from './__fixtures__'
 
 interface InfinityWaitModelState {
   count: number
 }
-
+interface CountState {
+  count: number
+  name: string
+}
 @Module('InfinityWaitModel')
 class InfinityWaitModel extends EffectModule<InfinityWaitModelState> {
   defaultState = { count: 0 }
@@ -142,30 +39,8 @@ class InfinityWaitModel extends EffectModule<InfinityWaitModelState> {
   }
 }
 
-@Module('TipModel')
-class TipModel extends EffectModule<TipState> {
-  defaultState = { tip: '' }
-
-  @ImmerReducer()
-  setTip(state: Draft<TipState>, tip: string) {
-    state.tip = tip
-  }
-
-  @Effect({ ssr: true })
-  getTip(payload$: Observable<void>): Observable<Action> {
-    return payload$.pipe(
-      mergeMap(() =>
-        timer(1).pipe(
-          map(() => this.getActions().setTip('tip')),
-          endWith(this.terminate()),
-        ),
-      ),
-    )
-  }
-}
-
 const Component = () => {
-  const [state, actions] = useModule(CountModel)
+  const [state, actions] = useModule(CountModule)
   useEffect(() => {
     actions.setName('new name')
   }, [actions])
@@ -173,88 +48,14 @@ const Component = () => {
   return <span>{state.count}</span>
 }
 
-const ComponentWithSelector = () => {
-  const [state, actions] = useModule(CountModel, {
-    selector: (s) => ({
-      count: s.count + 1,
-    }),
-  })
-  useEffect(() => {
-    actions.setName('new name')
-  }, [actions])
+const MODULES = [CountModule, TipModule, ServiceModule, Service]
 
-  return <span>{state.count}</span>
-}
-
-const MODULES = [CountModel, TipModel, ServiceModule, Service]
-
-describe('SSR specs:', () => {
-  it('should throw if module name not given', () => {
-    function generateException() {
-      // @ts-expect-error
-      @Module()
-      class ErrorModel extends EffectModule<any> {
-        defaultState = {}
-      }
-
-      return ErrorModel
-    }
-
-    expect(generateException).toThrow()
-  })
-
-  it('should pass valid module name', () => {
-    @Module('1')
-    class Model extends EffectModule<any> {
-      defaultState = {}
-    }
-
-    @Module('2')
-    class Model2 extends EffectModule<any> {
-      defaultState = {}
-    }
-
-    function generateException1() {
-      @Module('1')
-      class ErrorModel1 extends EffectModule<any> {
-        defaultState = {}
-      }
-
-      return ErrorModel1
-    }
-
-    function generateException2() {
-      @Module('1')
-      class ErrorModel2 extends EffectModule<any> {
-        defaultState = {}
-      }
-
-      return { ErrorModel2 }
-    }
-
-    // eslint-disable-next-line sonarjs/no-identical-functions
-    function generateException3() {
-      // @ts-expect-error
-      @Module()
-      class ErrorModel extends EffectModule<any> {
-        defaultState = {}
-      }
-
-      return ErrorModel
-    }
-
-    expect(Model).not.toBe(undefined)
-    expect(Model2).not.toBe(undefined)
-    expect(generateException1).toThrow()
-    expect(generateException2).toThrow()
-    expect(generateException3).toThrow()
-  })
-
+describe('SSR server', () => {
   it('should run ssr effects', async () => {
-    const state = await emitSSREffects({ url: 'name' } as any, [CountModel], {
+    const state = await emitSSREffects({ url: 'name' } as any, [CountModule], {
       providers: MODULES,
     }).pendingState
-    const moduleState = state['dataToPersist']['CountModel']
+    const moduleState = state['dataToPersist']['CountModule']
     expect(moduleState).not.toBe(undefined)
     expect(moduleState.count).toBe(1)
     expect(moduleState.name).toBe('name')
@@ -262,10 +63,10 @@ describe('SSR specs:', () => {
   })
 
   it('should skip effect if it returns SKIP_SYMBOL', async () => {
-    const state = await emitSSREffects({}, [CountModel], {
+    const state = await emitSSREffects({}, [CountModule], {
       providers: MODULES,
     }).pendingState
-    const moduleState = state['dataToPersist']['CountModel']
+    const moduleState = state['dataToPersist']['CountModule']
 
     expect(moduleState.name).toBe('')
     expect(state['dataToPersist']).toMatchSnapshot()
@@ -273,7 +74,7 @@ describe('SSR specs:', () => {
 
   it('should return right state in hooks', async () => {
     const req = {}
-    const { pendingState, injector } = emitSSREffects(req, [CountModel], {
+    const { pendingState, injector } = emitSSREffects(req, [CountModule], {
       providers: MODULES,
     })
     await pendingState
@@ -288,7 +89,7 @@ describe('SSR specs:', () => {
 
   it('should restore state from global', () => {
     global[GLOBAL_KEY_SYMBOL] = {
-      CountModel: {
+      CountModule: {
         count: 101,
         name: '',
       },
@@ -303,131 +104,9 @@ describe('SSR specs:', () => {
     testRenderer.unmount()
   })
 
-  it('should restore state from global #with selector', () => {
-    global[GLOBAL_KEY_SYMBOL] = {
-      CountModel: {
-        count: 10,
-        name: '',
-      },
-    }
-    const testRenderer = create(
-      <SSRContext value={new Injector().addProviders(MODULES)}>
-        <ComponentWithSelector />
-      </SSRContext>,
-    )
-    expect(testRenderer.root.findByType('span').children[0]).toBe('11')
-    delete global[GLOBAL_KEY_SYMBOL]
-    testRenderer.unmount()
-  })
-
-  it('should not restore state from global if state is null', () => {
-    global[GLOBAL_KEY_SYMBOL] = {
-      OtherModule: {
-        count: 10,
-        name: '',
-      },
-    }
-    const injector = new Injector().addProviders(MODULES)
-    const testRenderer = create(
-      <SSRContext value={injector}>
-        <ComponentWithSelector />
-      </SSRContext>,
-    )
-    act(() => {
-      testRenderer.update(
-        <SSRContext value={injector}>
-          <ComponentWithSelector />
-        </SSRContext>,
-      )
-    })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('1')
-
-    delete global[GLOBAL_KEY_SYMBOL]
-    testRenderer.unmount()
-  })
-
-  it('should restore and skip first action on client side', () => {
-    const Component = () => {
-      const [state, actions] = useModule(CountModel)
-      useEffect(() => {
-        actions.getCount()
-      }, [actions])
-
-      return <span>{state.count}</span>
-    }
-
-    global[GLOBAL_KEY_SYMBOL] = {
-      CountModel: {
-        count: 2,
-        name: '',
-      },
-    }
-
-    const injector = new Injector().addProviders(MODULES)
-
-    const testRenderer = create(
-      <SSRContext value={injector}>
-        <Component />
-      </SSRContext>,
-    )
-
-    act(() => {
-      testRenderer.update(
-        <SSRContext value={injector}>
-          <Component />
-        </SSRContext>,
-      )
-    })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('2')
-
-    delete global[GLOBAL_KEY_SYMBOL]
-    testRenderer.unmount()
-  })
-
-  it('should retry action if needed on client side', () => {
-    const Component = () => {
-      const [state, dispatcher] = useModule(ServiceModule)
-      useEffect(() => {
-        dispatcher.setNameWithFailure(void 0)
-      }, [dispatcher])
-
-      return (
-        <>
-          <span>{state.name}</span>
-        </>
-      )
-    }
-
-    global[RETRY_KEY_SYMBOL] = {
-      ServiceModule: ['setNameWithFailure'],
-    }
-
-    const injector = new Injector().addProviders(MODULES)
-
-    const testRenderer = create(
-      <SSRContext value={injector}>
-        <Component />
-      </SSRContext>,
-    )
-
-    // eslint-disable-next-line sonarjs/no-identical-functions
-    act(() => {
-      testRenderer.update(
-        <SSRContext value={injector}>
-          <Component />
-        </SSRContext>,
-      )
-    })
-
-    expect(testRenderer.root.findByType('span').children[0]).toBe('From retry')
-
-    delete global[GLOBAL_KEY_SYMBOL]
-    testRenderer.unmount()
-  })
-
   it('should timeout', async () => {
     const req = {}
-    return emitSSREffects(req, [CountModel], { providers: MODULES, timeout: 0 }).pendingState.catch((e: Error) => {
+    return emitSSREffects(req, [CountModule], { providers: MODULES, timeout: 0 }).pendingState.catch((e: Error) => {
       expect(e.message).toBe('Terminate timeout')
     })
   })
@@ -436,7 +115,7 @@ describe('SSR specs:', () => {
   // It would cause `UnhandledPromiseRejection`
   it('should timeout #2', async () => {
     const req = {}
-    const { pendingState } = emitSSREffects(req, [InfinityWaitModel, TipModel], {
+    const { pendingState } = emitSSREffects(req, [InfinityWaitModel, TipModule], {
       timeout: 2 / 1000,
     })
     await pendingState.catch((e) => {
@@ -587,9 +266,9 @@ describe('SSR specs:', () => {
       }
     }
 
-    @Module('InnerCountModel')
+    @Module('InnerCountModule')
     // eslint-disable-next-line @typescript-eslint/ban-types
-    class CountModel extends EffectModule<{}> {
+    class CountModule extends EffectModule<{}> {
       defaultState = {}
 
       constructor(private readonly stateModule: StateModel) {
@@ -612,10 +291,10 @@ describe('SSR specs:', () => {
     }
 
     const req = {}
-    const state = await emitSSREffects(req, [CountModel, StateModel]).pendingState
+    const state = await emitSSREffects(req, [CountModule, StateModel]).pendingState
 
     expect(state['dataToPersist']).toEqual({
-      InnerCountModel: {},
+      InnerCountModule: {},
       InnerStateModule: {
         count: 1,
       },
@@ -648,7 +327,7 @@ describe('SSR specs:', () => {
         return payload$.pipe(mergeMap(() => of(this.retryOnClient().setNameWithFailure(), this.terminate())))
       }
     }
-    @Module('InnerCountModel2')
+    @Module('InnerCountModule2')
     // eslint-disable-next-line @typescript-eslint/ban-types
     class InnerCountModule2 extends EffectModule<{}> {
       defaultState = {}
@@ -679,7 +358,7 @@ describe('SSR specs:', () => {
       .pendingState
 
     expect(state['actionsToRetry']).toEqual({
-      InnerCountModel2: ['skippedSetName'],
+      InnerCountModule2: ['skippedSetName'],
       InnerServiceModule: ['setNameWithFailure'],
     })
   })

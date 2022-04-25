@@ -28,6 +28,8 @@ describe('Smoking tests', () => {
     }
     store.dispatch(action)
     expect(store.state.name).toBe(action.payload)
+
+    store.dispose()
   })
 
   it('should be able to dispatch actions from the other module', () => {
@@ -136,5 +138,6 @@ describe('Smoking tests', () => {
     expect(spy.callCount).toBe(0)
     expect(module.state.foo).toBe(staticState.foo)
     expect(module.state.bar).toBe(staticState.bar)
+    module.store.dispose()
   })
 })

@@ -1,0 +1,149 @@
+/**
+ * @jest-environment jsdom
+ */
+/* eslint-disable sonarjs/no-identical-functions */
+import '@abraham/reflection'
+
+import { GLOBAL_KEY_SYMBOL, RETRY_KEY_SYMBOL } from '@sigi/core'
+import { Injector } from '@sigi/di'
+import { useEffect } from 'react'
+import { create, act } from 'react-test-renderer'
+
+import { SSRContext, useModule } from '../index.browser'
+
+import { CountModule, ServiceModule, Service } from './__fixtures__'
+
+const ComponentWithSelector = () => {
+  const [state, actions] = useModule(CountModule, {
+    selector: (s) => ({
+      count: s.count + 1,
+    }),
+  })
+  useEffect(() => {
+    actions.setName('new name')
+  }, [actions])
+
+  return <span>{state.count}</span>
+}
+
+const MODULES = [CountModule, ServiceModule, Service]
+
+describe('client ssr hydration', () => {
+  it('should restore state from global with selector', () => {
+    global[GLOBAL_KEY_SYMBOL] = {
+      CountModule: {
+        count: 10,
+        name: '',
+      },
+    }
+    const testRenderer = create(
+      <SSRContext value={new Injector().addProviders(MODULES)}>
+        <ComponentWithSelector />
+      </SSRContext>,
+    )
+    expect(testRenderer.root.findByType('span').children[0]).toBe('11')
+    delete global[GLOBAL_KEY_SYMBOL]
+    testRenderer.unmount()
+  })
+
+  it('should not restore state from global if state is null', () => {
+    global[GLOBAL_KEY_SYMBOL] = {
+      OtherModule: {
+        count: 10,
+        name: '',
+      },
+    }
+    const injector = new Injector().addProviders(MODULES)
+    const testRenderer = create(
+      <SSRContext value={injector}>
+        <ComponentWithSelector />
+      </SSRContext>,
+    )
+    act(() => {
+      testRenderer.update(
+        <SSRContext value={injector}>
+          <ComponentWithSelector />
+        </SSRContext>,
+      )
+    })
+    expect(testRenderer.root.findByType('span').children[0]).toBe('1')
+
+    delete global[GLOBAL_KEY_SYMBOL]
+    testRenderer.unmount()
+  })
+
+  it('should restore and skip first action on client side', () => {
+    const Component = () => {
+      const [state, actions] = useModule(CountModule)
+      useEffect(() => {
+        actions.getCount()
+      }, [actions])
+
+      return <span>{state.count}</span>
+    }
+
+    global[GLOBAL_KEY_SYMBOL] = {
+      CountModule: {
+        count: 2,
+        name: '',
+      },
+    }
+
+    const injector = new Injector().addProviders(MODULES)
+
+    const testRenderer = create(
+      <SSRContext value={injector}>
+        <Component />
+      </SSRContext>,
+    )
+
+    act(() => {
+      testRenderer.update(
+        <SSRContext value={injector}>
+          <Component />
+        </SSRContext>,
+      )
+    })
+    expect(testRenderer.root.findByType('span').children[0]).toBe('2')
+
+    delete global[GLOBAL_KEY_SYMBOL]
+    testRenderer.unmount()
+  })
+
+  it('should retry action if needed on client side', () => {
+    const Component = () => {
+      const [state, dispatcher] = useModule(ServiceModule)
+      useEffect(() => {
+        dispatcher.setNameWithFailure(void 0)
+      }, [dispatcher])
+
+      return <span>{state.name}</span>
+    }
+
+    global[RETRY_KEY_SYMBOL] = {
+      ServiceModule: ['setNameWithFailure'],
+    }
+
+    const injector = new Injector().addProviders(MODULES)
+
+    const testRenderer = create(
+      <SSRContext value={injector}>
+        <Component />
+      </SSRContext>,
+    )
+
+    // eslint-disable-next-line sonarjs/no-identical-functions
+    act(() => {
+      testRenderer.update(
+        <SSRContext value={injector}>
+          <Component />
+        </SSRContext>,
+      )
+    })
+
+    expect(testRenderer.root.findByType('span').children[0]).toBe('From retry')
+
+    delete global[GLOBAL_KEY_SYMBOL]
+    testRenderer.unmount()
+  })
+})

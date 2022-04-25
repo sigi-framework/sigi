@@ -1,5 +1,5 @@
 import { IStore, Epic, Action } from '@sigi/types'
-import { BehaviorSubject, ReplaySubject, Subject, Subscription, identity, Observable } from 'rxjs'
+import { BehaviorSubject, ReplaySubject, Subject, Subscription, identity, Observable, NEVER } from 'rxjs'
 import { last, share, switchMap, takeUntil } from 'rxjs/operators'
 
 import { logStoreAction } from './logger'
@@ -31,7 +31,7 @@ export class Store<S> implements IStore<S> {
     return this.isReady
   }
 
-  constructor(name: string, reducer: Reducer<S, Action> = identity, epic: Epic = identity) {
+  constructor(name: string, reducer: Reducer<S, Action> = identity, epic: Epic = () => NEVER) {
     this.name = name
     this.reducer = reducer
     this.epic$ = new BehaviorSubject(epic)
@@ -53,7 +53,6 @@ export class Store<S> implements IStore<S> {
   }
 
   /**
-   * @param combineEpic {(combineEpic: import('@sigi/types').Epic) => import('@sigi/types').Epic}
    * accept `combineEpic` factory to produce new `Epic`
    * The streams on old `Epic` will be switched.
    */
@@ -112,8 +111,6 @@ export class Store<S> implements IStore<S> {
     this.action$.complete()
     this.state$.complete()
     this.epic$.complete()
-    this.action$.unsubscribe()
-    this.epic$.unsubscribe()
   }
 
   private subscribeAction() {
@@ -124,10 +121,9 @@ export class Store<S> implements IStore<S> {
           try {
             this.dispatch(action)
           } catch (e) {
-            if (process.env.NODE_ENV !== 'production') {
+            if (process.env.NODE_ENV === 'development') {
               console.error(e)
             }
-            console.error(e)
             this.action$.error(e)
           }
         },

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SSR server should return right state in hooks 1`] = `"<span>1</span>"`;
+
+exports[`SSR server should run ssr effects 1`] = `
+Object {
+  "CountModule": Object {
+    "count": 1,
+    "name": "name",
+  },
+}
+`;
+
+exports[`SSR server should skip effect if it returns SKIP_SYMBOL 1`] = `
+Object {
+  "CountModule": Object {
+    "count": 1,
+    "name": "",
+  },
+}
+`;
