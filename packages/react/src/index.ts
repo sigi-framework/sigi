@@ -9,8 +9,6 @@ export type StateSelector<S, U> = {
 
 export type StateSelectorConfig<S, U> = {
   selector: StateSelector<S, U>
-  dependencies: any[]
-  equalFn?: (u1: U, u2: U) => boolean
 }
 
 const SERVER_DISPATCHERS = new Proxy(Object.create(null), {

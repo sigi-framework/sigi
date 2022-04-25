@@ -2,7 +2,7 @@ import '@abraham/reflection'
 import { initDevtool } from '@sigi/devtool'
 import { useModule } from '@sigi/react'
 import * as React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import { CountModule } from './app.module'
 
@@ -23,7 +23,7 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('root')
-render(<App />, rootElement)
+const rootElement = document.getElementById('app')!
+createRoot(rootElement).render(<App />)
 
 initDevtool()

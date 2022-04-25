@@ -2,12 +2,14 @@
   "name": "sigi",
   "version": "0.0.0",
   "description": "Well designed effect management framework for complex frontend app",
-  "main": "none",
   "repository": "git@github.com:sigi-framework/sigi.git",
   "author": "lynweklm@gmail.com",
   "license": "MIT",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*",
+    "examples"
+  ],
   "scripts": {
     "build": "run-s clean build:esm build:next build:cjs build:es2015 clean:tests",
     "build:es2015": "tsc -b ./configs/tsconfig.es2015.json",
@@ -23,7 +25,8 @@
     "format:source": "prettier --config ./package.json './{examples,packages}/**/*.{ts,tsx,js}' --write",
     "format:yml": "prettier --parser yaml --write './*.{yml,yaml}'",
     "test": "jest --config ./configs/jest.config.js --collectCoverage",
-    "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose"
+    "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose",
+    "start:example": "node example"
   },
   "devDependencies": {
     "@abraham/reflection": "^0.10.0",
@@ -34,8 +37,9 @@
     "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.172",
     "@types/node": "^16.7.6",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-test-renderer": "^17.0.1",
+    "@types/react": "^18.0.6",
+    "@types/react-dom": "^18.0.2",
+    "@types/react-test-renderer": "^17.0.2",
     "@types/sinon": "^10.0.2",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
@@ -55,13 +59,13 @@
     "lodash": "^4.17.21",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
-    "reflect-metadata": "^0.1.13",
+    "process": "^0.11.10",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-test-renderer": "^18.0.0",
     "rollup": "^2.56.3",
     "rollup-plugin-sourcemaps": "^0.6.3",
-    "rxjs": "^7.3.0",
+    "rxjs": "^7.5.5",
     "shx": "^0.3.3",
     "sinon": "^11.1.2",
     "ts-node": "^10.2.1",
@@ -70,10 +74,19 @@
     "vue": "^2.6.14"
   },
   "lint-staged": {
-    "*.@(js|ts|tsx)": ["prettier --write", "eslint -c .eslintrc.yml --fix"],
-    "*.@(yml|yaml)": ["prettier --parser yaml --write"],
-    "*.md": ["prettier --parser markdown --write"],
-    "*.json": ["prettier --parser json --write"]
+    "*.@(js|ts|tsx)": [
+      "prettier --write",
+      "eslint -c .eslintrc.yml --fix"
+    ],
+    "*.@(yml|yaml)": [
+      "prettier --parser yaml --write"
+    ],
+    "*.md": [
+      "prettier --parser markdown --write"
+    ],
+    "*.json": [
+      "prettier --parser json --write"
+    ]
   },
   "prettier": {
     "printWidth": 120,

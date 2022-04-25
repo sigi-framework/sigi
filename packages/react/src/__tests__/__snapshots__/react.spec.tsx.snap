@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`React components test should render three times while change local state which in dependencies list 1`] = `
-<div
-  onClick={[Function]}
->
-  1
+exports[`React components test should render once while initial rendering 1`] = `
+<div>
+  John Doe
+  : 
+  0
 </div>
 `;

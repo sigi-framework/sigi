@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { Injectable } from '@sigi/di'
 import React from 'react'

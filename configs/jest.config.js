@@ -28,3 +28,5 @@ module.exports = {
   },
   testPathIgnorePatterns: ['/node_modules/', '/examples/', '\\.js$', '\\.d\\.ts$'],
 }
+
+globalThis.IS_REACT_ACT_ENVIRONMENT = true

@@ -1,8 +1,9 @@
 import '@abraham/reflection'
+import { initDevtool } from '@sigi/devtool'
 import { ClassProvider } from '@sigi/di'
 import { useModule, InjectionProvidersContext } from '@sigi/react'
-import React from 'react'
-import { render } from 'react-dom'
+import React, { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 
 import { AppModule } from './app.module'
 import { HttpBetterClient } from './http-better.service'
@@ -42,5 +43,11 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('app')
-render(<App />, rootElement)
+initDevtool()
+
+const rootElement = document.getElementById('app')!
+createRoot(rootElement).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)

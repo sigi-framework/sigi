@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { Inject, Test, Injectable, InjectionToken, AbstractTestModule } from '../index'
 import { Injector } from '../injector'

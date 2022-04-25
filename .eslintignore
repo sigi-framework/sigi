@@ -9,4 +9,5 @@ coverage
 *.d.ts
 packages/type-test
 commitlint.config.js
+example.js
 examples/.parcel-cache

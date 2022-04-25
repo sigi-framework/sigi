@@ -2,8 +2,8 @@ import '@abraham/reflection'
 import 'antd/dist/antd.css'
 import { initDevtool } from '@sigi/devtool'
 import { useModule } from '@sigi/react'
-import React, { useState, useCallback, useEffect } from 'react'
-import { render } from 'react-dom'
+import React, { StrictMode, useCallback, useState, lazy, Suspense } from 'react'
+import { createRoot } from 'react-dom/client'
 
 import { AppModule } from './app.module'
 
@@ -25,17 +25,9 @@ function List() {
   )
 }
 
-function Async() {
-  const [childComponent, setComponent] = useState(<div />)
-  useEffect(() => {
-    import('./async-component').then(({ AsyncComponent }) => {
-      setComponent(<AsyncComponent />)
-    })
-  }, [])
-  return childComponent
-}
-
 export type TabType = 'list' | 'async'
+
+const Async = lazy(() => import('./async-component').then(({ AsyncComponent }) => ({ default: AsyncComponent })))
 
 function App() {
   const [currentTab, setTab] = useState<TabType>('list')
@@ -56,7 +48,14 @@ function App() {
     [setTab],
   )
 
-  const body = currentTab === 'list' ? <List /> : <Async />
+  const body =
+    currentTab === 'list' ? (
+      <List />
+    ) : (
+      <Suspense fallback={false}>
+        <Async />
+      </Suspense>
+    )
 
   return (
     <div>
@@ -74,7 +73,10 @@ function App() {
   )
 }
 
-const rootElement = document.getElementById('app')
-render(<App />, rootElement)
+createRoot(document.getElementById('app')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
 
 initDevtool()

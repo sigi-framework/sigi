@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+import '@abraham/reflection'
 
 import { rootInjector } from '@sigi/di'
 import { Action, IStore } from '@sigi/types'
