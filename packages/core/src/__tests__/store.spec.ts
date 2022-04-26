@@ -30,9 +30,8 @@ describe('store specs', () => {
 
   let store: Store<State>
 
-  const mockEpic: (prevEpic: Epic) => Epic = (prevEpic) => (action$) =>
+  const mockEpic: Epic = (action$) =>
     action$.pipe(
-      prevEpic,
       filter(({ type }) => type === ASYNC_UPDATE_FOO),
       delay(delayTime),
       map(({ payload }) => ({ type: UPDATE_FOO, payload, store })),
@@ -44,8 +43,7 @@ describe('store specs', () => {
   }
 
   beforeEach(() => {
-    store = new Store('testStore', mockReducer)
-    store.addEpic(mockEpic)
+    store = new Store('testStore', mockReducer, mockEpic)
     store.setup(defaultState)
     timer = Sinon.useFakeTimers()
   })
