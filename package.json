@@ -51,7 +51,7 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-sonarjs": "^0.13.0",
-    "husky": "^7.0.2",
+    "husky": "^8.0.0",
     "immer": "^9.0.5",
     "jest": "^28.0.0",
     "jest-environment-jsdom": "^28.0.0",
