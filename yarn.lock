@@ -4506,10 +4506,10 @@ eslint-plugin-react@^7.25.1:
     resolve "^2.0.0-next.3"
     string.prototype.matchall "^4.0.5"
 
-eslint-plugin-sonarjs@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-sonarjs/-/eslint-plugin-sonarjs-0.14.0.tgz#112d159ba7516a2a69bb1a6d6cab782e23bca259"
-  integrity sha512-0X0q3fB8ghppms19cR2oIK2ajoFp7DEy3AVGDqO7WX02r1aWOzkrHa+veatGZw+R7amgBvfcF0qHCG66p9Zoag==
+eslint-plugin-sonarjs@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-sonarjs/-/eslint-plugin-sonarjs-0.15.0.tgz#f9c904f143f4e2336f2923be08399b32b5bd2781"
+  integrity sha512-LuxHdAe6VqSbi1phsUvNjbmXLuvlobmryQJJNyQYbdubCfz6K8tmgoqNiJPnz0pP2AbYDbtuPm0ajOMgMrC+dQ==
 
 eslint-scope@^5.1.1:
   version "5.1.1"
