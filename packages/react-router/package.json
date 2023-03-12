@@ -33,6 +33,6 @@
   },
   "devDependencies": {
     "@types/history": "^4.7.9",
-    "history": "4"
+    "history": "5"
   }
 }
