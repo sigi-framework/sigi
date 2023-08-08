@@ -107,8 +107,8 @@ describe('Router module spec', () => {
       ],
     }).compile()
 
-    teardown = history.listen((location, action) => {
-      router$.next({ location, action })
+    teardown = history.listen((update) => {
+      router$.next(update)
     })
 
     testStub = testingModule.getTestingStub(TestModule)
@@ -127,7 +127,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke goBack', () => {
-    const goBackSpy = Sinon.spy(history, 'goBack')
+    const goBackSpy = Sinon.spy(history, 'back')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goBack()
     expect(goBackSpy.callCount).toBe(1)
@@ -151,7 +151,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke goForward', () => {
-    const goForwardSpy = Sinon.spy(history, 'goForward')
+    const goForwardSpy = Sinon.spy(history, 'forward')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goForward()
     expect(goForwardSpy.callCount).toBe(1)

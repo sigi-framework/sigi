@@ -2,7 +2,10 @@
   "name": "@sigi/di",
   "version": "2.11.3",
   "description": "Dependencies injection library for sigi framework",
-  "keywords": ["DI", "Sigi"],
+  "keywords": [
+    "DI",
+    "Sigi"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -15,7 +18,13 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015", "src"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -24,7 +33,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.6.1"
   },
   "peerDependencies": {
     "@abraham/reflection": ">=0.8.0"

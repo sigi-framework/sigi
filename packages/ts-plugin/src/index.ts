@@ -33,62 +33,58 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
       if (!effectImportResult && !moduleImportResult) {
         return node
       } else {
-        const { decorators } = node
-        if (effectImportResult && ts.isMethodDeclaration(node) && decorators && decorators.length) {
-          let hasModifiedDecorator = false
-          const modifiedDecorators = decorators.map((decorator) => {
-            const isEffectDecorator = checkDecorator(decorator, effectImportResult!, EffectName)
-            if (isEffectDecorator) {
-              const expression = decorator.expression as ts.CallExpression
-              const argument = expression.arguments.length ? expression.arguments[0] : null
-              if (!argument) {
-                return decorator
-              }
-              if (!ts.isObjectLiteralExpression(argument)) {
-                throw new TypeError('Only support object literal parameter in Effect decorator')
-              }
-              hasModifiedDecorator = true
-              return ts.factory.updateDecorator(
-                decorator,
-                ts.factory.updateCallExpression(expression, expression.expression, expression.typeArguments, [
-                  ts.factory.updateObjectLiteralExpression(
-                    argument,
-                    argument.properties.filter(
-                      (property) =>
-                        !(ts.isPropertyAssignment(property) || ts.isMethodDeclaration(property)) &&
-                        property.name?.getText() !== PayloadGetterName,
+        if (effectImportResult && ts.isMethodDeclaration(node)) {
+          const decorators = node.modifiers
+          if (decorators?.length) {
+            let hasModifiedDecorator = false
+            const modifiedDecorators = decorators.map((decorator) => {
+              const isEffectDecorator = checkDecorator(decorator, effectImportResult!, EffectName)
+              if (ts.isDecorator(decorator) && isEffectDecorator) {
+                const expression = decorator.expression as ts.CallExpression
+                const argument = expression.arguments.length ? expression.arguments[0] : null
+                if (!argument) {
+                  return decorator
+                }
+                if (!ts.isObjectLiteralExpression(argument)) {
+                  throw new TypeError('Only support object literal parameter in Effect decorator')
+                }
+                hasModifiedDecorator = true
+                return ts.factory.updateDecorator(
+                  decorator,
+                  ts.factory.updateCallExpression(expression, expression.expression, expression.typeArguments, [
+                    ts.factory.updateObjectLiteralExpression(
+                      argument,
+                      argument.properties.filter(
+                        (property) =>
+                          !(ts.isPropertyAssignment(property) || ts.isMethodDeclaration(property)) &&
+                          property.name?.getText() !== PayloadGetterName,
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
+                )
+              }
+              return decorator
+            })
+            if (hasModifiedDecorator) {
+              return ts.factory.updateMethodDeclaration(
+                node,
+                modifiedDecorators,
+                node.asteriskToken,
+                node.name,
+                node.questionToken,
+                node.typeParameters,
+                node.parameters,
+                node.type,
+                node.body,
               )
             }
-            return decorator
-          })
-          if (hasModifiedDecorator) {
-            return ts.factory.updateMethodDeclaration(
-              node,
-              modifiedDecorators,
-              node.modifiers,
-              node.asteriskToken,
-              node.name,
-              node.questionToken,
-              node.typeParameters,
-              node.parameters,
-              node.type,
-              node.body,
-            )
           }
           return node
-        } else if (
-          process.env.NODE_ENV === 'development' &&
-          moduleImportResult &&
-          ts.isClassDeclaration(node) &&
-          decorators &&
-          decorators.length
-        ) {
+        } else if (process.env.NODE_ENV === 'development' && moduleImportResult && ts.isClassDeclaration(node)) {
+          const decorators = node.modifiers ?? []
           let sigiModuleName: string | null = null
           decorators.forEach((decorator) => {
-            if (checkDecorator(decorator, moduleImportResult!, ModuleDef)) {
+            if (ts.isDecorator(decorator) && checkDecorator(decorator, moduleImportResult!, ModuleDef)) {
               const arg = (decorator.expression as ts.CallExpression).arguments[0]
               sigiModuleName = (arg as ts.StringLiteral | undefined)?.text ?? null
             }
@@ -104,7 +100,7 @@ export const SigiTransformer: ts.TransformerFactory<ts.SourceFile> = (context) =
     return ts.visitEachChild(node, visitor, context)
   }
 
-  return (node) => ts.visitNode(node, visitor)
+  return (node) => ts.visitNode(node, visitor) as ts.SourceFile
 }
 
 function checkImportDeclaration(
@@ -132,10 +128,13 @@ function checkImportDeclaration(
 }
 
 function checkDecorator(
-  decorator: ts.Decorator,
+  decorator: ts.ModifierLike,
   importCheckResult: ImportDeclarationCheckResult,
   name: ImportCheckType,
 ) {
+  if (!ts.isDecorator(decorator)) {
+    return false
+  }
   const { expression } = decorator
   if (ts.isCallExpression(expression)) {
     const { expression: childExpression } = expression

@@ -2,7 +2,10 @@
   "name": "@sigi/ssr",
   "version": "2.12.1",
   "description": "Server side rendering support for sigi framework",
-  "keywords": ["Sigi", "SSR"],
+  "keywords": [
+    "Sigi",
+    "SSR"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://github.com/sigi-framework/",
   "license": "MIT",
@@ -15,7 +18,13 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015", "src"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015",
+    "src"
+  ],
   "engines": {
     "node": ">= 10.17"
   },
@@ -30,13 +39,13 @@
     "@sigi/core": "^2.12.1",
     "@sigi/di": "^2.11.3",
     "@sigi/types": "^2.11.3",
-    "path-to-regexp": "^6.2.0",
-    "serialize-javascript": "^6.0.0",
-    "tslib": "^2.3.1"
+    "path-to-regexp": "^6.2.1",
+    "serialize-javascript": "^6.0.1",
+    "tslib": "^2.6.1"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "@types/serialize-javascript": "^5.0.1"
+    "@types/node": "^20.4.8",
+    "@types/serialize-javascript": "^5.0.2"
   },
   "peerDependencies": {
     "rxjs": ">=7"

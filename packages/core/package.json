@@ -2,7 +2,11 @@
   "name": "@sigi/core",
   "version": "2.12.1",
   "description": "Sigi core library",
-  "keywords": ["RxJS", "TypeScript", "Sigi"],
+  "keywords": [
+    "RxJS",
+    "TypeScript",
+    "Sigi"
+  ],
   "author": "LongYinan <longyinan.brooklyn@bytedance.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -15,7 +19,13 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015", "src"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
@@ -26,7 +36,7 @@
   "dependencies": {
     "@sigi/di": "^2.11.3",
     "@sigi/types": "^2.11.3",
-    "tslib": "^2.3.1"
+    "tslib": "^2.6.1"
   },
   "peerDependencies": {
     "immer": ">=9",

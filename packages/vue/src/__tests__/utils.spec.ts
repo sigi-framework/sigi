@@ -19,7 +19,11 @@ describe('cloneDeepPoj specs', () => {
 
   it('should be able to clone object which implement CloneTrait', () => {
     class Clone {
-      constructor(public foo: string, public bar: number, public arr: string[]) {}
+      constructor(
+        public foo: string,
+        public bar: number,
+        public arr: string[],
+      ) {}
 
       [CloneTrait]() {
         return new Clone(this.foo, this.bar, [...this.arr])
@@ -39,6 +43,7 @@ describe('cloneDeepPoj specs', () => {
   it('should throw if MAX_OBJECT_DEPTH reached', () => {
     const a = { foo: {} }
     const b = { c: a }
+    // @ts-expect-error
     a.foo['whatever'] = b
 
     expect(() => cloneDeepPoj(a)).toThrow()

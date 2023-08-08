@@ -14,14 +14,14 @@ export class ModuleA extends EffectModule<AState> {
         return payload$.pipe(map(() => this.createNoopAction()));
     }
 }
-if (process.env.NODE_ENV === \\"development\\" && module.hot) {
+if (process.env.NODE_ENV === "development" && module.hot) {
     module.hot.accept();
     module.hot.dispose(() => {
-        const { rootInjector } = require(\\"@sigi/di\\");
+        const { rootInjector } = require("@sigi/di");
         const instance = rootInjector
             .
                 getInstance(ModuleA);
-        Module.removeModule(\\"MA\\", instance);
+        Module.removeModule("MA", instance);
     });
 }
 "

@@ -4,7 +4,10 @@ import serialize from 'serialize-javascript'
 const ScriptId = 'sigi-persisted-data'
 
 export class StateToPersist<T> {
-  constructor(private readonly dataToPersist: T, private readonly actionsToRetry: { [index: string]: string[] }) {}
+  constructor(
+    private readonly dataToPersist: T,
+    private readonly actionsToRetry: { [index: string]: string[] },
+  ) {}
 
   extractToScriptString(withScriptTag = true) {
     if (this.dataToPersist == null) {

@@ -30,6 +30,7 @@ const MODULES = [CountModule, ServiceModule, Service]
 
 describe('client ssr hydration', () => {
   it('should restore state from global with selector', () => {
+    // @ts-expect-error
     global[GLOBAL_KEY_SYMBOL] = {
       CountModule: {
         count: 10,
@@ -42,11 +43,13 @@ describe('client ssr hydration', () => {
       </SSRContext>,
     )
     expect(testRenderer.root.findByType('span').children[0]).toBe('11')
+    // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
 
   it('should not restore state from global if state is null', () => {
+    // @ts-expect-error
     global[GLOBAL_KEY_SYMBOL] = {
       OtherModule: {
         count: 10,
@@ -68,6 +71,7 @@ describe('client ssr hydration', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('1')
 
+    // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
@@ -82,6 +86,7 @@ describe('client ssr hydration', () => {
       return <span>{state.count}</span>
     }
 
+    // @ts-expect-error
     global[GLOBAL_KEY_SYMBOL] = {
       CountModule: {
         count: 2,
@@ -106,6 +111,7 @@ describe('client ssr hydration', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('2')
 
+    // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })
@@ -120,6 +126,7 @@ describe('client ssr hydration', () => {
       return <span>{state.name}</span>
     }
 
+    // @ts-expect-error
     global[RETRY_KEY_SYMBOL] = {
       ServiceModule: ['setNameWithFailure'],
     }
@@ -143,6 +150,7 @@ describe('client ssr hydration', () => {
 
     expect(testRenderer.root.findByType('span').children[0]).toBe('From retry')
 
+    // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })

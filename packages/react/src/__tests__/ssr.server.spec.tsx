@@ -88,6 +88,7 @@ describe('SSR server', () => {
   })
 
   it('should restore state from global', () => {
+    // @ts-expect-error
     global[GLOBAL_KEY_SYMBOL] = {
       CountModule: {
         count: 101,
@@ -100,6 +101,7 @@ describe('SSR server', () => {
     })
     expect(testRenderer.root.findByType('span').children[0]).toBe('101')
 
+    // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
   })

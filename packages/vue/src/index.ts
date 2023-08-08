@@ -94,7 +94,7 @@ export const reactive = <
     let changed = false
     for (const prop of syncToSigi) {
       if (!(prop in (statePassToVue as any)) && process.env.NODE_ENV === 'development') {
-        console.warn(`${prop} in syncToSigi option is not existed in defaultProps property in Sigi module`)
+        console.warn(`${String(prop)} in syncToSigi option is not existed in defaultProps property in Sigi module`)
       }
       const propValue = (this as any)[prop]
       if (propValue !== latestState[prop]) {

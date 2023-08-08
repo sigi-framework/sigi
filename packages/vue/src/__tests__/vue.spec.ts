@@ -132,6 +132,7 @@ describe('VueJS reactive binding', () => {
 
     const vm = new Vue(reactiveOptions)
     vm.name = newName
+    // @ts-expect-error
     vm.$options.beforeUpdate![0].call(vm)
     expect(testingStub.getState().name).toBe(newName)
   })
@@ -144,6 +145,7 @@ describe('VueJS reactive binding', () => {
     })
 
     const vm = new Vue(reactiveOptions)
+    // @ts-expect-error
     vm.$options.beforeUpdate![0].call(vm)
     expect(spy.callCount).toBe(1)
   })
@@ -160,6 +162,7 @@ describe('VueJS reactive binding', () => {
 
     process.env.NODE_ENV = 'development'
 
+    // @ts-expect-error
     vm.$options.beforeUpdate![0].call(vm)
     expect(spy.callCount).toBe(1)
 

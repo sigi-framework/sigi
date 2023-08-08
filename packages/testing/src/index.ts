@@ -20,7 +20,10 @@ export class SigiTestModule extends TestModule {
 }
 
 export class SigiTestStub<M extends EffectModule<S>, S = M extends EffectModule<infer State> ? State : never> {
-  constructor(public readonly dispatcher: ActionOfEffectModule<M, S>, private readonly store: IStore<S>) {}
+  constructor(
+    public readonly dispatcher: ActionOfEffectModule<M, S>,
+    private readonly store: IStore<S>,
+  ) {}
 
   getState() {
     return this.store.state

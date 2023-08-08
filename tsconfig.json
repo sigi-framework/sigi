@@ -16,8 +16,8 @@
     "removeComments": true,
     "strict": true,
     "skipLibCheck": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "suppressExcessPropertyErrors": true,
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false,
     "forceConsistentCasingInFileNames": true,
     "target": "ES5",
     "sourceMap": true,
@@ -32,5 +32,5 @@
       "@sigi/*": ["./*/src/index.ts"]
     }
   },
-  "include": ["./packages/**/*"]
+  "exclude": ["node_modules"],
 }

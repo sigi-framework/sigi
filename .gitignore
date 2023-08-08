@@ -146,3 +146,5 @@ lib
 next
 es2015
 .parcel-cache
+.yarn/cache
+.yarn/install-state.gz

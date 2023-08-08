@@ -91,6 +91,7 @@ describe('Smoking tests', () => {
   it('should skip all effects restored from persisted state', () => {
     type State = { foo: string; bar: number }
     const staticState = { foo: 'foo', bar: 42 }
+    // @ts-expect-error
     global['SIGI_STATE'] = {
       SSRPersistModule: staticState,
     }

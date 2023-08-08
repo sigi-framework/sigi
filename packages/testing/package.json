@@ -2,7 +2,10 @@
   "name": "@sigi/testing",
   "version": "2.12.1",
   "description": "Testing library for sigi framework",
-  "keywords": ["Testing", "Sigi"],
+  "keywords": [
+    "Testing",
+    "Sigi"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -15,7 +18,13 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015", "src"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"
