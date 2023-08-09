@@ -15,7 +15,10 @@ export class Test<M extends AbstractTestModule> {
 
   readonly providersMap = new Map<Token<unknown>, Provider>()
 
-  private constructor(providers: Provider[], private readonly TestModule: Type<M>) {
+  private constructor(
+    providers: Provider[],
+    private readonly TestModule: Type<M>,
+  ) {
     for (const provider of providers) {
       this.providersMap.set((provider as ValueProvider<unknown>).provide ?? provider, provider)
     }
@@ -32,7 +35,10 @@ export class Test<M extends AbstractTestModule> {
 }
 
 export class MockProvider<T, M extends AbstractTestModule> {
-  constructor(private readonly test: Test<M>, private readonly token: Type<T> | InjectionToken<T>) {}
+  constructor(
+    private readonly test: Test<M>,
+    private readonly token: Type<T> | InjectionToken<T>,
+  ) {}
 
   useClass(value: Type<T>) {
     this.test.providersMap.set(this.token, { provide: this.token, useClass: value })

@@ -10,24 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 14.x
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
-          node-version: 14
-      - name: Cache NPM dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: npm-cache-tests-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            npm-cache-tests-
+          node-version: 18
+          cache: 'yarn'
       - name: Install dependencies
         run: |
-          yarn install --frozen-lockfile
+          yarn install
           cd examples
-          yarn install --frozen-lockfile
+          yarn install
           cd ..
       - name: Lint
         run: yarn lint

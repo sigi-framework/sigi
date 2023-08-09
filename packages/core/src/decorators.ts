@@ -41,6 +41,7 @@ export const Effect: <A = any>(
 ) => DecoratorReturnType<(action: Observable<A>) => Observable<Action>> = (options) => {
   const effectDecorator = createActionDecorator('Effect')
 
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   if (options && (options.ssr || options.payloadGetter)) {
     const { payloadGetter, skipFirstClientDispatch } = {
       payloadGetter: undefined,

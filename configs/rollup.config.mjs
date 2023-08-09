@@ -1,7 +1,12 @@
-import { readdirSync, statSync } from 'fs'
-import { join } from 'path'
+import { readdirSync, statSync } from 'node:fs'
+import { createRequire } from 'node:module'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import sourcemaps from 'rollup-plugin-sourcemaps'
+
+const __dirname = join(fileURLToPath(import.meta.url), '..')
+const require = createRequire(import.meta.url)
 
 const pkgs = readdirSync(join(__dirname, '..', 'packages')).filter(
   (dir) =>

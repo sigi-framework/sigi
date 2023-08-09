@@ -31,7 +31,7 @@ export function useModuleState<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
   config: M extends EffectModule<infer State> ? StateSelectorConfig<State, U> : never,
 ): M extends EffectModule<infer State>
-  ? typeof config['selector'] extends StateSelector<State, infer NewState>
+  ? (typeof config)['selector'] extends StateSelector<State, infer NewState>
     ? NewState
     : never
   : never
@@ -52,7 +52,7 @@ export function useModule<M extends EffectModule<any>, U>(
   A: ConstructorOf<M>,
   config: M extends EffectModule<infer State> ? StateSelectorConfig<State, U> : never,
 ): M extends EffectModule<infer State>
-  ? typeof config['selector'] extends StateSelector<State, infer NewState>
+  ? (typeof config)['selector'] extends StateSelector<State, infer NewState>
     ? [NewState, ActionOfEffectModule<M, State>]
     : never
   : never

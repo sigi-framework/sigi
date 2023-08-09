@@ -1,11 +1,11 @@
 import { EffectModule, Module, Effect } from '@sigi/core'
 import { Inject, InjectionToken, ValueProvider } from '@sigi/di'
 import { Action } from '@sigi/types'
-import { Location, Action as HistoryAction, Path, History } from 'history'
+import { Location, Action as HistoryAction, History, To } from 'history'
 import { Observable, Subject } from 'rxjs'
 import { tap, map } from 'rxjs/operators'
 
-export type HistoryMethods = 'go' | 'goBack' | 'goForward' | 'push' | 'replace'
+export type HistoryMethods = 'go' | 'back' | 'forward' | 'push' | 'replace'
 
 export interface RouterChanged {
   location: Location
@@ -43,7 +43,7 @@ export class RouterModule extends EffectModule<null> {
     }
   }
 
-  push(path: Path, state?: any): Action<CallHistoryPayload> {
+  push(path: To, state?: any): Action<CallHistoryPayload> {
     return this.getActions()._callHistory({ method: 'push', payloads: [path, state] })
   }
 
@@ -52,13 +52,13 @@ export class RouterModule extends EffectModule<null> {
   }
 
   goBack() {
-    return this.getActions()._callHistory({ method: 'goBack', payloads: [] })
+    return this.getActions()._callHistory({ method: 'back', payloads: [] })
   }
   goForward() {
-    return this.getActions()._callHistory({ method: 'goForward', payloads: [] })
+    return this.getActions()._callHistory({ method: 'forward', payloads: [] })
   }
 
-  replace(path: Path, state?: any) {
+  replace(path: To, state?: any) {
     return this.getActions()._callHistory({ method: 'replace', payloads: [path, state] })
   }
 

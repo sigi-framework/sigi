@@ -1,4 +1,5 @@
 import { reactive } from '@sigi/vue'
+import type { ComponentOptions } from 'vue'
 
 import { CommitsModule } from './commits.module'
 
@@ -8,7 +9,7 @@ export interface Props {
   msg: string
 }
 
-export default reactive(CommitsModule, {
+export const options: unknown = reactive(CommitsModule, {
   props: {
     size: Number,
     name: {

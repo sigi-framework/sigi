@@ -6,20 +6,7 @@ const { join } = require('path')
 const config = {
   rootDir: join(__dirname, '..'),
   testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
-  transform: {
-    '^.+\\.(t|j)sx?$': [
-      '@swc-node/jest',
-      // configuration
-      {
-        target: 'es2020',
-        experimentalDecorators: true,
-        emitDecoratorMetadata: true,
-        react: {
-          runtime: 'automatic',
-        },
-      },
-    ],
-  },
+  transform: { '^.+\\.tsx?$': ['ts-jest', {}] },
   collectCoverageFrom: [
     'packages/*/src/**/*.{ts,tsx}',
     '!packages/**/*.spec.{ts,tsx}',

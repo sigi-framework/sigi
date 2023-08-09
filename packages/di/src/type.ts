@@ -9,6 +9,7 @@ export class InjectionToken<T> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export interface Type<T = Record<string, unknown>> extends Function {
   new (...args: any[]): T
 }

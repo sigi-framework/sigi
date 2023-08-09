@@ -1,6 +1,6 @@
 import { ValueProvider } from '@sigi/di'
 import { InjectionProvidersContext } from '@sigi/react'
-import { History, Location, Action } from 'history'
+import { History } from 'history'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Subject } from 'rxjs'
 
@@ -23,8 +23,8 @@ export const SigiRouterProvider = memo<{ history: History; children: React.React
   }, [history, router$])
 
   useEffect(() => {
-    return history.listen((location: Location, action: Action) => {
-      router$.next({ location, action })
+    return history.listen((update) => {
+      router$.next(update)
     })
   }, [history, router$])
   return <InjectionProvidersContext providers={historyProvides}>{children}</InjectionProvidersContext>

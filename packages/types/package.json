@@ -2,7 +2,10 @@
   "name": "@sigi/types",
   "version": "2.11.3",
   "description": "Types definition for sigi framework",
-  "keywords": ["Sigi", "TypeScript"],
+  "keywords": [
+    "Sigi",
+    "TypeScript"
+  ],
   "author": "LongYinan <lynweklm@gmail.com>",
   "homepage": "https://sigi.how",
   "license": "MIT",
@@ -15,7 +18,13 @@
     "access": "public"
   },
   "sideEffects": false,
-  "files": ["dist", "esm", "next", "es2015", "src"],
+  "files": [
+    "dist",
+    "esm",
+    "next",
+    "es2015",
+    "src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sigi-framework/sigi.git"

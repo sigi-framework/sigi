@@ -56,7 +56,10 @@ describe('injectable specs', () => {
 
     @Injectable()
     class Service {
-      constructor(public dep: Dep, public depTwo: DepTwo) {}
+      constructor(
+        public dep: Dep,
+        public depTwo: DepTwo,
+      ) {}
     }
 
     const injector = rootInjector
@@ -78,7 +81,10 @@ describe('injectable specs', () => {
 
     @Injectable()
     class Service {
-      constructor(public dep: Dep, public depTwo: DepTwo) {}
+      constructor(
+        public dep: Dep,
+        public depTwo: DepTwo,
+      ) {}
     }
 
     const injector = rootInjector
@@ -185,7 +191,10 @@ describe('injectable specs', () => {
 
     @Injectable()
     class Dep {
-      constructor(public cacheSize: number, public depTwo: DepTwo) {}
+      constructor(
+        public cacheSize: number,
+        public depTwo: DepTwo,
+      ) {}
     }
 
     const cacheSize = 5

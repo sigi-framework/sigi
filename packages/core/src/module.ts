@@ -1,5 +1,5 @@
 import { Action, Epic } from '@sigi/types'
-import produce, { Draft } from 'immer'
+import { produce, Draft } from 'immer'
 import { Observable, merge } from 'rxjs'
 import { map, filter, ignoreElements } from 'rxjs/operators'
 
@@ -29,8 +29,6 @@ const _globalThis =
 const DEFAULT_STATE_KEY = 'defaultState'
 
 export abstract class EffectModule<S> {
-  abstract readonly defaultState: S
-
   readonly moduleName!: string
   readonly store: Store<S>
   // give them `any` type and refer the right type in useDispatchers
@@ -60,6 +58,7 @@ export abstract class EffectModule<S> {
   }
 
   constructor() {
+    this.moduleName = Object.getPrototypeOf(this).moduleName
     const reducer = this.combineReducers()
     const definedActions = this.combineDefineActions()
     const epic = this.combineEffects()
@@ -106,7 +105,6 @@ export abstract class EffectModule<S> {
         map(({ payload }) => payload),
       )
     }
-
     if (typeof Proxy !== 'undefined') {
       const context = this
       return new Proxy(this, {
@@ -118,6 +116,7 @@ export abstract class EffectModule<S> {
                 context.internalDefaultState = value
                 if (!context.store.ready) {
                   context.store.setup(context.getDefaultState())
+                  // @ts-expect-error
                   context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
                   context.actionsToSkip = new Set(
                     context.restoredFromSSR
@@ -132,6 +131,7 @@ export abstract class EffectModule<S> {
               context.internalDefaultState = attr.value
               if (!context.store.ready) {
                 context.store.setup(context.getDefaultState())
+                // @ts-expect-error
                 context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[context.moduleName] || [])
                 context.actionsToSkip = new Set(
                   context.restoredFromSSR
@@ -149,6 +149,7 @@ export abstract class EffectModule<S> {
             context.internalDefaultState = value
             if (!context.store.ready) {
               context.store.setup(context.getDefaultState())
+              // @ts-expect-error
               context.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[context.moduleName] || [])
               context.actionsToSkip = new Set(
                 context.restoredFromSSR
@@ -167,6 +168,7 @@ export abstract class EffectModule<S> {
           this.internalDefaultState = value
           if (!this.store.ready) {
             this.store.setup(this.getDefaultState())
+            // @ts-expect-error
             this.actionsToRetry = new Set(_globalThis[RETRY_KEY_SYMBOL]?.[this.moduleName] || [])
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             this.actionsToSkip = new Set(this.restoredFromSSR ? getActionsToSkip(this.constructor.prototype) || [] : [])
@@ -305,7 +307,7 @@ export abstract class EffectModule<S> {
                 name,
               },
               store: this.store,
-            } as Action)
+            }) as Action
           return effect.call(this, payload$)
         }),
       )
@@ -318,19 +320,25 @@ export abstract class EffectModule<S> {
 
     this.actionNames.push(...reducerKeys, ...immerReducerKeys)
 
-    const immerReducers = immerReducerKeys.reduce((acc, property) => {
-      acc[property] = (this as any)[property].bind(this)
-      return acc
-    }, {} as { [index: string]: ImmerReducer<S, unknown> })
-    const reducers = reducerKeys.reduce((acc, property) => {
-      acc[property] = (this as any)[property].bind(this)
-      return acc
-    }, {} as { [index: string]: Reducer<S, unknown> })
+    const immerReducers = immerReducerKeys.reduce(
+      (acc, property) => {
+        acc[property] = (this as any)[property].bind(this)
+        return acc
+      },
+      {} as { [index: string]: ImmerReducer<S, unknown> },
+    )
+    const reducers = reducerKeys.reduce(
+      (acc, property) => {
+        acc[property] = (this as any)[property].bind(this)
+        return acc
+      },
+      {} as { [index: string]: Reducer<S, unknown> },
+    )
 
     return (prevState, action) => {
       const { type } = action
       if (type === RESET_ACTION_TYPE_SYMBOL) {
-        return this.defaultState
+        return this.getDefaultState()
       } else {
         if (reducers[type]) {
           return reducers[type](prevState, action.payload)
