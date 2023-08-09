@@ -3065,9 +3065,9 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^20.4.8":
-  version: 20.4.8
-  resolution: "@types/node@npm:20.4.8"
-  checksum: 86a3963c0c7af3410553d1dfa4b018a20b3cb3ab4d8e8ffe27408b6338c5de0374b0bf379bc705da2205b466daa751ccfe062f453ba9bde34fdb0e5163ca6a68
+  version: 20.4.9
+  resolution: "@types/node@npm:20.4.9"
+  checksum: 504e3da96274f3865c1251830f4750bb0a8f6ef6f8648902cd3bba33370c5f219235471bfbf55cce726b25c8eacfcc8e2aad0ec3b13e27ea6708b00d4a9a46c8
   languageName: node
   linkType: hard
 
@@ -5325,9 +5325,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.477":
-  version: 1.4.487
-  resolution: "electron-to-chromium@npm:1.4.487"
-  checksum: 244651fa6878f8ccf94ab76924b7a1c482ac714e2e6032d9e0f3268a21876991b5ca4fb75fe77274a4b19e3836bbe4522cdacb75d6f6758af61a93030051a992
+  version: 1.4.488
+  resolution: "electron-to-chromium@npm:1.4.488"
+  checksum: 431c100e01262976bcef3d15505da3817d19978b57236aeede1d42653c3bc5872b79ea9ef7f2b13b2719a2663bd1cab718342217a8daa3bbc52c3819f418e552
   languageName: node
   linkType: hard
 
@@ -10759,8 +10759,8 @@ __metadata:
   linkType: hard
 
 "rc-picker@npm:~2.7.0":
-  version: 2.7.2
-  resolution: "rc-picker@npm:2.7.2"
+  version: 2.7.3
+  resolution: "rc-picker@npm:2.7.3"
   dependencies:
     "@babel/runtime": ^7.10.1
     classnames: ^2.2.1
@@ -10773,7 +10773,7 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 35d9171d2401ea1d23c1bcd0b1b35dd5a68e7ea04a47feab2a0eeee6a1c7ee06e461d53ff9b8d1cfbe5860c263b5d197ccd539fe5107c5870400429aa16bc7c1
+  checksum: 0cefc856eae619485030f3993ac9f233bb81239248ec46e205a727f2fce16295071e8c782d49635ae359fec7d5598c3589be8fb35022d2c2269948df1af0568a
   languageName: node
   linkType: hard
 
