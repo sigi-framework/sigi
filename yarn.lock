@@ -2662,7 +2662,7 @@ __metadata:
     "@sigi/di": ^2.11.3
     "@sigi/ssr": ^2.12.1
     "@sigi/types": ^2.11.3
-    "@types/use-sync-external-store": ^0.0.4
+    "@types/use-sync-external-store": ^0.0.5
     tslib: ^2.6.1
     use-sync-external-store: ^1.2.0
   peerDependencies:
@@ -3256,10 +3256,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/use-sync-external-store@npm:^0.0.4":
-  version: 0.0.4
-  resolution: "@types/use-sync-external-store@npm:0.0.4"
-  checksum: f8bf56b14f28fda6d0215281d50623d5affd17c549ba46bcfcfbb97c6301a583066c0477856260ae6feadcaa714c46cd45678e76b74da0f6f8b364aec07bd854
+"@types/use-sync-external-store@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "@types/use-sync-external-store@npm:0.0.5"
+  checksum: 96a22fa059d8a6d0fe0b03e5157eb22f599ab1cc58b9441617dec4be6d8586260fcf9041912ab90e92d9c6ea6dfec5c758bae6418552aa687fc7e0bb904e68bc
   languageName: node
   linkType: hard
 
