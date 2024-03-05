@@ -40,9 +40,9 @@
     "@sigi/types": "^2.11.3"
   },
   "peerDependencies": {
-    "vue": "<3"
+    "vue": "<4"
   },
   "devDependencies": {
-    "vue": "2"
+    "vue": "3"
   }
 }
