@@ -5798,12 +5798,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-sonarjs@npm:^0.24.0":
-  version: 0.24.0
-  resolution: "eslint-plugin-sonarjs@npm:0.24.0"
+"eslint-plugin-sonarjs@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "eslint-plugin-sonarjs@npm:0.25.0"
   peerDependencies:
     eslint: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-  checksum: 14e81d2b9efa9d309a0cf1758955708a3f73b1cdf129140607db983bb36027f1442a99fc0b254303307cf743bd241f88b07f95a68013502fbceca9565960ca02
+  checksum: 3fa9ee554ecf6d0287516d16b6574f19a0cc584dfa8983270f4e827f8f4964b65a2f8517a03471a8a10c27cdf0b2184f5a0e3835b3b05e14e9bde5c70328f6d3
   languageName: node
   linkType: hard
 
@@ -11929,7 +11929,7 @@ __metadata:
     eslint-plugin-prettier: ^5.0.0
     eslint-plugin-react: ^7.33.1
     eslint-plugin-react-hooks: ^4.6.0
-    eslint-plugin-sonarjs: ^0.24.0
+    eslint-plugin-sonarjs: ^0.25.0
     husky: ^9.0.0
     immer: ^10.0.2
     jest: ^29.6.2
