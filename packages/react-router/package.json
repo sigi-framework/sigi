@@ -36,10 +36,10 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.12.1",
-    "@sigi/di": "^2.11.3",
-    "@sigi/react": "^2.12.2",
-    "@sigi/types": "^2.11.3",
+    "@sigi/core": "workspace:*",
+    "@sigi/di": "workspace:*",
+    "@sigi/react": "workspace:*",
+    "@sigi/types": "workspace:*",
     "tslib": "^2.6.1"
   },
   "devDependencies": {

@@ -37,11 +37,11 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.12.1",
-    "@sigi/di": "^2.11.3",
-    "@sigi/ssr": "^2.12.1",
-    "@sigi/types": "^2.11.3",
-    "tslib": "^2.6.1"
+    "@sigi/core": "workspace:*",
+    "@sigi/di": "workspace:*",
+    "@sigi/ssr": "workspace:*",
+    "@sigi/types": "workspace:*",
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
     "react": ">=18",

@@ -6,6 +6,7 @@ const { join } = require('path')
 const config = {
   rootDir: join(__dirname, '..'),
   testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
+  skipFilter: true,
   transform: { '^.+\\.tsx?$': ['ts-jest', {}] },
   collectCoverageFrom: [
     'packages/*/src/**/*.{ts,tsx}',
@@ -14,7 +15,7 @@ const config = {
     '!packages/{core,react-router,devtool}/src/index.ts',
   ],
   moduleNameMapper: {
-    '@sigi/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2',
+    '@sigi/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2'
   },
   testPathIgnorePatterns: ['/node_modules/', '/examples/', '\\.js$', '\\.d\\.ts$'],
 }

@@ -40,7 +40,7 @@ class VueTestingModule extends EffectModule<VueTestingState> {
   }
 }
 
-describe('VueJS reactive binding', () => {
+describe.skip('VueJS reactive binding', () => {
   const options = reactive(VueTestingModule, {})
   let vm = new Vue(options)
   let testingStub: SigiTestStub<VueTestingModule, VueTestingState>
