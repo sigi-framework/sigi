@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.13.0](https://github.com/sigi-framework/sigi/compare/v2.12.2...v2.13.0) (2024-04-22)
+
+
+### Features
+
+* upgrade dependencies ([fe81b78](https://github.com/sigi-framework/sigi/commit/fe81b785aefabdda40ecc920290c569c4d29a851))
+
+
+
+
+
 ## [2.12.2](https://github.com/sigi-framework/sigi/compare/v2.12.1...v2.12.2) (2021-09-29)
 
 ### Bug Fixes
