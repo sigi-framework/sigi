@@ -11,7 +11,7 @@
     "examples"
   ],
   "scripts": {
-    "build": "run-s clean build:esm build:next build:cjs build:es2015 clean:tests",
+    "build": "run-s build:esm build:next build:cjs build:es2015 clean:tests",
     "build:es2015": "tsc -b ./configs/tsconfig.es2015.json",
     "build:esm": "tsc -b ./configs/tsconfig.project.json",
     "build:next": "tsc -b ./configs/tsconfig.next.json",
