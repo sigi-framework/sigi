@@ -1,10 +1,5 @@
 {
-  "extends": [
-    "config:base",
-    "group:allNonMajor",
-    "group:linters",
-    ":preserveSemverRanges"
-  ],
+  "extends": ["config:base", "group:allNonMajor", "group:linters", ":preserveSemverRanges"],
   "labels": ["dependencies"],
   "packageRules": [
     {
@@ -14,10 +9,7 @@
     },
     {
       "extends": "group:jsUnitTest",
-      "matchPackageNames": [
-        "ts-jest",
-        "@swc-node/jest"
-      ]
+      "matchPackageNames": ["ts-jest", "@swc-node/jest"]
     }
   ],
   "commitMessagePrefix": "chore: ",

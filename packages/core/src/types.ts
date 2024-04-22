@@ -12,26 +12,27 @@ type UnpackEffectPayload<Func> = Func extends (action$: Observable<infer Payload
 type UnpackReducerPayload<Func, S> = Func extends (state: S) => S
   ? void
   : Func extends (State: S, payload: infer Payload) => S
-  ? Payload
-  : never
+    ? Payload
+    : never
 
 type UnpackImmerReducerPayload<Func, S> = Func extends (state: Draft<S>) => void
   ? void
   : Func extends (state: Draft<S>, payload: infer Payload) => void
-  ? Payload
-  : never
+    ? Payload
+    : never
 
 type UnpackDefineActionPayload<OB> = OB extends Observable<infer P> ? P : never
 
-type UnpackPayload<F, S> = UnpackEffectPayload<F> extends never
-  ? UnpackImmerReducerPayload<F, S> extends never
-    ? UnpackReducerPayload<F, S> extends never
-      ? UnpackDefineActionPayload<F> extends never
-        ? never
-        : UnpackDefineActionPayload<F>
-      : UnpackReducerPayload<F, S>
-    : UnpackImmerReducerPayload<F, S>
-  : UnpackEffectPayload<F>
+type UnpackPayload<F, S> =
+  UnpackEffectPayload<F> extends never
+    ? UnpackImmerReducerPayload<F, S> extends never
+      ? UnpackReducerPayload<F, S> extends never
+        ? UnpackDefineActionPayload<F> extends never
+          ? never
+          : UnpackDefineActionPayload<F>
+        : UnpackReducerPayload<F, S>
+      : UnpackImmerReducerPayload<F, S>
+    : UnpackEffectPayload<F>
 
 export type ActionOfEffectModule<M extends EffectModule<S>, S> = Omit<
   {

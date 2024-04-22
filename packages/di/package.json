@@ -33,7 +33,7 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "tslib": "^2.6.1"
+    "tslib": "^2.6.2"
   },
   "peerDependencies": {
     "@abraham/reflection": ">=0.8.0"

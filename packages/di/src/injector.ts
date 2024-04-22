@@ -146,10 +146,10 @@ export class Injector {
     return typeof provider === 'function'
       ? Reflect.getMetadata('design:paramtypes', provider)
       : (provider as ClassProvider<T>).useClass
-      ? Reflect.getMetadata('design:paramtypes', (provider as ClassProvider<T>).useClass)
-      : (provider as FactoryProvider<T>).deps
-      ? (provider as FactoryProvider<T>).deps
-      : null
+        ? Reflect.getMetadata('design:paramtypes', (provider as ClassProvider<T>).useClass)
+        : (provider as FactoryProvider<T>).deps
+          ? (provider as FactoryProvider<T>).deps
+          : null
   }
 
   private checkDependenciesClean(leaf: Injector, deps: Token<unknown>[]): boolean {

@@ -33,7 +33,7 @@ export const runSSREffects = <Context, Returned = any>(
   const { providers, timeout = 1 } = config
   const injector = rootInjector.createChild([...modules, ...(providers ?? [])])
   const cleanupFns: (() => void)[] = []
-  let timer: NodeJS.Timer | null = null
+  let timer: NodeJS.Timeout | undefined
   let terminatedCount = 0
   let effectsCount = 0
   const moduleInstanceCache = new Map()
@@ -139,7 +139,7 @@ export const runSSREffects = <Context, Returned = any>(
     .then(() => {
       if (timer) {
         clearTimeout(timer)
-        timer = null
+        timer = undefined
       }
       for (const cleanup of cleanupFns) {
         cleanup()
@@ -149,7 +149,7 @@ export const runSSREffects = <Context, Returned = any>(
     .catch((e) => {
       if (timer) {
         clearTimeout(timer)
-        timer = null
+        timer = undefined
       }
       for (const cleanup of cleanupFns) {
         cleanup()

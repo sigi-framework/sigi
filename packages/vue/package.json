@@ -35,9 +35,9 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "dependencies": {
-    "@sigi/core": "^2.12.1",
-    "@sigi/di": "^2.11.3",
-    "@sigi/types": "^2.11.3"
+    "@sigi/core": "workspace:*",
+    "@sigi/di": "workspace:*",
+    "@sigi/types": "workspace:*"
   },
   "peerDependencies": {
     "vue": "<3"
