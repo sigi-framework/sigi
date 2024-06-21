@@ -39,7 +39,7 @@
     "@sigi/core": "workspace:*",
     "@sigi/di": "workspace:*",
     "@sigi/types": "workspace:*",
-    "path-to-regexp": "^6.2.2",
+    "path-to-regexp": "^7.0.0",
     "serialize-javascript": "^6.0.2",
     "tslib": "^2.6.2"
   },
