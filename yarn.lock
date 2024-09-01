@@ -2913,7 +2913,7 @@ __metadata:
     "@sigi/types": "workspace:*"
     "@types/node": "npm:^20.12.7"
     "@types/serialize-javascript": "npm:^5.0.4"
-    path-to-regexp: "npm:^7.0.0"
+    path-to-regexp: "npm:^8.0.0"
     serialize-javascript: "npm:^6.0.2"
     tslib: "npm:^2.6.2"
   peerDependencies:
@@ -9500,10 +9500,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:^7.0.0":
-  version: 7.1.0
-  resolution: "path-to-regexp@npm:7.1.0"
-  checksum: 10c0/8a5e6a496e980c7e8769bfa57fa9e2b6c79a9410e59739095f0bc9ea847b5d719ba629d4840dc1428791082d73e7d4a08bc1223a365eae26653f8f0eb0e0f7cb
+"path-to-regexp@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "path-to-regexp@npm:8.0.0"
+  checksum: 10c0/21a24e929b975a9c70507d6554b4c5cb9171fd06a7040d178f20bee5ab15d7624bf1803a6ee6776703e9ecdb6a354f1cf5f7636d5bb9e779f73d34ce8c53eccb
   languageName: node
   linkType: hard
 
