@@ -1780,58 +1780,58 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oxlint/darwin-arm64@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/darwin-arm64@npm:0.9.1"
+"@oxlint/darwin-arm64@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/darwin-arm64@npm:0.10.0"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@oxlint/darwin-x64@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/darwin-x64@npm:0.9.1"
+"@oxlint/darwin-x64@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/darwin-x64@npm:0.10.0"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@oxlint/linux-arm64-gnu@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/linux-arm64-gnu@npm:0.9.1"
+"@oxlint/linux-arm64-gnu@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/linux-arm64-gnu@npm:0.10.0"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@oxlint/linux-arm64-musl@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/linux-arm64-musl@npm:0.9.1"
+"@oxlint/linux-arm64-musl@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/linux-arm64-musl@npm:0.10.0"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@oxlint/linux-x64-gnu@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/linux-x64-gnu@npm:0.9.1"
+"@oxlint/linux-x64-gnu@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/linux-x64-gnu@npm:0.10.0"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@oxlint/linux-x64-musl@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/linux-x64-musl@npm:0.9.1"
+"@oxlint/linux-x64-musl@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/linux-x64-musl@npm:0.10.0"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@oxlint/win32-arm64@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/win32-arm64@npm:0.9.1"
+"@oxlint/win32-arm64@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/win32-arm64@npm:0.10.0"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@oxlint/win32-x64@npm:0.9.1":
-  version: 0.9.1
-  resolution: "@oxlint/win32-x64@npm:0.9.1"
+"@oxlint/win32-x64@npm:0.10.0":
+  version: 0.10.0
+  resolution: "@oxlint/win32-x64@npm:0.10.0"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -9121,18 +9121,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oxlint@npm:^0.9.0":
-  version: 0.9.1
-  resolution: "oxlint@npm:0.9.1"
+"oxlint@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "oxlint@npm:0.10.0"
   dependencies:
-    "@oxlint/darwin-arm64": "npm:0.9.1"
-    "@oxlint/darwin-x64": "npm:0.9.1"
-    "@oxlint/linux-arm64-gnu": "npm:0.9.1"
-    "@oxlint/linux-arm64-musl": "npm:0.9.1"
-    "@oxlint/linux-x64-gnu": "npm:0.9.1"
-    "@oxlint/linux-x64-musl": "npm:0.9.1"
-    "@oxlint/win32-arm64": "npm:0.9.1"
-    "@oxlint/win32-x64": "npm:0.9.1"
+    "@oxlint/darwin-arm64": "npm:0.10.0"
+    "@oxlint/darwin-x64": "npm:0.10.0"
+    "@oxlint/linux-arm64-gnu": "npm:0.10.0"
+    "@oxlint/linux-arm64-musl": "npm:0.10.0"
+    "@oxlint/linux-x64-gnu": "npm:0.10.0"
+    "@oxlint/linux-x64-musl": "npm:0.10.0"
+    "@oxlint/win32-arm64": "npm:0.10.0"
+    "@oxlint/win32-x64": "npm:0.10.0"
   dependenciesMeta:
     "@oxlint/darwin-arm64":
       optional: true
@@ -9151,8 +9151,9 @@ __metadata:
     "@oxlint/win32-x64":
       optional: true
   bin:
+    oxc_language_server: bin/oxc_language_server
     oxlint: bin/oxlint
-  checksum: 10c0/8c847d8feb15052abcd3aa54a26cb07814c47c817a29e7c72549e4a75243051d25243d59dece47e4ef436dc8481e4e8e1525d37353135fae870f33e3e82809ad
+  checksum: 10c0/48d4ecc38b052ba8040b7ff53085a774889918d587075aa4f2675a4184ee7fa526d2f88d8fd4cdeebd559328c4f8873fc7fa1e3d1afebdd651c70a5bb75a85d7
   languageName: node
   linkType: hard
 
@@ -11007,7 +11008,7 @@ __metadata:
     lint-staged: "npm:^15.2.2"
     lodash: "npm:^4.17.21"
     npm-run-all2: "npm:^6.1.2"
-    oxlint: "npm:^0.9.0"
+    oxlint: "npm:^0.10.0"
     prettier: "npm:^3.2.5"
     process: "npm:^0.11.10"
     react: "npm:^18.2.0"
