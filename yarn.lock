@@ -3484,12 +3484,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:^18.0.7":
-  version: 18.3.0
-  resolution: "@types/react-test-renderer@npm:18.3.0"
+"@types/react-test-renderer@npm:^19.0.0":
+  version: 19.0.0
+  resolution: "@types/react-test-renderer@npm:19.0.0"
   dependencies:
     "@types/react": "npm:*"
-  checksum: 10c0/3c9748be52e8e659e7adf91dea6939486463264e6f633bf21c4cb116de18af7bef0595568a1e588160420b2f65289473075dda1cb417c2875df8cf7a09f5d913
+  checksum: 10c0/4027e662028e4695eb1a395e54c0e430c35a323ef800fcb4d2726d9dafa1337f214f87e2487876e3cc51ecf7ac3b3d0903252524f194877d39ec4ebd0626b17d
   languageName: node
   linkType: hard
 
@@ -10902,7 +10902,7 @@ __metadata:
     "@types/node": "npm:^22.0.0"
     "@types/react": "npm:^18.2.79"
     "@types/react-dom": "npm:^18.2.25"
-    "@types/react-test-renderer": "npm:^18.0.7"
+    "@types/react-test-renderer": "npm:^19.0.0"
     "@types/sinon": "npm:^17.0.3"
     codecov: "npm:^3.8.3"
     husky: "npm:^9.0.11"
