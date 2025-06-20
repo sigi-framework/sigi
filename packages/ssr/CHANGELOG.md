@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.1](https://github.com/sigi-framework/sigi/compare/v2.13.0...v2.13.1) (2025-06-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency path-to-regexp to v7 ([#937](https://github.com/sigi-framework/sigi/issues/937)) ([30d454f](https://github.com/sigi-framework/sigi/commit/30d454f401246a58336da2a910bf3548ecde9a61))
+* **deps:** update dependency path-to-regexp to v8 ([#949](https://github.com/sigi-framework/sigi/issues/949)) ([eb98772](https://github.com/sigi-framework/sigi/commit/eb987722b6c68e84181fe2c6a6f0686258e2f910))
+
+
+
+
+
 # [2.13.0](https://github.com/sigi-framework/sigi/compare/v2.12.2...v2.13.0) (2024-04-22)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@sigi/react-router",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "description": "React router integration for sigi framework",
   "keywords": [
     "Sigi",

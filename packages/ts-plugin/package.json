@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ts-plugin",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "description": "TypeScript plugin for Sigi framework",
   "keywords": [
     "TypeScript",
