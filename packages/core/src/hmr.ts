@@ -1,6 +1,11 @@
 import { IStore } from '@sigi/types'
 
-export const hmrEnabled = process.env.NODE_ENV === 'development' && module.hot
+export const hmrEnabled =
+  process.env.NODE_ENV === 'development' && // webpack
+  ((typeof module !== 'undefined' && typeof module.hot === 'object') ||
+    // vite
+    // @ts-expect-error
+    ('hot' in import.meta && import.meta.hot !== null))
 
 export let hmrInstanceCache: Map<string, IStore<any>>
 
