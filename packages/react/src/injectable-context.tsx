@@ -1,5 +1,5 @@
 import { rootInjector, Provider, Injector } from '@sigi/di'
-import React, { createContext, useContext, useMemo, memo } from 'react'
+import { createContext, useContext, useMemo, memo } from 'react'
 
 // @internal
 export const _InjectableContext = createContext<Injector>(rootInjector)

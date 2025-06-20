@@ -4,7 +4,6 @@ import '@abraham/reflection'
 import { rootInjector } from '@sigi/di'
 import { Observable } from 'rxjs'
 import { delay, map, tap } from 'rxjs/operators'
-import * as Sinon from 'sinon'
 
 import { Reducer, Effect } from '../decorators'
 import { EffectModule } from '../module'
@@ -34,8 +33,8 @@ describe('Smoking tests', () => {
 
   it('should be able to dispatch actions from the other module', () => {
     const asyncTimeToDelay = 2000
-    const timer = Sinon.useFakeTimers()
-    const spy = Sinon.spy()
+    const timer = jest.useFakeTimers()
+    const spy = jest.fn()
     @Module('Foo')
     class FooModule extends EffectModule<{ foo: string }> {
       defaultState = {
@@ -75,16 +74,16 @@ describe('Smoking tests', () => {
     const action = barModule.getActions().asyncSetFoo(payload)
     expect(action.payload).toBe(payload)
     fooStore.dispatch(action)
-    timer.tick(asyncTimeToDelay)
+    timer.advanceTimersByTime(asyncTimeToDelay)
     expect(fooModule.state.foo).toBe(payload)
 
-    const [[fooState, fooPayload]] = spy.args
+    const [[fooState, fooPayload]] = spy.mock.calls
     expect(fooState).not.toBe(null)
     expect(fooPayload).toBe(payload)
 
     fooStore.dispose()
     barStore.dispose()
-    timer.restore()
+    jest.useRealTimers()
     rootInjector.reset()
   })
 
@@ -95,7 +94,7 @@ describe('Smoking tests', () => {
     global['SIGI_STATE'] = {
       SSRPersistModule: staticState,
     }
-    const spy = Sinon.spy()
+    const spy = jest.fn()
     @Module('SSRPersistModule')
     class SSRPersistModule extends EffectModule<State> {
       defaultState = {
@@ -136,7 +135,7 @@ describe('Smoking tests', () => {
     const module = rootInjector.getInstance(SSRPersistModule)
     module.dispatchers.setFoo(staticState.foo + 1)
     module.dispatchers.setBar(staticState.bar + 1)
-    expect(spy.callCount).toBe(0)
+    expect(spy).toHaveBeenCalledTimes(0)
     expect(module.state.foo).toBe(staticState.foo)
     expect(module.state.bar).toBe(staticState.bar)
     module.store.dispose()

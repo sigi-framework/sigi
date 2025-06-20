@@ -1,7 +1,7 @@
 import { ValueProvider } from '@sigi/di'
 import { InjectionProvidersContext } from '@sigi/react'
 import { History } from 'history'
-import React, { memo, useEffect, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { Subject } from 'rxjs'
 
 import { HistoryProvide, Router$Provide, RouterChanged } from './browser.module'

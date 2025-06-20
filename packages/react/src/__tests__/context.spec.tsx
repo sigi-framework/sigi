@@ -5,7 +5,6 @@
 import '@abraham/reflection'
 
 import { Injectable } from '@sigi/di'
-import React from 'react'
 import { render as testRender } from '@testing-library/react'
 
 import { InjectionProvidersContext, useInstance } from '../injectable-context'
