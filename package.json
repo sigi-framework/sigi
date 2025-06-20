@@ -24,7 +24,7 @@
     "format:md": "prettier --parser markdown --write './*.md' './{examples,packages}/**/*.md'",
     "format:source": "prettier --config ./package.json './{examples,packages}/**/*.{ts,tsx,js}' --write",
     "format:yml": "prettier --parser yaml --write './*.{yml,yaml}'",
-    "test": "jest --config ./configs/jest.config.js --no-cache --detectOpenHandles",
+    "test": "jest --config ./configs/jest.config.ts --no-cache --detectOpenHandles",
     "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose",
     "start:example": "node example"
   },
