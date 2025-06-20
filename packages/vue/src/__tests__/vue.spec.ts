@@ -5,7 +5,7 @@ import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { Draft } from 'immer'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, switchMap } from 'rxjs/operators'
-import * as Sinon from 'sinon'
+// oxlint-disable-next-line import/default
 import Vue from 'vue'
 
 import { reactive } from '../index'
@@ -44,7 +44,7 @@ describe.skip('VueJS reactive binding', () => {
   const options = reactive(VueTestingModule, {})
   let vm = new Vue(options)
   let testingStub: SigiTestStub<VueTestingModule, VueTestingState>
-  let timer: Sinon.SinonFakeTimers
+  let timer = jest.useFakeTimers()
 
   beforeEach(() => {
     const testingModule = Test.createTestingModule({
@@ -53,11 +53,11 @@ describe.skip('VueJS reactive binding', () => {
 
     vm = new Vue(reactive(VueTestingModule, {}))
     testingStub = testingModule.getTestingStub(VueTestingModule)
-    timer = Sinon.useFakeTimers()
+    timer = jest.useFakeTimers()
   })
 
   afterEach(() => {
-    timer.restore()
+    jest.useRealTimers()
   })
 
   it('should create vue component options', () => {
@@ -73,13 +73,13 @@ describe.skip('VueJS reactive binding', () => {
   it('should be able to call effect', () => {
     const name = 'VueJS'
     vm.asyncSetName(name)
-    timer.runAll()
+    timer.runAllTimers()
     expect(testingStub.getState().name).toBe(name)
   })
 
   it('state should map to vue data', () => {
     vm.getCount()
-    timer.runAll()
+    timer.runAllTimers()
     expect(vm.count).toBe(1)
   })
 
@@ -138,7 +138,7 @@ describe.skip('VueJS reactive binding', () => {
   })
 
   it('should merge original beforeUpdate lifecycle', () => {
-    const spy = Sinon.spy()
+    const spy = jest.fn()
     const reactiveOptions = reactive(VueTestingModule, {
       syncToSigi: ['name'],
       beforeUpdate: spy,
@@ -147,11 +147,11 @@ describe.skip('VueJS reactive binding', () => {
     const vm = new Vue(reactiveOptions)
     // @ts-expect-error
     vm.$options.beforeUpdate![0].call(vm)
-    expect(spy.callCount).toBe(1)
+    expect(spy).toHaveBeenCalledTimes(1)
   })
 
   it('should warn if property which syncToSigi not existed', () => {
-    const spy = Sinon.spy(console, 'warn')
+    const spy = jest.spyOn(console, 'warn')
     const reactiveOptions = reactive(VueTestingModule, {
       syncToSigi: ['name-n' as any],
     })
@@ -164,9 +164,9 @@ describe.skip('VueJS reactive binding', () => {
 
     // @ts-expect-error
     vm.$options.beforeUpdate![0].call(vm)
-    expect(spy.callCount).toBe(1)
+    expect(spy).toHaveBeenCalledTimes(1)
 
-    spy.restore()
+    jest.restoreAllMocks()
     process.env.NODE_ENV = NODE_ENV
   })
 
@@ -182,7 +182,7 @@ describe.skip('VueJS reactive binding', () => {
   })
 
   it('should call original beforeDestroy', async () => {
-    const spy = Sinon.spy()
+    const spy = jest.fn()
     const reactiveOptions = reactive(VueTestingModule, {
       beforeDestroy: spy,
     })
@@ -191,6 +191,6 @@ describe.skip('VueJS reactive binding', () => {
     vm.$destroy()
     await vm.$nextTick()
 
-    expect(spy.calledOnce).toBeTruthy()
+    expect(spy).toHaveBeenCalledTimes(1)
   })
 })

@@ -7,7 +7,7 @@ import '@abraham/reflection'
 import { GLOBAL_KEY_SYMBOL, RETRY_KEY_SYMBOL } from '@sigi/core'
 import { Injector } from '@sigi/di'
 import { useEffect } from 'react'
-import { create, act } from 'react-test-renderer'
+import { render, act } from '@testing-library/react'
 
 import { SSRContext, useModule } from '../index.browser'
 
@@ -37,12 +37,12 @@ describe('client ssr hydration', () => {
         name: '',
       },
     }
-    const testRenderer = create(
+    const testRenderer = render(
       <SSRContext value={new Injector().addProviders(MODULES)}>
         <ComponentWithSelector />
       </SSRContext>,
     )
-    expect(testRenderer.root.findByType('span').children[0]).toBe('11')
+    expect(testRenderer.baseElement.querySelector('span')?.textContent).toBe('11')
     // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
     testRenderer.unmount()
@@ -57,19 +57,20 @@ describe('client ssr hydration', () => {
       },
     }
     const injector = new Injector().addProviders(MODULES)
-    const testRenderer = create(
+    const testRenderer = render(
       <SSRContext value={injector}>
         <ComponentWithSelector />
       </SSRContext>,
     )
     act(() => {
-      testRenderer.update(
+      testRenderer.rerender(
         <SSRContext value={injector}>
           <ComponentWithSelector />
         </SSRContext>,
       )
     })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('1')
+
+    expect(testRenderer.baseElement.querySelector('span')?.textContent).toBe('1')
 
     // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
@@ -96,20 +97,20 @@ describe('client ssr hydration', () => {
 
     const injector = new Injector().addProviders(MODULES)
 
-    const testRenderer = create(
+    const testRenderer = render(
       <SSRContext value={injector}>
         <Component />
       </SSRContext>,
     )
 
     act(() => {
-      testRenderer.update(
+      testRenderer.rerender(
         <SSRContext value={injector}>
           <Component />
         </SSRContext>,
       )
     })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('2')
+    expect(testRenderer.baseElement.querySelector('span')?.textContent).toBe('2')
 
     // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]
@@ -133,7 +134,7 @@ describe('client ssr hydration', () => {
 
     const injector = new Injector().addProviders(MODULES)
 
-    const testRenderer = create(
+    const testRenderer = render(
       <SSRContext value={injector}>
         <Component />
       </SSRContext>,
@@ -141,14 +142,14 @@ describe('client ssr hydration', () => {
 
     // eslint-disable-next-line sonarjs/no-identical-functions
     act(() => {
-      testRenderer.update(
+      testRenderer.rerender(
         <SSRContext value={injector}>
           <Component />
         </SSRContext>,
       )
     })
 
-    expect(testRenderer.root.findByType('span').children[0]).toBe('From retry')
+    expect(testRenderer.baseElement.querySelector('span')?.textContent).toBe('From retry')
 
     // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]

@@ -5,7 +5,6 @@ import { Action, IStore } from '@sigi/types'
 import { Draft } from 'immer'
 import { of, Observable, noop } from 'rxjs'
 import { delay, map, withLatestFrom, takeUntil, tap, switchMap, exhaustMap, startWith, share } from 'rxjs/operators'
-import * as Sinon from 'sinon'
 
 import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
 import { EffectModule } from '../module'
@@ -194,8 +193,8 @@ describe('EffectModule Class', () => {
       const onlyReducer = new WithoutEpic()
       const store = onlyReducer.store
       const actionCreator = onlyReducer.getActions()
-      const beforeSpy = Sinon.spy()
-      const afterSpy = Sinon.spy()
+      const beforeSpy = jest.fn()
+      const afterSpy = jest.fn()
       store.addEpic((prev) => (action$) => {
         return prev(action$.pipe(tap(beforeSpy)))
       })
@@ -204,8 +203,8 @@ describe('EffectModule Class', () => {
       })
       store.dispatch(actionCreator.set(1))
       expect(store.state.count).toBe(1)
-      expect(beforeSpy.callCount).toBe(1)
-      expect(afterSpy.callCount).toBe(0)
+      expect(beforeSpy).toHaveBeenCalledTimes(1)
+      expect(afterSpy).toHaveBeenCalledTimes(0)
     })
 
     it('should be able to create module without reducer', () => {
@@ -284,8 +283,8 @@ describe('EffectModule Class', () => {
 
   describe('dispatcher', () => {
     let actionsDispatcher: InstanceActionOfEffectModule<Counter, CounterState>
-    let spy: Sinon.SinonSpy
-    let timer: Sinon.SinonFakeTimers
+    let spy = jest.fn()
+    let timer = jest.useFakeTimers()
     beforeEach(() => {
       const actions = counter.getActions()
       actionsDispatcher = Object.keys(actions).reduce((acc, key) => {
@@ -296,88 +295,88 @@ describe('EffectModule Class', () => {
         }
         return acc
       }, {} as any)
-      spy = Sinon.spy()
+      spy = jest.fn()
       store.addEpic((prev) => (action$) => prev(action$.pipe(tap(spy), share())))
-      timer = Sinon.useFakeTimers()
+      timer = jest.useFakeTimers()
     })
 
     afterEach(() => {
-      spy.resetHistory()
-      timer.restore()
+      spy.mockReset()
+      jest.useRealTimers()
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #void', () => {
       const action = actionsDispatcher.addOne()
-      expect(spy.alwaysCalledWith(action)).toBe(true)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledWith(action)
+      expect(spy).toHaveBeenCalledTimes(1)
       expect(store.state.count).toBe(counter.defaultState.count + 1)
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #param', () => {
       const newCount = 100
       const action = actionsDispatcher.setCount(newCount)
-      const [[arg]] = spy.args
+      const [[arg]] = spy.mock.calls
       expect(arg).toStrictEqual(action)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledTimes(1)
       expect(store.state.count).toBe(newCount)
     })
 
     it('should be able to dispatch immer reducer action by actions dispatcher #void', () => {
       const action = actionsDispatcher.addCountOneImmer()
-      const [[arg]] = spy.args
+      const [[arg]] = spy.mock.calls
       expect(arg).toStrictEqual(action)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledTimes(1)
       expect(store.state.count).toBe(counter.defaultState.count + 1)
     })
 
     it('should be able to dispatch immer reducer action by actions dispatcher #param', () => {
       const newCount = new Date()
       const action = actionsDispatcher.setCountImmer(newCount)
-      const [[arg]] = spy.args
+      const [[arg]] = spy.mock.calls
       expect(arg).toStrictEqual(action)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledTimes(1)
       expect(store.state.count).toBe(newCount.valueOf())
     })
 
     it('should be able to dispatch epic action by actions dispatcher #void', () => {
       const action = actionsDispatcher.asyncAddCountOne()
-      const [[arg]] = spy.args
+      const [[arg]] = spy.mock.calls
       expect(arg).toStrictEqual(action)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledTimes(1)
       expect(store.state.count).toBe(counter.defaultState.count)
-      timer.tick(TIME_TO_DELAY)
-      const [, [arg1]] = spy.args
+      timer.advanceTimersByTime(TIME_TO_DELAY)
+      const [, [arg1]] = spy.mock.calls
       expect(arg1).toStrictEqual(counter.getActions().setCount(counter.defaultState.count + 1))
-      expect(spy.callCount).toBe(2)
+      expect(spy).toHaveBeenCalledTimes(2)
     })
 
     it('should be able to dispatch epic action by actions dispatcher #param', () => {
       const newCount = 100
       const action = actionsDispatcher.asyncAddCount(newCount)
-      const [[arg]] = spy.args
+      const [[arg]] = spy.mock.calls
       expect(arg).toStrictEqual(action)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledTimes(1)
       expect(store.state.count).toBe(counter.defaultState.count)
-      timer.tick(TIME_TO_DELAY)
-      const [, [arg1]] = spy.args
+      timer.advanceTimersByTime(TIME_TO_DELAY)
+      const [, [arg1]] = spy.mock.calls
       expect(arg1).toStrictEqual(counter.getActions().asyncAddCountString(`${newCount}`))
-      expect(spy.callCount).toBe(2)
+      expect(spy).toHaveBeenCalledTimes(2)
     })
 
     it('should be able to dispose by other actions', () => {
       const newCount = 100
       actionsDispatcher.asyncAddCount(newCount)
-      expect(spy.callCount).toBe(1)
+      expect(spy).toHaveBeenCalledTimes(1)
       actionsDispatcher.dispose$()
-      timer.tick(TIME_TO_DELAY)
-      expect(spy.callCount).toBe(2)
+      timer.advanceTimersByTime(TIME_TO_DELAY)
+      expect(spy).toHaveBeenCalledTimes(2)
       expect(store.state).toStrictEqual(counter.defaultState)
     })
 
     it('should be able to dispatch noop action', () => {
       const action = actionsDispatcher.effectWithPureSideEffect()
-      expect(spy.callCount).toBe(1)
-      const [[arg1]] = spy.args
+      expect(spy).toHaveBeenCalledTimes(1)
+      const [[arg1]] = spy.mock.calls
       expect(arg1).toStrictEqual(action)
       expect(store.state).toStrictEqual(counter.defaultState)
     })
@@ -386,17 +385,17 @@ describe('EffectModule Class', () => {
       actionsDispatcher.addOne()
       expect(store.state.count).toBe(counter.defaultState.count + 1)
       actionsDispatcher.effectToResetState()
-      expect(spy.callCount).toBe(3)
+      expect(spy).toHaveBeenCalledTimes(3)
       expect(store.state.count).toBe(counter.defaultState.count)
     })
 
     it('should follow rxjs flow control #switchMap', () => {
       actionsDispatcher.cancellableEffect()
       actionsDispatcher.cancellableEffect()
-      timer.tick(TIME_TO_DELAY)
+      timer.advanceTimersByTime(TIME_TO_DELAY)
 
-      expect(spy.callCount).toBe(5)
-      expect(spy.args.map(([{ type }]) => type)).toEqual([
+      expect(spy).toHaveBeenCalledTimes(5)
+      expect(spy.mock.calls.map(([{ type }]) => type)).toEqual([
         'cancellableEffect',
         'setCount',
         'cancellableEffect',
@@ -408,10 +407,10 @@ describe('EffectModule Class', () => {
     it('should follow rxjs flow control #exhaustMap', () => {
       actionsDispatcher.exhaustEffect()
       actionsDispatcher.exhaustEffect()
-      timer.tick(TIME_TO_DELAY)
+      timer.advanceTimersByTime(TIME_TO_DELAY)
 
-      expect(spy.callCount).toBe(4)
-      expect(spy.args.map(([{ type }]) => type)).toEqual(['exhaustEffect', 'setCount', 'exhaustEffect', 'addOne'])
+      expect(spy).toHaveBeenCalledTimes(4)
+      expect(spy.mock.calls.map(([{ type }]) => type)).toEqual(['exhaustEffect', 'setCount', 'exhaustEffect', 'addOne'])
     })
   })
 })

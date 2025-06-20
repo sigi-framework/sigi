@@ -1,12 +1,15 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import '@abraham/reflection'
 
 import { Module, EffectModule, Effect, ImmerReducer, Action } from '@sigi/core'
 import { Draft } from 'immer'
 import { useEffect } from 'react'
-import { create, act, ReactTestRenderer } from 'react-test-renderer'
+import { render, act, type RenderResult } from '@testing-library/react'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, endWith, switchMap } from 'rxjs/operators'
-import * as Sinon from 'sinon'
 
 import { useModuleState, useModule } from '../index.browser'
 
@@ -60,10 +63,10 @@ class CountModel extends EffectModule<CountState> {
 }
 
 describe('React components test', () => {
-  const renderSpy = Sinon.spy()
+  const mockRender = jest.fn()
   const TestComponent = () => {
     const state = useModuleState(CountModel)
-    renderSpy()
+    mockRender()
     return (
       <div>
         {state.name}: {state.count}
@@ -72,43 +75,43 @@ describe('React components test', () => {
   }
 
   afterEach(() => {
-    renderSpy.resetHistory()
+    mockRender.mockReset()
   })
 
   it('should render once while initial rendering', () => {
-    const node = create(<TestComponent />)
-    expect(renderSpy.callCount).toBe(1)
-    expect(node).toMatchSnapshot()
+    const node = render(<TestComponent />)
+    expect(mockRender).toHaveBeenCalledTimes(1)
+    expect(node.baseElement.innerHTML).toMatchSnapshot()
   })
 })
 
 describe('Hooks', () => {
-  const resetStore = Sinon.stub()
-  const setCount = Sinon.stub()
-  const renderSpy = Sinon.spy()
+  const resetStore = jest.fn()
+  const setCount = jest.fn()
+  const mockRender = jest.fn()
   const TestComponent = () => {
     const [state, dispatcher] = useModule(CountModel, {
       selector: (state) => {
         return state.count
       },
     })
-    renderSpy()
+    mockRender()
     useEffect(() => {
-      setCount.callsFake(() => {
+      setCount.mockImplementation(() => {
         dispatcher.setCount(10)
       })
-      resetStore.callsFake(() => {
+      resetStore.mockImplementation(() => {
         dispatcher.reset()
       })
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return <div>{state}</div>
   }
-  let testWrapper!: ReactTestRenderer
+  let testWrapper!: RenderResult
 
   beforeEach(() => {
     act(() => {
-      testWrapper = create(<TestComponent />)
+      testWrapper = render(<TestComponent />)
     })
   })
 
@@ -117,30 +120,30 @@ describe('Hooks', () => {
       resetStore()
       testWrapper.unmount()
     })
-    renderSpy.resetHistory()
-    setCount.reset()
-    resetStore.reset()
+    mockRender.mockReset()
+    setCount.mockReset()
+    resetStore.mockReset()
   })
 
   it('could reset state from dispatcher', () => {
-    expect(testWrapper.root.findByType('div').children[0]).toBe('0')
-    expect(renderSpy.callCount).toBe(1)
+    expect(testWrapper.container.querySelector('div')?.textContent).toBe('0')
+    expect(mockRender).toHaveBeenCalledTimes(1)
 
     act(() => {
       setCount()
     })
-    expect(testWrapper.root.findByType('div').children[0]).toBe('10')
-    expect(renderSpy.callCount).toBe(2)
+    expect(testWrapper.container.querySelector('div')?.textContent).toBe('10')
+    expect(mockRender).toHaveBeenCalledTimes(2)
 
     act(() => {
       resetStore()
     })
-    expect(testWrapper.root.findByType('div').children[0]).toBe('0')
-    expect(renderSpy.callCount).toBe(3)
+    expect(testWrapper.container.querySelector('div')?.textContent).toBe('0')
+    expect(mockRender).toHaveBeenCalledTimes(3)
   })
 
   it('should not re-render if return state shallow equaled', () => {
-    const fooRenderSpy = Sinon.spy()
+    const fooRenderSpy = jest.fn()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
         selector: (state) => ({ name: state.name }),
@@ -149,22 +152,21 @@ describe('Hooks', () => {
       return <div>{state.name}</div>
     }
 
-    let fooWrapper!: ReactTestRenderer
+    let fooWrapper!: RenderResult
     act(() => {
-      fooWrapper = create(<FooComponent />)
+      fooWrapper = render(<FooComponent />)
     })
-
-    expect(fooWrapper.root.findByType('div').children[0]).toBe('John Doe')
+    expect(fooWrapper.container.querySelector('div')?.textContent).toBe('John Doe')
     act(() => {
       setCount()
     })
-    expect(fooRenderSpy.callCount).toBe(1)
-    expect(renderSpy.callCount).toBe(2)
-    fooRenderSpy.resetHistory()
+    expect(fooRenderSpy).toHaveBeenCalledTimes(1)
+    expect(mockRender).toHaveBeenCalledTimes(2)
+    fooRenderSpy.mockReset()
   })
 
   it('should re-render if return state not pass custom equality function', () => {
-    const fooRenderSpy = Sinon.spy()
+    const fooRenderSpy = jest.fn()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
         selector: (state) => ({ name: state.name }),
@@ -174,17 +176,17 @@ describe('Hooks', () => {
       return <div>{state.name}</div>
     }
 
-    let fooWrapper!: ReactTestRenderer
+    let fooWrapper!: RenderResult
     act(() => {
-      fooWrapper = create(<FooComponent />)
+      fooWrapper = render(<FooComponent />)
     })
 
-    expect(fooWrapper.root.findByType('div').children[0]).toBe('John Doe')
+    expect(fooWrapper.container.querySelector('div')?.textContent).toBe('John Doe')
     act(() => {
       setCount()
     })
-    expect(fooRenderSpy.callCount).toBe(2)
-    fooRenderSpy.resetHistory()
+    expect(fooRenderSpy).toHaveBeenCalledTimes(2)
+    fooRenderSpy.mockReset()
   })
 
   it('Child <-> Parent scenario', () => {
@@ -209,11 +211,11 @@ describe('Hooks', () => {
       )
     }
 
-    let fooWrapper!: ReactTestRenderer
+    let fooWrapper!: RenderResult
     act(() => {
-      fooWrapper = create(<FooComponent />)
+      fooWrapper = render(<FooComponent />)
     })
-    expect(fooWrapper.root.findByType('span').children[0]).toBe(name)
-    expect(fooWrapper.root.findByType('div').children[0]).toBe(name)
+    expect(fooWrapper.container.querySelector('span')?.textContent).toBe(name)
+    expect(fooWrapper.container.querySelector('div')?.childNodes.item(0).textContent).toBe(name)
   })
 })
