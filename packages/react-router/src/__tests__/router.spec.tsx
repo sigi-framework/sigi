@@ -1,12 +1,15 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import '@abraham/reflection'
 import { EffectModule, Effect, Module, Reducer, Action, DefineAction } from '@sigi/core'
 import { useInstance } from '@sigi/react'
 import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { History, createMemoryHistory } from 'history'
-import { create, act, ReactTestRenderer } from 'react-test-renderer'
+import { render, act, type RenderResult } from '@testing-library/react'
 import { Observable, Subject } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'
-import * as Sinon from 'sinon'
 
 import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../browser.module'
 import { SigiRouterProvider } from '../router-provider'
@@ -120,42 +123,42 @@ describe('Router module spec', () => {
   })
 
   it('should invoke push', () => {
-    const pushSpy = Sinon.spy(history, 'push')
+    const pushSpy = jest.spyOn(history, 'push')
     testStub.dispatcher.goHome()
-    expect(pushSpy.callCount).toBe(1)
-    pushSpy.restore()
+    expect(pushSpy).toHaveBeenCalledTimes(1)
+    pushSpy.mockRestore()
   })
 
   it('should invoke goBack', () => {
-    const goBackSpy = Sinon.spy(history, 'back')
+    const goBackSpy = jest.spyOn(history, 'back')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goBack()
-    expect(goBackSpy.callCount).toBe(1)
-    goBackSpy.restore()
+    expect(goBackSpy).toHaveBeenCalledTimes(1)
+    goBackSpy.mockRestore()
   })
 
   it('should invoke replace', () => {
-    const replaceSpy = Sinon.spy(history, 'replace')
+    const replaceSpy = jest.spyOn(history, 'replace')
     testStub.dispatcher.goHome()
     testStub.dispatcher.replace('app')
-    expect(replaceSpy.callCount).toBe(1)
-    replaceSpy.restore()
+    expect(replaceSpy).toHaveBeenCalledTimes(1)
+    replaceSpy.mockRestore()
   })
 
   it('should invoke go', () => {
-    const goSpy = Sinon.spy(history, 'go')
+    const goSpy = jest.spyOn(history, 'go')
     testStub.dispatcher.goHome()
     testStub.dispatcher.go(1)
-    expect(goSpy.callCount).toBe(1)
-    goSpy.restore()
+    expect(goSpy).toHaveBeenCalledTimes(1)
+    goSpy.mockRestore()
   })
 
   it('should invoke goForward', () => {
-    const goForwardSpy = Sinon.spy(history, 'forward')
+    const goForwardSpy = jest.spyOn(history, 'forward')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goForward()
-    expect(goForwardSpy.callCount).toBe(1)
-    goForwardSpy.restore()
+    expect(goForwardSpy).toHaveBeenCalledTimes(1)
+    goForwardSpy.mockRestore()
   })
 
   it('should listen router changed', () => {
@@ -177,7 +180,7 @@ describe('Router module spec', () => {
 describe('SigiRouterProvider', () => {
   const history: History = createMemoryHistory()
   let routerModule: RouterModule
-  let renderer: ReactTestRenderer
+  let renderer: RenderResult
 
   function Component() {
     routerModule = useInstance(RouterModule)
@@ -185,7 +188,7 @@ describe('SigiRouterProvider', () => {
   }
 
   beforeEach(() => {
-    renderer = create(
+    renderer = render(
       <SigiRouterProvider history={history}>
         <Component />
       </SigiRouterProvider>,
@@ -201,7 +204,7 @@ describe('SigiRouterProvider', () => {
     const { router$ } = routerModule
     const newHistory = createMemoryHistory()
     act(() => {
-      renderer.update(
+      renderer.rerender(
         <SigiRouterProvider history={newHistory}>
           <Component />
         </SigiRouterProvider>,

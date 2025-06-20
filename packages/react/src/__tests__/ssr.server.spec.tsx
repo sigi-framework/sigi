@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 /* eslint-disable sonarjs/no-identical-functions */
 import '@abraham/reflection'
 
@@ -7,7 +11,7 @@ import { Action } from '@sigi/types'
 import { Draft } from 'immer'
 import { useEffect } from 'react'
 import { renderToString } from 'react-dom/server'
-import { create, act } from 'react-test-renderer'
+import { render, act } from '@testing-library/react'
 import { Observable, of, timer } from 'rxjs'
 import { endWith, map, mergeMap, withLatestFrom } from 'rxjs/operators'
 
@@ -95,11 +99,11 @@ describe('SSR server', () => {
         name: '',
       },
     }
-    const testRenderer = create(<Component />)
+    const testRenderer = render(<Component />)
     act(() => {
-      testRenderer.update(<Component />)
+      testRenderer.rerender(<Component />)
     })
-    expect(testRenderer.root.findByType('span').children[0]).toBe('101')
+    expect(testRenderer.container.querySelector('span')?.textContent).toBe('101')
 
     // @ts-expect-error
     delete global[GLOBAL_KEY_SYMBOL]

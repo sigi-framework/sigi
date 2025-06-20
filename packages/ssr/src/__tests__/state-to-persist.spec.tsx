@@ -7,7 +7,7 @@ describe('StateToPersist specs', () => {
     return new StateToPersist(data, actionsToRetry)
   }
 
-  const renderDocumentJSX = (child: React.ReactChild | null = null) => (
+  const renderDocumentJSX = (child: React.ReactNode | null = null) => (
     <html>
       <head>
         <link rel="stylesheet" href="https://sigi.how/style.css" />

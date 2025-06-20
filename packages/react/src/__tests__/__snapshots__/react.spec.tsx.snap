@@ -1,9 +1,3 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`React components test should render once while initial rendering 1`] = `
-<div>
-  John Doe
-  : 
-  0
-</div>
-`;
+exports[`React components test should render once while initial rendering 1`] = `"<div><div>John Doe: 0</div></div>"`;

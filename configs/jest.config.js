@@ -1,4 +1,6 @@
-const { join } = require('path')
+const { join } = require('node:path')
+
+const { createDefaultEsmPreset } = require('ts-jest')
 
 /**
  * @type { import('@jest/types').Config.InitialOptions}
@@ -7,7 +9,14 @@ const config = {
   rootDir: join(__dirname, '..'),
   testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
   skipFilter: true,
-  transform: { '^.+\\.tsx?$': ['ts-jest', {}] },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        ...createDefaultEsmPreset(),
+      },
+    ],
+  },
   collectCoverageFrom: [
     'packages/*/src/**/*.{ts,tsx}',
     '!packages/**/*.spec.{ts,tsx}',
@@ -15,7 +24,7 @@ const config = {
     '!packages/{core,react-router,devtool}/src/index.ts',
   ],
   moduleNameMapper: {
-    '@sigi/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2'
+    '@sigi/([^/]+)(.*)$': '<rootDir>/packages/$1/src$2',
   },
   testPathIgnorePatterns: ['/node_modules/', '/examples/', '\\.js$', '\\.d\\.ts$'],
 }

@@ -11,15 +11,15 @@
     "test": "jest --config ./packages/recipes-writing-tests/jest.config.js"
   },
   "dependencies": {
-    "@abraham/reflection": "^0.10.0",
-    "antd": "^4.16.11",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "rxjs": "^7.5.5"
+    "@abraham/reflection": "^0.13.0",
+    "antd": "^5.26.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "@parcel/transformer-typescript-tsc": "^2.5.0",
-    "@types/parcel-env": "^0.0.1",
-    "parcel": "^2.5.0"
+    "@parcel/transformer-typescript-tsc": "^2.15.2",
+    "@types/parcel-env": "^0.0.9",
+    "parcel": "^2.15.2"
   }
 }

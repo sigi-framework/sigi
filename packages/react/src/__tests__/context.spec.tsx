@@ -1,13 +1,17 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import '@abraham/reflection'
 
 import { Injectable } from '@sigi/di'
 import React from 'react'
-import { create } from 'react-test-renderer'
+import { render as testRender } from '@testing-library/react'
 
 import { InjectionProvidersContext, useInstance } from '../injectable-context'
 
 function render(component: React.ReactElement) {
-  return create(<InjectionProvidersContext>{component}</InjectionProvidersContext>)
+  return testRender(<InjectionProvidersContext>{component}</InjectionProvidersContext>)
 }
 
 function inject() {
