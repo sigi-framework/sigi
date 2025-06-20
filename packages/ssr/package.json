@@ -1,6 +1,6 @@
 {
   "name": "@sigi/ssr",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "description": "Server side rendering support for sigi framework",
   "keywords": [
     "Sigi",

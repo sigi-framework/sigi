@@ -1,6 +1,6 @@
 {
   "name": "@sigi/core",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "description": "Sigi core library",
   "keywords": [
     "RxJS",

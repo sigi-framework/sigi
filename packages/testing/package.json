@@ -1,6 +1,6 @@
 {
   "name": "@sigi/testing",
-  "version": "2.13.1",
+  "version": "2.13.2",
   "description": "Testing library for sigi framework",
   "keywords": [
     "Testing",
