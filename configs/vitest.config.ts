@@ -6,13 +6,32 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default defineConfig({
+  esbuild: {
+    // Disable esbuild for TypeScript so we can use proper TypeScript compilation
+    include: [],
+  },
+  plugins: [
+    {
+      name: 'typescript-metadata',
+      transform(code, id) {
+        if (id.endsWith('.ts') || id.endsWith('.tsx')) {
+          const ts = require('typescript')
+          const result = ts.transpile(code, {
+            target: ts.ScriptTarget.ES2018,
+            module: ts.ModuleKind.ESNext,
+            experimentalDecorators: true,
+            emitDecoratorMetadata: true,
+            jsx: ts.JsxEmit.ReactJSX,
+            moduleResolution: ts.ModuleResolutionKind.NodeJs,
+          })
+          return result
+        }
+      },
+    },
+  ],
   test: {
     globals: true,
     environment: 'node',
-    environmentMatchGlobs: [
-      ['**/react/**/*.spec.{ts,tsx}', 'jsdom'],
-      ['**/react-router/**/*.spec.{ts,tsx}', 'jsdom'],
-    ],
     include: ['**/?(*.)+(spec|test).[jt]s?(x)'],
     exclude: [
       '**/node_modules/**',
@@ -35,8 +54,40 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /^@sigi\/([^/]+)(.*)$/,
-        replacement: join(__dirname, '..', 'packages/$1/src$2'),
+        find: '@sigi/core',
+        replacement: join(__dirname, '..', 'packages/core/src'),
+      },
+      {
+        find: '@sigi/di',
+        replacement: join(__dirname, '..', 'packages/di/src'),
+      },
+      {
+        find: '@sigi/react',
+        replacement: join(__dirname, '..', 'packages/react/src'),
+      },
+      {
+        find: '@sigi/react-router',
+        replacement: join(__dirname, '..', 'packages/react-router/src'),
+      },
+      {
+        find: '@sigi/ssr',
+        replacement: join(__dirname, '..', 'packages/ssr/src'),
+      },
+      {
+        find: '@sigi/testing',
+        replacement: join(__dirname, '..', 'packages/testing/src'),
+      },
+      {
+        find: '@sigi/ts-plugin',
+        replacement: join(__dirname, '..', 'packages/ts-plugin/src'),
+      },
+      {
+        find: '@sigi/types',
+        replacement: join(__dirname, '..', 'packages/types/src'),
+      },
+      {
+        find: '@sigi/vue',
+        replacement: join(__dirname, '..', 'packages/vue/src'),
       },
       {
         find: './hmr',
