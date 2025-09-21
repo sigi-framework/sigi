@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`ts-plugin specs should output hmr codes 1`] = `
 "import { Module, Effect } from '@sigi/core';

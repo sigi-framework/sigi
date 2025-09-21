@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`StateToPersist specs should be able extract actionsToRetry 1`] = `"<html><head><link rel="preload" as="image" href="https://sigi.how/image.jpeg"/><link rel="stylesheet" href="https://sigi.how/style.css"/></head><body><div id="app"><img src="https://sigi.how/image.jpeg" alt=""/></div><script id="sigi-persisted-data">window['SIGI_STATE']={"foo":1};window['SIGI_RETRY']={"home":["initAppContext"]}</script></body></html>"`;
 

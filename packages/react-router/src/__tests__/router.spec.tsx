@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 
 import '@abraham/reflection'
@@ -10,6 +10,7 @@ import { History, createMemoryHistory } from 'history'
 import { render, act, type RenderResult } from '@testing-library/react'
 import { Observable, Subject } from 'rxjs'
 import { map, exhaustMap, takeUntil, switchMap } from 'rxjs/operators'
+import { vi } from 'vitest'
 
 import { RouterModule, RouterChanged, HistoryProvide, Router$Provide } from '../browser.module'
 import { SigiRouterProvider } from '../router-provider'
@@ -123,14 +124,14 @@ describe('Router module spec', () => {
   })
 
   it('should invoke push', () => {
-    const pushSpy = jest.spyOn(history, 'push')
+    const pushSpy = vi.spyOn(history, 'push')
     testStub.dispatcher.goHome()
     expect(pushSpy).toHaveBeenCalledTimes(1)
     pushSpy.mockRestore()
   })
 
   it('should invoke goBack', () => {
-    const goBackSpy = jest.spyOn(history, 'back')
+    const goBackSpy = vi.spyOn(history, 'back')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goBack()
     expect(goBackSpy).toHaveBeenCalledTimes(1)
@@ -138,7 +139,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke replace', () => {
-    const replaceSpy = jest.spyOn(history, 'replace')
+    const replaceSpy = vi.spyOn(history, 'replace')
     testStub.dispatcher.goHome()
     testStub.dispatcher.replace('app')
     expect(replaceSpy).toHaveBeenCalledTimes(1)
@@ -146,7 +147,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke go', () => {
-    const goSpy = jest.spyOn(history, 'go')
+    const goSpy = vi.spyOn(history, 'go')
     testStub.dispatcher.goHome()
     testStub.dispatcher.go(1)
     expect(goSpy).toHaveBeenCalledTimes(1)
@@ -154,7 +155,7 @@ describe('Router module spec', () => {
   })
 
   it('should invoke goForward', () => {
-    const goForwardSpy = jest.spyOn(history, 'forward')
+    const goForwardSpy = vi.spyOn(history, 'forward')
     testStub.dispatcher.goHome()
     testStub.dispatcher.goForward()
     expect(goForwardSpy).toHaveBeenCalledTimes(1)

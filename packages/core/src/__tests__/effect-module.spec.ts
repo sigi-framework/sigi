@@ -5,6 +5,7 @@ import { Action, IStore } from '@sigi/types'
 import { Draft } from 'immer'
 import { of, Observable, noop } from 'rxjs'
 import { delay, map, withLatestFrom, takeUntil, tap, switchMap, exhaustMap, startWith, share } from 'rxjs/operators'
+import { vi } from 'vitest'
 
 import { Effect, Reducer, ImmerReducer, DefineAction } from '../decorators'
 import { EffectModule } from '../module'
@@ -193,8 +194,8 @@ describe('EffectModule Class', () => {
       const onlyReducer = new WithoutEpic()
       const store = onlyReducer.store
       const actionCreator = onlyReducer.getActions()
-      const beforeSpy = jest.fn()
-      const afterSpy = jest.fn()
+      const beforeSpy = vi.fn()
+      const afterSpy = vi.fn()
       store.addEpic((prev) => (action$) => {
         return prev(action$.pipe(tap(beforeSpy)))
       })
@@ -283,8 +284,8 @@ describe('EffectModule Class', () => {
 
   describe('dispatcher', () => {
     let actionsDispatcher: InstanceActionOfEffectModule<Counter, CounterState>
-    let spy = jest.fn()
-    let timer = jest.useFakeTimers()
+    let spy = vi.fn()
+    let timer = vi.useFakeTimers()
     beforeEach(() => {
       const actions = counter.getActions()
       actionsDispatcher = Object.keys(actions).reduce((acc, key) => {
@@ -295,14 +296,14 @@ describe('EffectModule Class', () => {
         }
         return acc
       }, {} as any)
-      spy = jest.fn()
+      spy = vi.fn()
       store.addEpic((prev) => (action$) => prev(action$.pipe(tap(spy), share())))
-      timer = jest.useFakeTimers()
+      timer = vi.useFakeTimers()
     })
 
     afterEach(() => {
       spy.mockReset()
-      jest.useRealTimers()
+      vi.useRealTimers()
     })
 
     it('should be able to dispatch reducer action by actions dispatcher #void', () => {

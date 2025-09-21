@@ -5,6 +5,7 @@ import { Test, SigiTestModule, SigiTestStub } from '@sigi/testing'
 import { Draft } from 'immer'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, switchMap } from 'rxjs/operators'
+import { vi } from 'vitest'
 // oxlint-disable-next-line import/default
 import Vue from 'vue'
 
@@ -44,7 +45,7 @@ describe.skip('VueJS reactive binding', () => {
   const options = reactive(VueTestingModule, {})
   let vm = new Vue(options)
   let testingStub: SigiTestStub<VueTestingModule, VueTestingState>
-  let timer = jest.useFakeTimers()
+  let timer = vi.useFakeTimers()
 
   beforeEach(() => {
     const testingModule = Test.createTestingModule({
@@ -53,11 +54,11 @@ describe.skip('VueJS reactive binding', () => {
 
     vm = new Vue(reactive(VueTestingModule, {}))
     testingStub = testingModule.getTestingStub(VueTestingModule)
-    timer = jest.useFakeTimers()
+    timer = vi.useFakeTimers()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   it('should create vue component options', () => {
@@ -138,7 +139,7 @@ describe.skip('VueJS reactive binding', () => {
   })
 
   it('should merge original beforeUpdate lifecycle', () => {
-    const spy = jest.fn()
+    const spy = vi.fn()
     const reactiveOptions = reactive(VueTestingModule, {
       syncToSigi: ['name'],
       beforeUpdate: spy,
@@ -151,7 +152,7 @@ describe.skip('VueJS reactive binding', () => {
   })
 
   it('should warn if property which syncToSigi not existed', () => {
-    const spy = jest.spyOn(console, 'warn')
+    const spy = vi.spyOn(console, 'warn')
     const reactiveOptions = reactive(VueTestingModule, {
       syncToSigi: ['name-n' as any],
     })
@@ -166,7 +167,7 @@ describe.skip('VueJS reactive binding', () => {
     vm.$options.beforeUpdate![0].call(vm)
     expect(spy).toHaveBeenCalledTimes(1)
 
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
     process.env.NODE_ENV = NODE_ENV
   })
 
@@ -182,7 +183,7 @@ describe.skip('VueJS reactive binding', () => {
   })
 
   it('should call original beforeDestroy', async () => {
-    const spy = jest.fn()
+    const spy = vi.fn()
     const reactiveOptions = reactive(VueTestingModule, {
       beforeDestroy: spy,
     })

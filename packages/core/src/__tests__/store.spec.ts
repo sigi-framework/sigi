@@ -2,6 +2,7 @@ import { Action, Epic } from '@sigi/types'
 import { Reducer } from 'react'
 import { interval } from 'rxjs'
 import { delay, filter, map, mergeMap, tap } from 'rxjs/operators'
+import { vi } from 'vitest'
 
 import { Store } from '../store'
 
@@ -16,7 +17,7 @@ describe('store specs', () => {
   const UPDATE_FOO = 'update-foo'
   const UPDATE_BAR = 'update-bar'
   const ASYNC_UPDATE_FOO = 'async-update-foo'
-  let timer = jest.useFakeTimers()
+  let timer = vi.useFakeTimers()
 
   const mockReducer: Reducer<State, Action<any>> = (prevState, action) => {
     if (action.type === UPDATE_FOO) {
@@ -44,12 +45,12 @@ describe('store specs', () => {
   beforeEach(() => {
     store = new Store('testStore', mockReducer, mockEpic)
     store.setup(defaultState)
-    timer = jest.useFakeTimers()
+    timer = vi.useFakeTimers()
   })
 
   afterEach(() => {
     store.dispose()
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('state', () => {
@@ -89,7 +90,7 @@ describe('store specs', () => {
     })
 
     it('should be able to add epic after setup', () => {
-      const spy = jest.fn()
+      const spy = vi.fn()
       store.addEpic((prev) => (action$) => action$.pipe(tap(spy), prev))
       const action = { type: '__NOOP__', payload: null, store }
       store.dispatch(action)
@@ -99,7 +100,7 @@ describe('store specs', () => {
     })
 
     it('should respect epics ordering', () => {
-      const spy = jest.fn()
+      const spy = vi.fn()
       store.addEpic((prev) => (action$) => action$.pipe(prev, tap(spy)))
 
       store.dispatch({ type: UPDATE_FOO, payload: '2', store: store })
@@ -109,7 +110,7 @@ describe('store specs', () => {
 
   describe('Dispose', () => {
     it('should complete all pending epic after disposed', () => {
-      const nextSpy = jest.fn()
+      const nextSpy = vi.fn()
       const store = new Store('testStore', mockReducer, (action$) =>
         action$.pipe(
           mergeMap((action) => interval(1000).pipe(map(() => action))),
@@ -129,7 +130,7 @@ describe('store specs', () => {
     })
 
     it('should complete all pending epic after disposed on added epic', () => {
-      const nextSpy = jest.fn()
+      const nextSpy = vi.fn()
       const store = new Store('testStore', mockReducer)
       store.setup(defaultState)
 
