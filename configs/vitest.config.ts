@@ -32,6 +32,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    environmentMatchGlobs: [
+      ['packages/react/**', 'jsdom'],
+      ['packages/react-router/**', 'jsdom'],
+    ],
     include: ['**/?(*.)+(spec|test).[jt]s?(x)'],
     exclude: [
       '**/node_modules/**',
