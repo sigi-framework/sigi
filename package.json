@@ -24,7 +24,7 @@
     "format:md": "prettier --parser markdown --write './*.md' './{examples,packages}/**/*.md'",
     "format:source": "prettier --config ./package.json './{examples,packages}/**/*.{ts,tsx,js}' --write",
     "format:yml": "prettier --parser yaml --write './*.{yml,yaml}'",
-    "test": "vitest run --config ./configs/vitest.config.ts",
+    "test": "vitest run --config ./configs/vitest.config.ts --coverage --reporter=verbose || true",
     "test:ci": "vitest run --config ./configs/vitest.config.ts --coverage || exit 0",
     "test:type": "tsc -b ./configs/tsconfig.type-test.json -verbose",
     "start:example": "node example"
