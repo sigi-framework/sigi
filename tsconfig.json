@@ -25,6 +25,7 @@
     "useDefineForClassFields": false,
     "stripInternal": true,
     "lib": ["dom", "ES5", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "esnext"],
+    "types": ["vitest/globals"],
     "baseUrl": "./packages",
     "paths": {
       "react": ["node_modules/@types/react"],

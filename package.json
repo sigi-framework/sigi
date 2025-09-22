@@ -36,7 +36,7 @@
     "@commitlint/config-lerna-scopes": "^19.8.1",
     "@swc/core": "^1.13.5",
     "@types/lodash": "^4.17.18",
-    "@types/node": "^24.0.3",
+    "@types/node": "^24.5.2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/react-test-renderer": "^19.1.0",

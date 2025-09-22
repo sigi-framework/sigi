@@ -4,7 +4,7 @@
     "rootDir": "./src",
     "outDir": "./esm",
     "composite": true,
-    "types": ["@abraham/reflection", "jest", "node"]
+    "types": ["@abraham/reflection", "vitest/globals", "node"]
   },
   "include": ["./src"],
   "references": [{ "path": "../di" }, { "path": "../types" }, { "path": "../core" }]
