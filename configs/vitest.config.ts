@@ -32,10 +32,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    environmentMatchGlobs: [
-      ['packages/react/**', 'jsdom'],
-      ['packages/react-router/**', 'jsdom'],
-    ],
     include: ['**/?(*.)+(spec|test).[jt]s?(x)'],
     exclude: [
       '**/node_modules/**',
@@ -44,6 +40,8 @@ export default defineConfig({
       '**/*.d.ts',
     ],
     coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
       include: [
         'packages/*/src/**/*.{ts,tsx}',
       ],
