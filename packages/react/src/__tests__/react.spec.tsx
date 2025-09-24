@@ -1,5 +1,5 @@
 /**
- * @jest-environment jsdom
+ * @vitest-environment jsdom
  */
 
 import '@abraham/reflection'
@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import { render, act, type RenderResult } from '@testing-library/react'
 import { Observable, timer } from 'rxjs'
 import { mergeMap, map, endWith, switchMap } from 'rxjs/operators'
+import { vi } from 'vitest'
 
 import { useModuleState, useModule } from '../index.browser'
 
@@ -63,7 +64,7 @@ class CountModel extends EffectModule<CountState> {
 }
 
 describe('React components test', () => {
-  const mockRender = jest.fn()
+  const mockRender = vi.fn()
   const TestComponent = () => {
     const state = useModuleState(CountModel)
     mockRender()
@@ -86,9 +87,9 @@ describe('React components test', () => {
 })
 
 describe('Hooks', () => {
-  const resetStore = jest.fn()
-  const setCount = jest.fn()
-  const mockRender = jest.fn()
+  const resetStore = vi.fn()
+  const setCount = vi.fn()
+  const mockRender = vi.fn()
   const TestComponent = () => {
     const [state, dispatcher] = useModule(CountModel, {
       selector: (state) => {
@@ -143,7 +144,7 @@ describe('Hooks', () => {
   })
 
   it('should not re-render if return state shallow equaled', () => {
-    const fooRenderSpy = jest.fn()
+    const fooRenderSpy = vi.fn()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
         selector: (state) => ({ name: state.name }),
@@ -166,7 +167,7 @@ describe('Hooks', () => {
   })
 
   it('should re-render if return state not pass custom equality function', () => {
-    const fooRenderSpy = jest.fn()
+    const fooRenderSpy = vi.fn()
     const FooComponent = () => {
       const state = useModuleState(CountModel, {
         selector: (state) => ({ name: state.name }),

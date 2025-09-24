@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import { restoreState } from '../browser'
 
 beforeEach(() => {
@@ -16,14 +17,14 @@ afterEach(() => {
 
 describe('Browser function test', () => {
   it('should add data into window', () => {
-    global.document.getElementById = jest.fn().mockReturnValue({ textContent: '{}' })
+    global.document.getElementById = vi.fn().mockReturnValue({ textContent: '{}' })
     restoreState()
     expect(global.window['SIGI_STATE']).toEqual({})
     expect(global.window['SIGI_RETRY']).toEqual({})
   })
 
   it('should not add data into window', () => {
-    global.document.getElementById = jest.fn().mockReturnValue(null)
+    global.document.getElementById = vi.fn().mockReturnValue(null)
     restoreState()
     expect(global.window['SIGI_STATE']).toEqual(undefined)
     expect(global.window['SIGI_RETRY']).toEqual(undefined)

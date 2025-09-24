@@ -4,6 +4,7 @@ import '@abraham/reflection'
 import { rootInjector } from '@sigi/di'
 import { Observable } from 'rxjs'
 import { delay, map, tap } from 'rxjs/operators'
+import { vi } from 'vitest'
 
 import { Reducer, Effect } from '../decorators'
 import { EffectModule } from '../module'
@@ -33,8 +34,8 @@ describe('Smoking tests', () => {
 
   it('should be able to dispatch actions from the other module', () => {
     const asyncTimeToDelay = 2000
-    const timer = jest.useFakeTimers()
-    const spy = jest.fn()
+    const timer = vi.useFakeTimers()
+    const spy = vi.fn()
     @Module('Foo')
     class FooModule extends EffectModule<{ foo: string }> {
       defaultState = {
@@ -83,7 +84,7 @@ describe('Smoking tests', () => {
 
     fooStore.dispose()
     barStore.dispose()
-    jest.useRealTimers()
+    vi.useRealTimers()
     rootInjector.reset()
   })
 
@@ -94,7 +95,7 @@ describe('Smoking tests', () => {
     global['SIGI_STATE'] = {
       SSRPersistModule: staticState,
     }
-    const spy = jest.fn()
+    const spy = vi.fn()
     @Module('SSRPersistModule')
     class SSRPersistModule extends EffectModule<State> {
       defaultState = {

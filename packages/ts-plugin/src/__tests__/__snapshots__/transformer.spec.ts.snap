@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ts-plugin specs should output hmr codes 1`] = `
+exports[`ts-plugin specs > should output hmr codes 1`] = `
 "import { Module, Effect } from '@sigi/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === "development" && module.hot) {
 "
 `;
 
-exports[`ts-plugin specs should skip inject hmr codes if non module name 1`] = `
+exports[`ts-plugin specs > should skip inject hmr codes if non module name 1`] = `
 "import { Module, Effect } from '@sigi/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
@@ -44,7 +44,7 @@ export class ModuleA extends EffectModule<AState> {
 "
 `;
 
-exports[`ts-plugin specs should transform alias 1`] = `
+exports[`ts-plugin specs > should transform alias 1`] = `
 
 File: alias.tsx
 TypeScript before transform:
@@ -88,7 +88,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform do-nothing 1`] = `
+exports[`ts-plugin specs > should transform do-nothing 1`] = `
 
 File: do-nothing.tsx
 TypeScript before transform:
@@ -144,7 +144,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform do-nothing-2 1`] = `
+exports[`ts-plugin specs > should transform do-nothing-2 1`] = `
 
 File: do-nothing-2.tsx
 TypeScript before transform:
@@ -198,7 +198,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform do-nothing-4 1`] = `
+exports[`ts-plugin specs > should transform do-nothing-4 1`] = `
 
 File: do-nothing-4.tsx
 TypeScript before transform:
@@ -268,7 +268,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform do-notiong-3 1`] = `
+exports[`ts-plugin specs > should transform do-notiong-3 1`] = `
 
 File: do-notiong-3.tsx
 TypeScript before transform:
@@ -322,7 +322,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform named-import 1`] = `
+exports[`ts-plugin specs > should transform named-import 1`] = `
 
 File: named-import.tsx
 TypeScript before transform:
@@ -367,7 +367,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform namespace-import 1`] = `
+exports[`ts-plugin specs > should transform namespace-import 1`] = `
 
 File: namespace-import.tsx
 TypeScript before transform:
@@ -411,7 +411,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform no-argument 1`] = `
+exports[`ts-plugin specs > should transform no-argument 1`] = `
 
 File: no-argument.tsx
 TypeScript before transform:
@@ -460,7 +460,7 @@ TypeScript after transform:
 
 `;
 
-exports[`ts-plugin specs should transform without-named-binding 1`] = `
+exports[`ts-plugin specs > should transform without-named-binding 1`] = `
 
 File: without-named-binding.tsx
 TypeScript before transform:
