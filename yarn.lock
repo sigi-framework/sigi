@@ -4039,12 +4039,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/sinon@npm:^17.0.4":
-  version: 17.0.4
-  resolution: "@types/sinon@npm:17.0.4"
+"@types/sinon@npm:^20.0.0":
+  version: 20.0.0
+  resolution: "@types/sinon@npm:20.0.0"
   dependencies:
     "@types/sinonjs__fake-timers": "npm:*"
-  checksum: 10c0/7c67ae1050d98a86d8dd771f0a764e97adb9d54812bf3b001195f8cfaa1e2bdfc725d5b970b91e7b0bb6b7c1ca209f47993f2c6f84f1f868313c37441313ca5b
+  checksum: 10c0/0a3d9761be5bf2f7bf79fb91da2f4462726ec27ed8bc14adb50a9ce68efbcdb71436447ae923e5df297c3023c7c39447b63c98be49b4954e0ed3fd01e8917de2
   languageName: node
   linkType: hard
 
@@ -10683,7 +10683,7 @@ __metadata:
     "@types/react": "npm:^19.1.8"
     "@types/react-dom": "npm:^19.1.6"
     "@types/react-test-renderer": "npm:^19.1.0"
-    "@types/sinon": "npm:^17.0.4"
+    "@types/sinon": "npm:^20.0.0"
     "@vitest/coverage-v8": "npm:^3.2.4"
     "@vitest/ui": "npm:^3.2.4"
     codecov: "npm:^3.8.3"
