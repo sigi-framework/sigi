@@ -6678,10 +6678,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"immer@npm:^10.1.1":
-  version: 10.1.1
-  resolution: "immer@npm:10.1.1"
-  checksum: 10c0/b749e10d137ccae91788f41bd57e9387f32ea6d6ea8fd7eb47b23fd7766681575efc7f86ceef7fe24c3bc9d61e38ff5d2f49c2663b2b0c056e280a4510923653
+"immer@npm:^11.0.0":
+  version: 11.0.1
+  resolution: "immer@npm:11.0.1"
+  checksum: 10c0/d505c1aa6d5d7ff03196e0a508af2853839eb1a3d5af51d55ca5815c46981b74765faf357fbd276b151109b07dd6b564077be92b0247b0a4effa78130166030d
   languageName: node
   linkType: hard
 
@@ -10688,7 +10688,7 @@ __metadata:
     "@vitest/ui": "npm:^3.2.4"
     codecov: "npm:^3.8.3"
     husky: "npm:^9.1.7"
-    immer: "npm:^10.1.1"
+    immer: "npm:^11.0.0"
     jsdom: "npm:^27.0.0"
     lerna: "npm:^9.0.0"
     lint-staged: "npm:^16.1.2"
