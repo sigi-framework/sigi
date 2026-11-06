@@ -30,7 +30,7 @@
     "start:example": "node example"
   },
   "devDependencies": {
-    "@abraham/reflection": "^0.13.0",
+    "@abraham/reflection": "^0.14.0",
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@commitlint/config-lerna-scopes": "^20.0.0",

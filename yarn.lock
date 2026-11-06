@@ -12,6 +12,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@abraham/reflection@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@abraham/reflection@npm:0.14.0"
+  checksum: 10c0/d9dafbbf7a22a9b4dd86f8b9ae50d1df91243439d649b671a80f09d0feea1609b08a023c9515e33fda7e58efe79324695cd41d466318f47a3c139077da4acc28
+  languageName: node
+  linkType: hard
+
 "@acemir/cssom@npm:^0.9.31":
   version: 0.9.31
   resolution: "@acemir/cssom@npm:0.9.31"
@@ -10323,7 +10330,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sigi@workspace:."
   dependencies:
-    "@abraham/reflection": "npm:^0.13.0"
+    "@abraham/reflection": "npm:^0.14.0"
     "@commitlint/cli": "npm:^20.0.0"
     "@commitlint/config-conventional": "npm:^20.0.0"
     "@commitlint/config-lerna-scopes": "npm:^20.0.0"
