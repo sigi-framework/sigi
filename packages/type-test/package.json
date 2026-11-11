@@ -23,6 +23,6 @@
     "url": "https://github.com/sigi-framework/sigi/issues"
   },
   "devDependencies": {
-    "vue": "2"
+    "vue": "3"
   }
 }
