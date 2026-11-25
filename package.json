@@ -64,7 +64,7 @@
     "tslib": "^2.8.1",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",
-    "vue": "2"
+    "vue": "3"
   },
   "lint-staged": {
     "*.@(js|ts|tsx)": [
